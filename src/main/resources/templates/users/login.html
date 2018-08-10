@@ -7,16 +7,16 @@
     <div class="col-lg-5 align-items-lg-center">
         <form action="/users/login" method="post" th:object="${viewModel}">
             <br>
-            <div class="form-group" th:classappend="${#fields.hasErrors('username')}? 'alert-danger' : ''">
+            <div class="form-group" th:classappend="${#fields.hasErrors('username')}? 'is-invalid'">
                 <label th:for="${#ids.next('username')}">Username</label>
-                <input type="text" class="form-control" th:field="*{username}">
-                <p class="help-block text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
+                <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{username}">
+                <p class="help-block invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
             </div>
             <br>
-            <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'alert-danger' : ''">
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'is-invalid'">
                 <label th:for="${#ids.next('password')}">Password</label>
-                <input type="password" class="form-control" th:field="*{password}">
-                <p class="help-block text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
+                <input type="password" class="form-control" th:errorclass="is-invalid" th:field="*{password}">
+                <p class="help-block invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
             </div>
             <hr class="form-line">
             <div class="form-group">

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "games")
@@ -19,6 +20,7 @@ public class Game extends BaseEntity{
     private Set<Review> reviews;
     private Boolean approved;
     private Set<GenreName> genres;
+    private String pegiRating;
     private String description;
     private BigDecimal price;
     private Set<String> images;
@@ -92,6 +94,14 @@ public class Game extends BaseEntity{
         this.price = price;
     }
 
+    public String getPegiRating() {
+        return pegiRating;
+    }
+
+    public void setPegiRating(String pegiRating) {
+        this.pegiRating = pegiRating;
+    }
+
     @Column(nullable = false)
     public LocalDate getReleaseDate() {
         return releaseDate;
@@ -120,5 +130,12 @@ public class Game extends BaseEntity{
 
     public void setGenres(Set<GenreName> genres) {
         this.genres = genres;
+    }
+
+    private Integer reviewScore(){
+        int approved = this.getReviews().stream().filter(Review::getApproved).collect(Collectors.toList()).size();
+        int notApproved = this.getReviews().stream().filter(r -> !r.getApproved()).collect(Collectors.toList()).size();
+
+        return (approved * notApproved) / 100;
     }
 }

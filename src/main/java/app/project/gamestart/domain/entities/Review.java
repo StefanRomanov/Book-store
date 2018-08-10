@@ -13,6 +13,7 @@ public class Review extends BaseEntity{
     private String text;
     private User user;
     private Game game;
+    private boolean approved;
 
     public Review() {
     }
@@ -51,5 +52,14 @@ public class Review extends BaseEntity{
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    @Column(nullable = false)
+    public boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
     }
 }
