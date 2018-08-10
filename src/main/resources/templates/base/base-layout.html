@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml">
+<!--/*@thymesVar id="title" type="java.lang.String"*/-->
+<!--/*@thymesVar id="viewName" type="java.lang.String"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body class="app-color-secondary">
+<div class="container-fluid">
+    <header>
+        <nav class="navbar navbar-static-top navbar-expand-lg navbar-light container-fluid app-color-prime nav navbar-holder rounded">
+            <a class="navbar-brand text-white" href="/">GameStart</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Browse by genre
+                            </a>
+                                <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
+                                    <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.GenreName).values()}">
+                                        <a class="dropdown-item text-white" th:href="|/games/all?genre=${genre}|" th:text="${#strings.capitalize(#strings.toLowerCase(genre))}"></a>
+                                    </th:block>
+                                </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/map">Map</a>
+                        </li>
+                        <li class="nav-item active">
+                            <a class="nav-link text-white" href="/users/register">Register</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/users/login">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white" href="/users/logout">Logout</a>
+                        </li>
+                    </ul>
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+    <main th:include="${viewName}"></main>
+    <footer>
+        <div class="d-flex app-color-prime mt-5 rounded">
+            <div class="footer mx-auto justify-content-center align-bottom ">
+                <span class="text-muted">&copy; CopyRight Eventures Inc. 2018-2018. All rights reserved.</span>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

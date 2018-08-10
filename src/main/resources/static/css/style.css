@@ -1,0 +1,60 @@
+body{
+    display: flex;
+}
+
+.app-color-prime {
+    background-color: #171A21;
+}
+
+.app-color-secondary {
+    background-color: #333333;
+}
+
+.nav {
+    margin-bottom: 20px;
+}
+
+.footer {
+    line-height: 60px;
+    margin-top: auto;
+}
+
+.nav-color {
+    color: black;
+}
+
+hr.home
+{
+    height: 2px;
+    background-color: black;
+}
+
+hr.form-line {
+    height: 2px;
+    border-color: #AFEEEE;
+    background-color: #AFEEEE;
+}
+
+div.form-group{
+    margin-bottom:35px
+}
+
+.invalid-feedback {
+    height: 0px;
+}
+
+input.form-control{
+     background-color: #818182;
+ }
+
+input.form-control:focus{
+    background-color: #818182;
+}
+
+input.form-control::placeholder{
+    color: gainsboro;
+}
+
+.dropdown-item:hover{
+    background-color: #333333;
+}

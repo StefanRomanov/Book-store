@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml">
+<h1 class="text-center">Login !</h1>
+<hr class="form-line">
+<br>
+<div class="d-flex justify-content-lg-center align-items-center container">
+    <div class="col-lg-5 align-items-lg-center">
+        <form action="/users/login" method="post" th:object="${viewModel}">
+            <br>
+            <div class="form-group" th:classappend="${#fields.hasErrors('username')}? 'alert-danger' : ''">
+                <label th:for="${#ids.next('username')}">Username</label>
+                <input type="text" class="form-control" th:field="*{username}">
+                <p class="help-block text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
+            </div>
+            <br>
+            <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'alert-danger' : ''">
+                <label th:for="${#ids.next('password')}">Password</label>
+                <input type="password" class="form-control" th:field="*{password}">
+                <p class="help-block text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
+            </div>
+            <hr class="form-line">
+            <div class="form-group">
+                <div class="offset-sm-4 col-6 col-centered">
+                    <input type="checkbox" id="remember" name="remember">
+                    <label for="remember"> Remember Me</label>
+                </div>
+            </div>
+            <hr class="form-line">
+            <br>
+            <button class="btn btn-lg app-color offset-md-5" type="submit">Login</button>
+        </form>
+    </div>
+</div>
