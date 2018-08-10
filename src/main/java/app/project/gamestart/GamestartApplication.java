@@ -1,5 +1,6 @@
 package app.project.gamestart;
 
+import app.project.gamestart.domain.enums.PegiRatings;
 import app.project.gamestart.domain.enums.Platform;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

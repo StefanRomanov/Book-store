@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.domain.enums.GenreName;
+import app.project.gamestart.domain.enums.PegiRatings;
 import app.project.gamestart.domain.enums.Platform;
 
 import javax.persistence.*;
@@ -20,7 +21,7 @@ public class Game extends BaseEntity{
     private Set<Review> reviews;
     private Boolean approved;
     private Set<GenreName> genres;
-    private String pegiRating;
+    private PegiRatings pegiRating;
     private String description;
     private BigDecimal price;
     private Set<String> images;
@@ -94,11 +95,13 @@ public class Game extends BaseEntity{
         this.price = price;
     }
 
-    public String getPegiRating() {
+    @Column(nullable = false)
+    @Enumerated(value = EnumType.STRING)
+    public PegiRatings getPegiRating() {
         return pegiRating;
     }
 
-    public void setPegiRating(String pegiRating) {
+    public void setPegiRating(PegiRatings pegiRating) {
         this.pegiRating = pegiRating;
     }
 
@@ -134,8 +137,8 @@ public class Game extends BaseEntity{
 
     private Integer reviewScore(){
         int approved = this.getReviews().stream().filter(Review::getApproved).collect(Collectors.toList()).size();
-        int notApproved = this.getReviews().stream().filter(r -> !r.getApproved()).collect(Collectors.toList()).size();
+        int total = this.getReviews().size();
 
-        return (approved * notApproved) / 100;
+        return (approved * total) / 100;
     }
 }

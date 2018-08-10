@@ -1,7 +1,6 @@
 package app.project.gamestart.domain.enums;
 
 public enum PegiRatings {
-
     PEGI_3(3),
     PEGI_7(7),
     PEGI_12(12),
