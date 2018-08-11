@@ -51,6 +51,15 @@ public class UserController extends BaseController {
         return super.view("/users/login",new UserLoginBindingModel(), "Login");
     }
 
+   //@PostMapping("/login")
+   //public ModelAndView loginConfirm(@Valid @ModelAttribute("viewModel") UserLoginBindingModel bindingModel, BindingResult bindingResult){
+   //    if(bindingResult.hasErrors()){
+   //      return super.view("/users/login",bindingModel,"Login");
+   //    }
+
+   //    return super.redirect("/","Home");
+   //}
+
     @GetMapping("/logout")
     public ModelAndView logout() {
         return super.redirect("/",null,"Home");

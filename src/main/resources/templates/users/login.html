@@ -1,6 +1,8 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns="http://www.w3.org/1999/xhtml">
-<h1 class="text-center">Login !</h1>
+<div class="jumbotron-fluid">
+    <h2 class="text-center text-white">LOGIN</h2>
+</div>
 <hr class="form-line">
 <br>
 <div class="d-flex justify-content-lg-center align-items-center container">
@@ -8,21 +10,21 @@
         <form action="/users/login" method="post" th:object="${viewModel}">
             <br>
             <div class="form-group" th:classappend="${#fields.hasErrors('username')}? 'is-invalid'">
-                <label th:for="${#ids.next('username')}">Username</label>
-                <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{username}">
+                <label class="text-white" th:for="${#ids.next('username')}">Username</label>
+                <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{username}">
                 <p class="help-block invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"/>
             </div>
             <br>
             <div class="form-group" th:classappend="${#fields.hasErrors('password')}? 'is-invalid'">
-                <label th:for="${#ids.next('password')}">Password</label>
-                <input type="password" class="form-control" th:errorclass="is-invalid" th:field="*{password}">
+                <label class="text-white" th:for="${#ids.next('password')}">Password</label>
+                <input type="password" class="form-control text-white" th:errorclass="is-invalid" th:field="*{password}">
                 <p class="help-block invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"/>
             </div>
             <hr class="form-line">
             <div class="form-group">
                 <div class="offset-sm-4 col-6 col-centered">
                     <input type="checkbox" id="remember" name="remember">
-                    <label for="remember"> Remember Me</label>
+                    <label for="remember" class="text-white"> Remember Me</label>
                 </div>
             </div>
             <hr class="form-line">
