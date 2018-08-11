@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
-      xmlns="http://www.w3.org/1999/xhtml">
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <!--/*@thymesVar id="title" type="java.lang.String"*/-->
 <!--/*@thymesVar id="viewName" type="java.lang.String"*/-->
 <head>
@@ -28,9 +30,10 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Browse by genre
+                                Games
                             </a>
                                 <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item text-white" th:href="@{/games/all}" th:text="All"></a>
                                     <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.GenreName).values()}">
                                         <a class="dropdown-item text-white" th:href="|/games/all?genre=${genre}|" th:text="${#strings.capitalize(#strings.toLowerCase(genre))}"></a>
                                     </th:block>
@@ -39,15 +42,20 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" href="/map">Map</a>
                         </li>
-                        <li class="nav-item active">
-                            <a class="nav-link text-white" href="/users/register">Register</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/users/login">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" href="/users/logout">Logout</a>
-                        </li>
+                        <th:block sec:authorize="isAnonymous()">
+                            <li class="nav-item active" sec:authorize="isAnonymous()">
+                                <a class="nav-link text-white" href="/users/register">Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/users/login">Login</a>
+                            </li>
+                        </th:block>
+                        <th:block sec:authorize="isAuthenticated()">
+                            <li class="nav-item">
+                                <a class="nav-link text-white" href="/users/logout">Logout</a>
+                            </li>
+                        </th:block>
+
                     </ul>
                 </ul>
             </div>

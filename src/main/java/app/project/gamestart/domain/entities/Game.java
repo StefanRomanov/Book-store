@@ -24,6 +24,7 @@ public class Game extends BaseEntity{
     private PegiRatings pegiRating;
     private String description;
     private BigDecimal price;
+    private String coverImageUrl;
     private Set<String> images;
     private LocalDate releaseDate;
 
@@ -112,6 +113,15 @@ public class Game extends BaseEntity{
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    @Column(nullable = false)
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
+
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
     }
 
     @ElementCollection
