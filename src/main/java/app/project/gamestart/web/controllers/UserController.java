@@ -6,12 +6,11 @@ import app.project.gamestart.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.naming.AuthenticationException;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 @Controller
@@ -47,18 +46,18 @@ public class UserController extends BaseController {
     }
 
     @GetMapping("/login")
-    public ModelAndView login() {
-        return super.view("/users/login",new UserLoginBindingModel(), "Login");
+    public ModelAndView login(@RequestParam(value = "error", required = false) String error,
+                              @RequestParam(value = "logout", required = false) String logout) {
+        if (error != null) {
+            return super.view("/users/login", "Invalid username and password!","Login");
+        }
+
+        if (logout != null) {
+            return super.view("/users/login", "You've been logged out successfully.","Login");
+        }
+
+        return super.view("/users/login", null,"Login");
     }
-
-   //@PostMapping("/login")
-   //public ModelAndView loginConfirm(@Valid @ModelAttribute("viewModel") UserLoginBindingModel bindingModel, BindingResult bindingResult){
-   //    if(bindingResult.hasErrors()){
-   //      return super.view("/users/login",bindingModel,"Login");
-   //    }
-
-   //    return super.redirect("/","Home");
-   //}
 
     @GetMapping("/logout")
     public ModelAndView logout() {

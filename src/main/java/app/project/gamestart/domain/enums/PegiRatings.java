@@ -7,13 +7,13 @@ public enum PegiRatings {
     PEGI_16(16),
     PEGI_18(18);
 
-    private int value;
+    private final int value;
 
     PegiRatings(int value) {
         this.value = value;
     }
 
     public int getValue() {
-        return value;
+        return this.value;
     }
 }

@@ -9,11 +9,14 @@
         <h3><a href="/users/register" th:text="Register"></a> if you don't have an account.</h3>
         <div>
         </div>
-        <div id="result">
-            <form action="/postpic" method="post"  enctype="multipart/form-data">
-                <input  type="file" class="form-control-file"  name="file">
-                <button type="submit">Submit</button>
-            </form>
+
+    </div>
+    <div id="result" class="d-flex justify-content-center">
+        <div class="custom-file w-50 " id="customFile">
+            <input type="file" class="custom-file-input" id="exampleInputFile" aria-describedby="fileHelp" multiple>
+            <label class="custom-file-label" for="exampleInputFile">
+                Select game images...
+            </label>
         </div>
     </div>
 </div>

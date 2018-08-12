@@ -55,6 +55,35 @@ input.form-control::placeholder{
     color: gainsboro;
 }
 
+textarea.form-control{
+    background-color: #818182;
+}
+
+textarea.form-control:focus{
+    background-color: #818182;
+}
+
+textarea.form-control::placeholder{
+    color: gainsboro;
+}
+
 .dropdown-item:hover{
     background-color: #333333;
+}
+
+.w-85{
+    width: 85%;
+}
+
+.custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+}
+
+.custom-file-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

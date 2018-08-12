@@ -37,8 +37,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/css/**", "/js/**").permitAll()
                 .antMatchers("/").permitAll()
-                .antMatchers( "/users/login", "/users/register", "/postpic").anonymous()
-                .antMatchers("/users/home").hasAnyAuthority("USER")
+                .antMatchers( "/users/login", "/users/register", "/postpic", "/users/login-error").anonymous()
+                .antMatchers("/users/home","/games/add").hasAnyAuthority("USER","ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
@@ -48,7 +48,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .usernameParameter("username")
                 .passwordParameter("password")
                 .defaultSuccessUrl("/")
-                .failureUrl("/error")
+                .failureUrl("/users/login?error=1")
                 .and()
                 .rememberMe()
                 .rememberMeParameter("remember")
@@ -58,7 +58,7 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .userDetailsService(userService)
                 .and()
                 .logout().logoutUrl("/users/logout")
-                .logoutSuccessUrl("/users/login");
+                .logoutSuccessUrl("/users/login?logout=1");
 
     }
 }

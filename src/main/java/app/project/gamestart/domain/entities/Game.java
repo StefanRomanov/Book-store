@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 @Table(name = "games")
 public class Game extends BaseEntity{
 
-    private String name;
+    private String title;
     private Platform platform;
     private Developer developer;
     private Set<Review> reviews;
@@ -33,11 +33,11 @@ public class Game extends BaseEntity{
 
     @Column(nullable = false)
     public String getName() {
-        return name;
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setName(String title) {
+        this.title = title;
     }
 
     @Enumerated(value = EnumType.STRING)

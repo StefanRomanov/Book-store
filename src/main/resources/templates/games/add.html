@@ -4,38 +4,94 @@
     <h2 class="text-center text-white">ADD A GAME</h2>
 </div>
 <hr class="form-line">
-<div class="d-flex justify-content-lg-center container">
-    <div class="col-lg-6 align-items-lg-center">
-        <form action="/users/register" method="post" th:object="${viewModel}">
+<div class="d-flex justify-content-around">
+    <div class=" rounded w-85 app-color-prime">
+        <form th:action="@{/games/add}" method="post" enctype=multipart/form-data th:object="${viewModel}">
             <br>
-            <div class="d-flex justify-content-between container-fluid">
-                <div class="form-group" th:classappend="${#fields.hasErrors('username')} ? 'is-invalid'">
-                    <label class="text-white" th:for="${#ids.next('username')}">Username</label>
-                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{username}" placeholder="Username...">
-                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+            <div class="d-flex justify-content-center">
+                <div class="form-group w-50" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+                    <label class="text-white" th:for="${#ids.next('title')}">Title</label>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{title}" placeholder="Game title...">
+                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
                 </div>
                 <br>
-                <div class="form-group" th:classappend="${#fields.hasErrors('email')}? 'is-invalid'">
-                    <label class="text-white" th:for="${#ids.next('email')}">Email</label>
-                    <input type="email" class="form-control text-white" th:errorclass="is-invalid" th:field="*{email}" placeholder="Email...">
-                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            </div>
+            <br>
+            <div class="d-flex justify-content-between justify-content-around justify-content-center">
+                <div class="form-group w-20">
+                    <label class="text-white">Platform</label>
+                    <br>
+                    <select id="select-platform" multiple="multiple" class="d-flex form-control" th:errorclass="is-invalid" th:field="*{platform}">
+                        <th:block th:each="platform : ${T(app.project.gamestart.domain.enums.Platform).values()}">
+                            <option th:value="${platform}" th:text="${platform}"></option>
+                        </th:block>
+                    </select>
+                    <br>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('platform')}" th:errors="*{platform}"></span>
+                </div>
+                <div class="form-group w-20">
+                    <label class="text-white">Genre</label>
+                    <br>
+                    <select id="select-genre" multiple="multiple" class="d-flex form-control" th:field="*{genres}">
+                        <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.GenreName).values()}">
+                            <option th:value="${genre}" th:text="${genre}"></option>
+                        </th:block>
+                    </select>
+                    <br>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}"></span>
+                    <br>
+                </div>
+                <div class="form-group w-20">
+                    <label class="text-white">PEGI Rating</label>
+                    <br>
+                    <select id="select-rating" class="d-flex form-control" th:field="*{pegiRating}">
+                        <th:block th:each="rating : ${T(app.project.gamestart.domain.enums.PegiRatings).values()}">
+                            <option th:value="${rating}" th:text="|${rating.value}&plus;|"></option>
+                        </th:block>
+                    </select>
+                    <br>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('pegiRating')}" th:errors="*{pegiRating}"></span>
+                    <br>
+                </div>
+                <div class="form-group w-20">
+                    <label class="text-white">Release date</label>
+                    <br>
+                    <input  type="date" class="rounded" >
+                    <br>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('pegiRating')}" th:errors="*{pegiRating}"></span>
+                    <br>
                 </div>
             </div>
-            <div class="d-flex justify-content-between container-fluid">
-                <div class="form-group" th:classappend="${#fields.hasErrors('password')} ? 'is-invalid'">
-                    <label class="text-white" th:for="${#ids.next('password')}">Password</label>
-                    <input type="password" class="form-control text-white" th:errorclass="is-invalid" th:field="*{password}" placeholder="Password...">
-                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></span>
+            <div class="d-flex justify-content-around">
+                <div class="custom-file w-25 form-group" >
+                    <input type="file" class="custom-file-input" id="titleImage" th:errorclass="is-invalid" aria-describedby="fileHelp" th:field="*{coverImageUrl}">
+                    <label class="custom-file-label" for="titleImage">
+                        Select title image
+                    </label>
+                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('coverImageUrl')}" th:errors="*{coverImageUrl}"></span>
+                </div>
+                <div class="custom-file w-25 form-group">
+                    <input type="file" class="custom-file-input" id="otherImages" aria-describedby="fileHelp" multiple>
+                    <label class="custom-file-label" for="otherImages">
+                        Select game images
+                    </label>
+                </div>
+            </div>
+            <br>
+            <div class="d-flex justify-content-center">
+                <br>
+                <div class="form-group w-75" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'">
+                    <label class="text-white" th:for="${#ids.next('description')}">Description</label>
+                    <textarea class="form-control text-white text-area" th:errorclass="is-invalid" th:field="*{description}" placeholder="Game Description..."></textarea>
+                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                 </div>
                 <br>
-                <div class="form-group" th:classappend="${#fields.hasErrors('confirmPassword')}? 'has-danger'">
-                    <label class="text-white" th:for="${#ids.next('confirmPassword')}">Confirm Password</label>
-                    <input type="password" class="form-control text-white" th:errorclass="is-invalid" th:field="*{confirmPassword}" placeholder="Confirm Password...">
-                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></span>
-                </div>
             </div>
             <hr class="form-line">
-            <button class="btn app-color offset-md-5" type="submit">Register</button>
+            <div class="d-flex justify-content-center mb-3">
+                <button class="btn app-color " type="submit">Add</button>
+            </div>
         </form>
     </div>
 </div>
+<script src="/js/scripts/add-games.js"></script>
