@@ -3,18 +3,18 @@ package app.project.gamestart.domain.models.binding;
 import app.project.gamestart.validators.annotations.NotEmptyFile;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 
 public class GameAddBindingModel {
 
     private String title;
-    private List<String> platform;
+    private String platform;
     private String developer;
     private Set<String> genres;
     private String pegiRating;
@@ -22,9 +22,10 @@ public class GameAddBindingModel {
     private BigDecimal price;
     private MultipartFile coverImageUrl;
     private Set<MultipartFile> images;
-    private LocalDate releaseDate;
+    private String releaseDate;
 
     public GameAddBindingModel() {
+        this.genres = new HashSet<>();
     }
 
     @NotEmpty
@@ -36,17 +37,15 @@ public class GameAddBindingModel {
         this.title = title;
     }
 
-    @NotNull
-    @Size(min = 1,message = "Select at least one platform !")
-    public List<String> getPlatform() {
+    @NotEmpty(message = "Pick a platform !")
+    public String getPlatform() {
         return platform;
     }
 
-    public void setPlatform(List<String> platform) {
+    public void setPlatform(String platform) {
         this.platform = platform;
     }
 
-    @NotEmpty
     public String getDeveloper() {
         return developer;
     }
@@ -82,7 +81,7 @@ public class GameAddBindingModel {
         this.description = description;
     }
 
-    @NotNull
+    @NotNull(message = "Games should have price!")
     public BigDecimal getPrice() {
         return price;
     }
@@ -109,12 +108,12 @@ public class GameAddBindingModel {
         this.images = images;
     }
 
-    @NotNull
-    public LocalDate getReleaseDate() {
+    @NotEmpty
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(LocalDate releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 }

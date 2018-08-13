@@ -15,10 +15,7 @@ import static org.apache.activemq.ActiveMQConnectionFactory.DEFAULT_BROKER_URL;
 @Configuration
 public class BeanConfig {
 
-    @Bean
-    public ModelMapper modelMapper(){
-        return new ModelMapper();
-    }
+
 
     @Bean
     public BCryptPasswordEncoder bCryptPasswordEncoder(){

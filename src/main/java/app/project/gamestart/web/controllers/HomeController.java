@@ -1,6 +1,5 @@
 package app.project.gamestart.web.controllers;
 
-import app.project.gamestart.domain.models.binding.TestModel;
 import app.project.gamestart.services.CloudinaryService;
 import app.project.gamestart.services.GameService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +28,5 @@ public class HomeController  extends BaseController{
     public ModelAndView index(){
 
         return super.view("index",null,"Welcome");
-    }
-
-    @PostMapping("/postpic")
-    public ModelAndView postpic(@ModelAttribute TestModel model) throws IOException {
-        Future<String> string = this.cloudinaryService.uploadImage(model.getFile());
-        return super.view("index");
     }
 }

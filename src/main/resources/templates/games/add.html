@@ -5,7 +5,7 @@
 </div>
 <hr class="form-line">
 <div class="d-flex justify-content-around">
-    <div class=" rounded w-85 app-color-prime">
+    <div class=" rounded w-85 app-color-prime container-fluid">
         <form th:action="@{/games/add}" method="post" enctype=multipart/form-data th:object="${viewModel}">
             <br>
             <div class="d-flex justify-content-center">
@@ -21,7 +21,7 @@
                 <div class="form-group w-20">
                     <label class="text-white">Platform</label>
                     <br>
-                    <select id="select-platform" multiple="multiple" class="d-flex form-control" th:errorclass="is-invalid" th:field="*{platform}">
+                    <select id="select-platform" class="selectpicker" th:field="*{platform}">
                         <th:block th:each="platform : ${T(app.project.gamestart.domain.enums.Platform).values()}">
                             <option th:value="${platform}" th:text="${platform}"></option>
                         </th:block>
@@ -32,9 +32,9 @@
                 <div class="form-group w-20">
                     <label class="text-white">Genre</label>
                     <br>
-                    <select id="select-genre" multiple="multiple" class="d-flex form-control" th:field="*{genres}">
+                    <select id="select-genre" multiple="multiple" class="selectpicker" th:field="*{genres}">
                         <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.GenreName).values()}">
-                            <option th:value="${genre}" th:text="${genre}"></option>
+                            <option th:value="${genre}" th:text="${#strings.capitalize(#strings.toLowerCase(genre))}"></option>
                         </th:block>
                     </select>
                     <br>
@@ -44,7 +44,7 @@
                 <div class="form-group w-20">
                     <label class="text-white">PEGI Rating</label>
                     <br>
-                    <select id="select-rating" class="d-flex form-control" th:field="*{pegiRating}">
+                    <select id="select-rating" class="selectpicker" th:field="*{pegiRating}">
                         <th:block th:each="rating : ${T(app.project.gamestart.domain.enums.PegiRatings).values()}">
                             <option th:value="${rating}" th:text="|${rating.value}&plus;|"></option>
                         </th:block>
@@ -56,9 +56,13 @@
                 <div class="form-group w-20">
                     <label class="text-white">Release date</label>
                     <br>
-                    <input  type="date" class="rounded" >
-                    <br>
-                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('pegiRating')}" th:errors="*{pegiRating}"></span>
+                    <div class="input-group date" data-provide="datepicker" data-date-format="dd-mm-yyyy">
+                        <input type="text" class="form-control datepicker rounded" th:errorclass="is-invalid" th:field="*{releaseDate}">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                        <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('releaseDate')}" th:errors="*{releaseDate}"></span>
+                    </div>
                     <br>
                 </div>
             </div>
@@ -71,10 +75,11 @@
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('coverImageUrl')}" th:errors="*{coverImageUrl}"></span>
                 </div>
                 <div class="custom-file w-25 form-group">
-                    <input type="file" class="custom-file-input" id="otherImages" aria-describedby="fileHelp" multiple>
+                    <input type="file" class="custom-file-input" id="otherImages" aria-describedby="fileHelp" multiple th:field="*{images}">
                     <label class="custom-file-label" for="otherImages">
                         Select game images
                     </label>
+                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('images')}" th:errors="*{images}"></span>
                 </div>
             </div>
             <br>
@@ -87,9 +92,18 @@
                 </div>
                 <br>
             </div>
+            <div class="d-flex justify-content-center">
+                <br>
+                <div class="form-group w-25" th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
+                    <label class="text-white" th:for="${#ids.next('price')}">Price</label>
+                    <input type="number" step=".01" class="form-control" th:errorclass="is-invalid" th:field="*{price}"/>
+                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
+                </div>
+                <br>
+            </div>
             <hr class="form-line">
             <div class="d-flex justify-content-center mb-3">
-                <button class="btn app-color " type="submit">Add</button>
+                <button class="btn app-color" type="submit">Add</button>
             </div>
         </form>
     </div>

@@ -1,22 +1,9 @@
 
-$(document).ready(function() {
-    $('#select-platform').multiselect({
-        buttonWidth: '200px',
-        buttonClass: 'btn btn-info'
-    });
 
-});
-$(document).ready(function() {
-    $('#select-genre').multiselect({
-            buttonWidth: '200px'
-        }
-    );
-});
-$(document).ready(function() {
-    $('#select-rating').multiselect({
-            buttonWidth: '100px'
-        }
-    );
+//$('.selectpicker').selectpicker({
+//});
+$('.datepicker').datepicker({
+    format: 'dd-mm-yyyy'
 });
 
 $('#titleImage').change(function() {

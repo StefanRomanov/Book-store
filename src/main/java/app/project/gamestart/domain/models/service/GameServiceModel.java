@@ -1,20 +1,18 @@
-package app.project.gamestart.domain.entities;
+package app.project.gamestart.domain.models.service;
 
+import app.project.gamestart.domain.entities.Developer;
+import app.project.gamestart.domain.entities.Review;
 import app.project.gamestart.domain.enums.GenreName;
 import app.project.gamestart.domain.enums.PegiRatings;
 import app.project.gamestart.domain.enums.Platform;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-@Entity
-@Table(name = "games")
-public class Game extends BaseEntity{
-
+public class GameServiceModel {
     private String title;
     private Platform platform;
     private Developer developer;
@@ -28,10 +26,11 @@ public class Game extends BaseEntity{
     private Set<String> images;
     private LocalDate releaseDate;
 
-    public Game() {
+    public GameServiceModel() {
+        this.images = new HashSet<>();
+        this.genres = new HashSet<>();
     }
 
-    @Column(nullable = false)
     public String getTitle() {
         return title;
     }
@@ -40,8 +39,6 @@ public class Game extends BaseEntity{
         this.title = title;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
     public Platform getPlatform() {
         return platform;
     }
@@ -50,7 +47,6 @@ public class Game extends BaseEntity{
         this.platform = platform;
     }
 
-    @ManyToOne
     public Developer getDeveloper() {
         return developer;
     }
@@ -59,7 +55,6 @@ public class Game extends BaseEntity{
         this.developer = developer;
     }
 
-    @OneToMany(mappedBy = "game")
     public Set<Review> getReviews() {
         return reviews;
     }
@@ -68,7 +63,6 @@ public class Game extends BaseEntity{
         this.reviews = reviews;
     }
 
-    @Column(nullable = false)
     public Boolean getApproved() {
         return approved;
     }
@@ -77,66 +71,6 @@ public class Game extends BaseEntity{
         this.approved = approved;
     }
 
-    @Column
-    @Lob
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Column(nullable = false)
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
-
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    public PegiRatings getPegiRating() {
-        return pegiRating;
-    }
-
-    public void setPegiRating(PegiRatings pegiRating) {
-        this.pegiRating = pegiRating;
-    }
-
-    @Column(nullable = false)
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    @Column(nullable = false)
-    public String getCoverImageUrl() {
-        return coverImageUrl;
-    }
-
-    public void setCoverImageUrl(String coverImageUrl) {
-        this.coverImageUrl = coverImageUrl;
-    }
-
-    @ElementCollection
-    public Set<String> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<String> images) {
-        this.images = images;
-    }
-
-    @ElementCollection(targetClass = GenreName.class)
-    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "genre")
-    @Enumerated(EnumType.STRING)
     public Set<GenreName> getGenres() {
         return genres;
     }
@@ -145,10 +79,51 @@ public class Game extends BaseEntity{
         this.genres = genres;
     }
 
-    private Integer reviewScore(){
-        int approved = this.getReviews().stream().filter(Review::getApproved).collect(Collectors.toList()).size();
-        int total = this.getReviews().size();
+    public PegiRatings getPegiRating() {
+        return pegiRating;
+    }
 
-        return (approved * total) / 100;
+    public void setPegiRating(PegiRatings pegiRating) {
+        this.pegiRating = pegiRating;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
+
+    public String getCoverImageUrl() {
+        return coverImageUrl;
+    }
+
+    public void setCoverImageUrl(String coverImageUrl) {
+        this.coverImageUrl = coverImageUrl;
+    }
+
+    public Set<String> getImages() {
+        return images;
+    }
+
+    public void setImages(Set<String> images) {
+        this.images = images;
+    }
+
+    public LocalDate getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(LocalDate releaseDate) {
+        this.releaseDate = releaseDate;
     }
 }

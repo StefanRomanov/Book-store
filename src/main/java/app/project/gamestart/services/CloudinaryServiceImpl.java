@@ -21,9 +21,9 @@ public class CloudinaryServiceImpl implements CloudinaryService {
         this.cloudinary = cloudinary;
     }
 
-    @Async
+
     @Override
-    public Future<String> uploadImage(MultipartFile multipartFile) throws IOException {
+    public String uploadImage(MultipartFile multipartFile) throws IOException {
         File fileToUpload = File.createTempFile("temp-file", multipartFile.getOriginalFilename());
         multipartFile.transferTo(fileToUpload);
 
@@ -33,7 +33,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
                 .get("url")
                 .toString();
 
-        return new AsyncResult<>(result);
+        return result;
     }
 
     @Override
