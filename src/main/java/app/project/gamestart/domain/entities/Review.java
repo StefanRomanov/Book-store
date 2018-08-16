@@ -12,7 +12,7 @@ public class Review extends BaseEntity{
     private String title;
     private String text;
     private User user;
-    private Game game;
+    private Book book;
     private boolean approved;
 
     public Review() {
@@ -46,12 +46,12 @@ public class Review extends BaseEntity{
     }
 
     @ManyToOne
-    public Game getGame() {
-        return game;
+    public Book getBook() {
+        return book;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     @Column(nullable = false)

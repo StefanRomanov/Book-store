@@ -6,5 +6,5 @@ import javax.transaction.Transactional;
 
 @Service
 @Transactional
-public class DeveloperServiceImpl implements DeveloperService {
+public class AuthorServiceImpl implements AuthorService {
 }

@@ -1,28 +1,24 @@
-package app.project.gamestart.domain.entities;
+package app.project.gamestart.domain.models.binding;
 
-import javax.persistence.*;
-import java.util.Set;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 
-@Entity
-@Table(name = "publishers")
-public class Publisher extends BaseEntity{
-
+public class PublisherAddBindingModel {
     private String companyName;
     private String vatNumber;
     private String billingAddress;
     private String legalForm;
     private String companyEmail;
+    private boolean sameEmail;
     private String country;
     private String city;
     private String postalCode;
-    private User user;
-    private Set<Author> authors;
-    private Boolean isApproved;
 
-    public Publisher() {
+    public PublisherAddBindingModel() {
     }
 
-    @Column(nullable = false)
+    @NotEmpty(message = "Please input Your company name !")
     public String getCompanyName() {
         return companyName;
     }
@@ -31,7 +27,8 @@ public class Publisher extends BaseEntity{
         this.companyName = companyName;
     }
 
-    @Column(nullable = false)
+    @NotEmpty(message = "Please input VAT number")
+    @Size(min = 10, message = "VAT number should be at least 10 characters long.")
     public String getVatNumber() {
         return vatNumber;
     }
@@ -40,7 +37,7 @@ public class Publisher extends BaseEntity{
         this.vatNumber = vatNumber;
     }
 
-    @Column(nullable = false)
+    @NotEmpty(message = "Please input company full billing address.")
     public String getBillingAddress() {
         return billingAddress;
     }
@@ -49,33 +46,7 @@ public class Publisher extends BaseEntity{
         this.billingAddress = billingAddress;
     }
 
-    @OneToMany
-    public Set<Author> getAuthors() {
-        return authors;
-    }
-
-    public void setAuthors(Set<Author> authors) {
-        this.authors = authors;
-    }
-
-    @Column(nullable = false)
-    public Boolean getIsApproved() {
-        return isApproved;
-    }
-
-    public void setIsApproved(Boolean approved) {
-        isApproved = approved;
-    }
-
-    @OneToOne
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
+    @NotEmpty(message = "Please input company legal form stated in the registration papers.")
     public String getLegalForm() {
         return legalForm;
     }
@@ -84,6 +55,7 @@ public class Publisher extends BaseEntity{
         this.legalForm = legalForm;
     }
 
+    @Email(message = "Please input company email.")
     public String getCompanyEmail() {
         return companyEmail;
     }
@@ -92,6 +64,15 @@ public class Publisher extends BaseEntity{
         this.companyEmail = companyEmail;
     }
 
+    public boolean getSameEmail() {
+        return sameEmail;
+    }
+
+    public void setSameEmail(boolean sameEmail) {
+        this.sameEmail = sameEmail;
+    }
+
+    @NotEmpty(message = "Please enter country of registration.")
     public String getCountry() {
         return country;
     }
@@ -100,6 +81,7 @@ public class Publisher extends BaseEntity{
         this.country = country;
     }
 
+    @NotEmpty(message = "Please enter city.")
     public String getCity() {
         return city;
     }
@@ -108,19 +90,12 @@ public class Publisher extends BaseEntity{
         this.city = city;
     }
 
+    @NotEmpty(message = "Please enter postal code.")
     public String getPostalCode() {
         return postalCode;
     }
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
-    }
-
-    public Boolean getApproved() {
-        return isApproved;
-    }
-
-    public void setApproved(Boolean approved) {
-        isApproved = approved;
     }
 }

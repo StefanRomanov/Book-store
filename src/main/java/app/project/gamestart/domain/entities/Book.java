@@ -1,34 +1,30 @@
 package app.project.gamestart.domain.entities;
 
-import app.project.gamestart.domain.enums.GenreName;
-import app.project.gamestart.domain.enums.PegiRatings;
-import app.project.gamestart.domain.enums.Platform;
+import app.project.gamestart.domain.enums.Genre;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
-@Table(name = "games")
-public class Game extends BaseEntity{
+@Table(name = "books")
+public class Book extends BaseEntity{
 
     private String title;
-    private Platform platform;
-    private Developer developer;
+    private Author author;
     private Set<Review> reviews;
     private Boolean approved;
-    private Set<GenreName> genres;
-    private PegiRatings pegiRating;
+    private Set<Genre> genres;
     private String description;
     private BigDecimal price;
     private String coverImageUrl;
-    private Set<String> images;
+    private String textFile;
     private LocalDate releaseDate;
+    private Set<User> users;
 
-    public Game() {
+    public Book() {
     }
 
     @Column(nullable = false)
@@ -40,26 +36,16 @@ public class Game extends BaseEntity{
         this.title = title;
     }
 
-    @Enumerated(value = EnumType.STRING)
-    @Column(nullable = false)
-    public Platform getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(Platform platform) {
-        this.platform = platform;
-    }
-
     @ManyToOne
-    public Developer getDeveloper() {
-        return developer;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setDeveloper(Developer developer) {
-        this.developer = developer;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
-    @OneToMany(mappedBy = "game")
+    @OneToMany(mappedBy = "book")
     public Set<Review> getReviews() {
         return reviews;
     }
@@ -97,16 +83,6 @@ public class Game extends BaseEntity{
     }
 
     @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    public PegiRatings getPegiRating() {
-        return pegiRating;
-    }
-
-    public void setPegiRating(PegiRatings pegiRating) {
-        this.pegiRating = pegiRating;
-    }
-
-    @Column(nullable = false)
     public LocalDate getReleaseDate() {
         return releaseDate;
     }
@@ -124,25 +100,34 @@ public class Game extends BaseEntity{
         this.coverImageUrl = coverImageUrl;
     }
 
-    @ElementCollection
-    public Set<String> getImages() {
-        return images;
+    @Column(nullable = false)
+    public String getTextFile() {
+        return textFile;
     }
 
-    public void setImages(Set<String> images) {
-        this.images = images;
+    public void setTextFile(String textFile) {
+        this.textFile = textFile;
     }
 
-    @ElementCollection(targetClass = GenreName.class)
+    @ElementCollection(targetClass = Genre.class)
     @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "game_id"))
     @Column(name = "genre")
     @Enumerated(EnumType.STRING)
-    public Set<GenreName> getGenres() {
+    public Set<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<GenreName> genres) {
+    public void setGenres(Set<Genre> genres) {
         this.genres = genres;
+    }
+
+    @ManyToMany(mappedBy = "books")
+    public Set<User> getUsers() {
+        return users;
+    }
+
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 
     private Integer reviewScore(){

@@ -17,6 +17,7 @@ public class User extends BaseEntity implements UserDetails {
     private Set<UserRole> authorities;
     private Set<Sale> sales;
     private Set<Review> reviews;
+    private Set<Book> books;
     private boolean isAccountNonExpired;
     private boolean isAccountNonLocked;
     private boolean isCredentialsNonExpired;
@@ -94,6 +95,15 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setAuthorities(Set<UserRole> authorities) {
         this.authorities = authorities;
+    }
+
+    @ManyToMany
+    public Set<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(Set<Book> books) {
+        this.books = books;
     }
 
     @Override

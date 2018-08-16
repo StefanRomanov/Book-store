@@ -1,24 +1,23 @@
 package app.project.gamestart.domain.models.service;
 
-import app.project.gamestart.domain.entities.Developer;
+import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.entities.Review;
-import app.project.gamestart.domain.enums.GenreName;
+import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.domain.enums.PegiRatings;
 import app.project.gamestart.domain.enums.Platform;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GameServiceModel {
+public class BookServiceModel {
     private String title;
     private Platform platform;
-    private Developer developer;
+    private Author author;
     private Set<Review> reviews;
     private Boolean approved;
-    private Set<GenreName> genres;
+    private Set<Genre> genres;
     private PegiRatings pegiRating;
     private String description;
     private BigDecimal price;
@@ -26,7 +25,7 @@ public class GameServiceModel {
     private Set<String> images;
     private LocalDate releaseDate;
 
-    public GameServiceModel() {
+    public BookServiceModel() {
         this.images = new HashSet<>();
         this.genres = new HashSet<>();
     }
@@ -47,12 +46,12 @@ public class GameServiceModel {
         this.platform = platform;
     }
 
-    public Developer getDeveloper() {
-        return developer;
+    public Author getAuthor() {
+        return author;
     }
 
-    public void setDeveloper(Developer developer) {
-        this.developer = developer;
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 
     public Set<Review> getReviews() {
@@ -71,11 +70,11 @@ public class GameServiceModel {
         this.approved = approved;
     }
 
-    public Set<GenreName> getGenres() {
+    public Set<Genre> getGenres() {
         return genres;
     }
 
-    public void setGenres(Set<GenreName> genres) {
+    public void setGenres(Set<Genre> genres) {
         this.genres = genres;
     }
 

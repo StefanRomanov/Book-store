@@ -38,9 +38,9 @@
                                 Games
                             </a>
                                 <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item text-white" th:href="@{/games/all}" th:text="All"></a>
-                                    <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.GenreName).values()}">
-                                        <a class="dropdown-item text-white" th:href="|/games/all?genre=${genre}|" th:text="${#strings.capitalize(#strings.toLowerCase(genre))}"></a>
+                                    <a class="dropdown-item text-white" th:href="@{/books/all}" th:text="All"></a>
+                                    <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.Genre).values()}">
+                                        <a class="dropdown-item text-white" th:href="|/books/all?genre=${genre}|" th:text="${#strings.capitalize(#strings.toLowerCase(genre))}"></a>
                                     </th:block>
                                 </div>
                         </li>
@@ -56,8 +56,17 @@
                             </li>
                         </th:block>
                         <th:block sec:authorize="isAuthenticated()">
-                            <li class="nav-item">
-                                <a class="nav-link text-white" href="/users/logout">Logout</a>
+                            <li class="nav-item dropdown mr-5">
+                                <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="|Hello, ${#authentication.getPrincipal().getUsername()}|">
+                                </a>
+                                <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item text-white" th:href="@{/user/profile}" th:text="Profile"></a>
+                                    <a class="dropdown-item text-white" th:href="@{/user/games}" th:text="|My Games|"></a>
+                                    <a class="dropdown-item text-white" sec:authorize="!hasRole('PUBLISHER')" href="/publisher/register" th:text="|Become partner|"></a>
+                                    <a class="dropdown-item text-white" sec:authorize="hasRole('PUBLISHER')" href="/games/add" th:text="|Add game|"></a>
+                                    <a class="dropdown-item text-white" href="/users/logout">Logout</a>
+                                </div>
                             </li>
                         </th:block>
 

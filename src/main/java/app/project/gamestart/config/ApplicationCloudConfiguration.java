@@ -20,6 +20,7 @@ public class ApplicationCloudConfiguration {
 
     @Bean
     public Cloudinary cloudinary() {
+
         return new Cloudinary(new HashMap<String, Object>(){{
             put("cloud_name", cloudApiName);
             put("api_key", cloudApiKey);

@@ -8,13 +8,13 @@ import java.util.Set;
 
 
 @Entity
-@Table(name = "developers")
-public class Developer extends BaseEntity {
+@Table(name = "authors")
+public class Author extends BaseEntity {
 
     private String companyName;
-    private Set<Game> games;
+    private Set<Book> books;
 
-    public Developer() {
+    public Author() {
     }
 
     @Column(nullable = false)
@@ -26,12 +26,12 @@ public class Developer extends BaseEntity {
         this.companyName = companyName;
     }
 
-    @OneToMany(mappedBy = "developer")
-    public Set<Game> getGames() {
-        return games;
+    @OneToMany(mappedBy = "author")
+    public Set<Book> getBooks() {
+        return books;
     }
 
-    public void setGames(Set<Game> games) {
-        this.games = games;
+    public void setBooks(Set<Book> books) {
+        this.books = books;
     }
 }

@@ -4,12 +4,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>app.project</groupId>
-    <artifactId>demo</artifactId>
+    <artifactId>BookStore</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>gamestart</name>
-    <description>Simple game storefront</description>
+    <description>Simple book storefront</description>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -80,6 +80,11 @@
             <groupId>com.cloudinary</groupId>
             <artifactId>cloudinary</artifactId>
             <version>1.0.14</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.4</version>
         </dependency>
     </dependencies>
 

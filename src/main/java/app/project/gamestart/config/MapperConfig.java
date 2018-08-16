@@ -1,17 +1,15 @@
 package app.project.gamestart.config;
 
-import app.project.gamestart.domain.enums.GenreName;
+import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.domain.enums.PegiRatings;
 import app.project.gamestart.domain.enums.Platform;
-import app.project.gamestart.domain.models.binding.GameAddBindingModel;
-import app.project.gamestart.domain.models.service.GameServiceModel;
-import app.project.gamestart.services.GameService;
-import org.apache.tomcat.jni.Local;
+import app.project.gamestart.domain.models.binding.BookAddBindingModel;
+import app.project.gamestart.domain.models.service.BookAddServiceModel;
+import app.project.gamestart.domain.models.service.BookServiceModel;
 import org.modelmapper.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -32,17 +30,15 @@ public class MapperConfig{
     }
 
     private void gameServiceModelMapping(ModelMapper modelMapper){
-        Converter<GameAddBindingModel, GameServiceModel> converter = new AbstractConverter<GameAddBindingModel, GameServiceModel>() {
+        Converter<BookAddBindingModel, BookAddServiceModel> converter = new AbstractConverter<BookAddBindingModel, BookAddServiceModel>() {
             @Override
-            protected GameServiceModel convert(GameAddBindingModel source) {
-                GameServiceModel destination = new GameServiceModel();
+            protected BookAddServiceModel convert(BookAddBindingModel source) {
+                BookAddServiceModel destination = new BookAddServiceModel();
                 destination.setTitle(source.getTitle());
                 destination.setApproved(false);
                 destination.setDescription(source.getDescription());
-                destination.setPegiRating(PegiRatings.valueOf(source.getPegiRating()));
-                destination.setPlatform(Platform.valueOf(source.getPlatform()));
                 for (String genreName : source.getGenres()) {
-                    destination.getGenres().add(GenreName.valueOf(genreName));
+                    destination.getGenres().add(Genre.valueOf(genreName));
                 }
                 destination.setPrice(source.getPrice());
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");

@@ -1,6 +1,5 @@
 package app.project.gamestart.domain.entities;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -9,19 +8,19 @@ import javax.persistence.Table;
 @Table(name = "sales")
 public class Sale extends BaseEntity{
 
-    private Game game;
+    private Book book;
     private User customer;
 
     public Sale() {
     }
 
     @ManyToOne
-    public Game getGame() {
-        return game;
+    public Book getBook() {
+        return book;
     }
 
-    public void setGame(Game game) {
-        this.game = game;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
     @ManyToOne

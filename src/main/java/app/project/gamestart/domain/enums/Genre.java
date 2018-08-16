@@ -1,6 +1,6 @@
 package app.project.gamestart.domain.enums;
 
-public enum GenreName {
+public enum Genre {
     ACTION,
     ADVENTURE,
     CASUAL,

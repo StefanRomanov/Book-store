@@ -1,32 +1,41 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.domain.entities.Author;
+import app.project.gamestart.domain.entities.Review;
+import app.project.gamestart.domain.entities.User;
+import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.validators.annotations.NotEmptyFile;
+import java.io.File;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
-public class GameAddBindingModel {
+public class BookAddBindingModel {
 
     private String title;
-    private String platform;
-    private String developer;
+    private String author;
+    private Set<Review> reviews;
+    private Boolean approved;
     private Set<String> genres;
-    private String pegiRating;
     private String description;
     private BigDecimal price;
     private MultipartFile coverImageUrl;
-    private Set<MultipartFile> images;
+    private MultipartFile textFile;
     private String releaseDate;
+    private Set<User> users;
+    private File cover;
+    private File text;
 
-    public GameAddBindingModel() {
+    public BookAddBindingModel() {
         this.genres = new HashSet<>();
     }
+
 
     @NotEmpty
     public String getTitle() {
@@ -37,21 +46,20 @@ public class GameAddBindingModel {
         this.title = title;
     }
 
-    @NotEmpty(message = "Pick a platform !")
-    public String getPlatform() {
-        return platform;
+    public String getAuthor() {
+        return author;
     }
 
-    public void setPlatform(String platform) {
-        this.platform = platform;
+    public void setAuthor(String author) {
+        this.author = author;
     }
 
-    public String getDeveloper() {
-        return developer;
+    public MultipartFile getTextFile() {
+        return textFile;
     }
 
-    public void setDeveloper(String developer) {
-        this.developer = developer;
+    public void setTextFile(MultipartFile textFile) {
+        this.textFile = textFile;
     }
 
     @NotNull
@@ -64,15 +72,6 @@ public class GameAddBindingModel {
         this.genres = genres;
     }
 
-    @NotEmpty
-    public String getPegiRating() {
-        return pegiRating;
-    }
-
-    public void setPegiRating(String pegiRating) {
-        this.pegiRating = pegiRating;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -81,7 +80,7 @@ public class GameAddBindingModel {
         this.description = description;
     }
 
-    @NotNull(message = "Games should have price!")
+    @NotNull(message = "Books should have price!")
     public BigDecimal getPrice() {
         return price;
     }
@@ -100,14 +99,6 @@ public class GameAddBindingModel {
         this.coverImageUrl = coverImageUrl;
     }
 
-    public Set<MultipartFile> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<MultipartFile> images) {
-        this.images = images;
-    }
-
     @NotEmpty
     public String getReleaseDate() {
         return releaseDate;
@@ -115,5 +106,21 @@ public class GameAddBindingModel {
 
     public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public File getFile() {
+        return cover;
+    }
+
+    public void setFile(File file) {
+        this.cover = file;
+    }
+
+    public File getText() {
+        return text;
+    }
+
+    public void setText(File text) {
+        this.text = text;
     }
 }

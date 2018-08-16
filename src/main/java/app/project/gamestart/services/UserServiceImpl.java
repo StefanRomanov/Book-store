@@ -2,6 +2,7 @@ package app.project.gamestart.services;
 
 import app.project.gamestart.domain.entities.User;
 import app.project.gamestart.domain.models.binding.UserRegisterBindingModel;
+import app.project.gamestart.domain.models.service.UserServiceModel;
 import app.project.gamestart.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+    public User loadUserByUsername(String s) throws UsernameNotFoundException {
         return this.userRepository.getFirstByUsername(s);
     }
 
@@ -47,5 +48,11 @@ public class UserServiceImpl implements UserService{
         }
 
         this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public User getUserById(String userId) {
+
+        return this.userRepository.getOne(userId);
     }
 }
