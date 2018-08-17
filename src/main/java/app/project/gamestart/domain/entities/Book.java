@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Book extends BaseEntity{
 
     private String title;
-    private Author author;
+    private Set<Author> authors;
     private Set<Review> reviews;
     private Boolean approved;
     private Set<Genre> genres;
@@ -36,13 +36,13 @@ public class Book extends BaseEntity{
         this.title = title;
     }
 
-    @ManyToOne
-    public Author getAuthor() {
-        return author;
+    @ManyToMany
+    public Set<Author> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 
     @OneToMany(mappedBy = "book")

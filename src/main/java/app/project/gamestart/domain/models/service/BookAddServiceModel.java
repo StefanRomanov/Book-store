@@ -14,7 +14,7 @@ import java.util.Set;
 public class BookAddServiceModel {
 
     private String title;
-    private Author author;
+    private Set<String> authors;
     private Set<Review> reviews;
     private Boolean approved;
     private Set<Genre> genres;
@@ -39,12 +39,12 @@ public class BookAddServiceModel {
         this.title = title;
     }
 
-    public Author getAuthor() {
-        return author;
+    public Set<String> getAuthors() {
+        return authors;
     }
 
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthors(Set<String> authors) {
+        this.authors = authors;
     }
 
     public Set<Review> getReviews() {

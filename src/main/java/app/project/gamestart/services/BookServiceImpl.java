@@ -1,5 +1,6 @@
 package app.project.gamestart.services;
 
+import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.entities.Book;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
 import app.project.gamestart.repositories.BookRepository;
@@ -13,18 +14,22 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 @Transactional
 public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
+    private final AuthorService authorService;
     private final ModelMapper modelMapper;
     private final CloudinaryService cloudinaryService;
 
     @Autowired
-    public BookServiceImpl(BookRepository bookRepository, ModelMapper modelMapper, CloudinaryService cloudinaryService) {
+    public BookServiceImpl(BookRepository bookRepository, AuthorService authorService, ModelMapper modelMapper, CloudinaryService cloudinaryService) {
         this.bookRepository = bookRepository;
+        this.authorService = authorService;
         this.modelMapper = modelMapper;
         this.cloudinaryService = cloudinaryService;
     }
@@ -37,10 +42,13 @@ public class BookServiceImpl implements BookService {
 
         Book bookFinal = this.modelMapper.map(bookModel, Book.class);
 
+        Set<Author> authors = this.authorService.findAllByNameIn(bindingModel.getAuthors());
+
+        bookFinal.setAuthors(authors);
+
         bookFinal.setTextFile(this.cloudinaryService.uploadImage(bookModel.getTextFile()));
         bookFinal.setCoverImageUrl(this.cloudinaryService.uploadImage(bookModel.getCoverImageUrl()));
 
-        String test = "";
 
         this.bookRepository.saveAndFlush(bookFinal);
     }

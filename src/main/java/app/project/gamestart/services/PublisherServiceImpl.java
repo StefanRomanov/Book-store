@@ -50,6 +50,7 @@ public class PublisherServiceImpl implements PublisherService {
     public void approvePublisher(String publisherId) {
         Publisher publisher = this.publisherRepository.getOne(publisherId);
         publisher.setApproved(true);
+        this.userService.addRole(publisher.getUser().getId(),"PARTNER");
 
         this.publisherRepository.saveAndFlush(publisher);
     }

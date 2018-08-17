@@ -65,7 +65,7 @@
                 <br>
                 <div class="form-group w-75" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('description')}">Description</label>
-                    <textarea class="form-control text-white text-area" th:errorclass="is-invalid" th:field="*{description}" placeholder="Game Description..."></textarea>
+                    <textarea class="form-control text-white text-area" id="summernote" th:errorclass="is-invalid" th:field="*{description}" placeholder="Game Description..."></textarea>
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                 </div>
                 <br>
@@ -78,6 +78,18 @@
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
                 </div>
                 <br>
+                <div class="form-group w-20">
+                    <label class="text-white">Author</label>
+                    <br>
+                    <select id="select-author" data-live-search="true" multiple="multiple" class="selectpicker" th:field="*{authors}">
+                        <th:block th:each="author : *{authorViews}">
+                            <option th:value="${author.id}" th:text="${author.name}" th:data-subtext="|born ${author.dateOfBirth}, ${author.country}|"></option>
+                        </th:block>
+                    </select>
+                    <br>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}"></span>
+                    <br>
+                </div>
             </div>
             <hr class="form-line">
             <div class="d-flex justify-content-center mb-3">

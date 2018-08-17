@@ -1,5 +1,7 @@
 package app.project.gamestart.domain.models.views;
 
+import app.project.gamestart.domain.enums.Country;
+
 public class PublisherApproveViewModel {
     private String id;
     private String companyName;

@@ -1,28 +1,27 @@
-package app.project.gamestart.domain.entities;
+package app.project.gamestart.domain.models.service;
 
 import app.project.gamestart.domain.enums.Country;
 
-import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
+public class AuthorServiceModel {
 
-@Entity
-@Table(name = "authors")
-public class Author extends BaseEntity {
-
+    private String id;
     private String name;
     private LocalDate dateOfBirth;
     private Country country;
-    private Set<Book> books;
 
-
-    public Author() {
-        this.books = new HashSet<>();
+    public AuthorServiceModel() {
     }
 
-    @Column(nullable = false)
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -31,7 +30,6 @@ public class Author extends BaseEntity {
         this.name = name;
     }
 
-    @Column(nullable = false)
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
     }
@@ -40,7 +38,6 @@ public class Author extends BaseEntity {
         this.dateOfBirth = dateOfBirth;
     }
 
-    @Enumerated(value = EnumType.STRING)
     public Country getCountry() {
         return country;
     }
@@ -48,15 +45,4 @@ public class Author extends BaseEntity {
     public void setCountry(Country country) {
         this.country = country;
     }
-
-    @ManyToMany(mappedBy = "authors")
-    public Set<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(Set<Book> books) {
-        this.books = books;
-    }
-
-
 }

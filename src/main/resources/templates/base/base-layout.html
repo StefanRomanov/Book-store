@@ -63,8 +63,8 @@
                                 <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item text-white" th:href="@{/user/profile}" th:text="Profile"></a>
                                     <a class="dropdown-item text-white" th:href="@{/user/games}" th:text="|My Games|"></a>
-                                    <a class="dropdown-item text-white" sec:authorize="!hasRole('PUBLISHER')" href="/publisher/register" th:text="|Become partner|"></a>
-                                    <a class="dropdown-item text-white" sec:authorize="hasRole('PUBLISHER')" href="/games/add" th:text="|Add game|"></a>
+                                    <a class="dropdown-item text-white" sec:authorize="!hasAuthority('PARTNER')" href="/publishers/register" th:text="|Become partner|"></a>
+                                    <a class="dropdown-item text-white" sec:authorize="hasAuthority('PARTNER')" href="/books/add" th:text="|Add game|"></a>
                                     <a class="dropdown-item text-white" href="/users/logout">Logout</a>
                                 </div>
                             </li>

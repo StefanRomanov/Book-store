@@ -1,15 +1,15 @@
 package app.project.gamestart.services;
 
 import app.project.gamestart.domain.entities.User;
+import app.project.gamestart.domain.entities.UserRole;
 import app.project.gamestart.domain.models.binding.UserRegisterBindingModel;
-import app.project.gamestart.domain.models.service.UserServiceModel;
 import app.project.gamestart.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import javax.transaction.Transactional;
 
@@ -54,5 +54,13 @@ public class UserServiceImpl implements UserService{
     public User getUserById(String userId) {
 
         return this.userRepository.getOne(userId);
+    }
+
+    @Override
+    public void addRole(String userId, String role){
+        User user = this.userRepository.getOne(userId);
+        UserRole userRole = this.roleService.findByAuthority(role);
+
+        user.getAuthorities().add(userRole);
     }
 }

@@ -1,5 +1,7 @@
 package app.project.gamestart.domain.entities;
 
+import app.project.gamestart.domain.enums.Country;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -12,7 +14,7 @@ public class Publisher extends BaseEntity{
     private String billingAddress;
     private String legalForm;
     private String companyEmail;
-    private String country;
+    private Country country;
     private String city;
     private String postalCode;
     private User user;
@@ -80,10 +82,12 @@ public class Publisher extends BaseEntity{
         return legalForm;
     }
 
+    @Column(nullable = false)
     public void setLegalForm(String legalForm) {
         this.legalForm = legalForm;
     }
 
+    @Column(nullable = false)
     public String getCompanyEmail() {
         return companyEmail;
     }
@@ -92,14 +96,16 @@ public class Publisher extends BaseEntity{
         this.companyEmail = companyEmail;
     }
 
-    public String getCountry() {
+    @Enumerated(value = EnumType.STRING)
+    public Country getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 
+    @Column(nullable = false)
     public String getCity() {
         return city;
     }
@@ -108,6 +114,7 @@ public class Publisher extends BaseEntity{
         this.city = city;
     }
 
+    @Column(nullable = false)
     public String getPostalCode() {
         return postalCode;
     }

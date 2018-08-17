@@ -7,4 +7,5 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 public interface UserService extends UserDetailsService {
     void saveUser(UserRegisterBindingModel model);
     User getUserById(String userId);
+    void addRole(String userId, String role);
 }

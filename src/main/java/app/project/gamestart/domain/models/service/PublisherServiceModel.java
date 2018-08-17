@@ -1,5 +1,7 @@
 package app.project.gamestart.domain.models.service;
 
+import app.project.gamestart.domain.enums.Country;
+
 public class PublisherServiceModel {
     private String id;
     private String companyName;
@@ -7,7 +9,7 @@ public class PublisherServiceModel {
     private String billingAddress;
     private String legalForm;
     private String companyEmail;
-    private String country;
+    private Country country;
     private String city;
     private String postalCode;
 
@@ -62,11 +64,11 @@ public class PublisherServiceModel {
         this.companyEmail = companyEmail;
     }
 
-    public String getCountry() {
+    public Country getCountry() {
         return country;
     }
 
-    public void setCountry(String country) {
+    public void setCountry(Country country) {
         this.country = country;
     }
 

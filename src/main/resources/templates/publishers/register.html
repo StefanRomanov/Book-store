@@ -47,10 +47,17 @@
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></span>
                 </div>
                 <br>
-                <div class="form-group" th:classappend="${#fields.hasErrors('country')}? 'has-danger'">
-                    <label class="text-white" th:for="${#ids.next('country')}">Country</label>
-                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{country}" placeholder="Country">
-                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+                <div class="form-group">
+                    <label class="text-white w-50">Country</label>
+                    <br>
+                    <select id="select-genre" class="selectpicker" data-live-search="true" th:field="*{country}">
+                        <th:block th:each="country : ${T(app.project.gamestart.domain.enums.Country).values()}">
+                            <option th:value="${country}" th:text="${country.getFullName()}"></option>
+                        </th:block>
+                    </select>
+                    <br>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+                    <br>
                 </div>
             </div>
             <div class="d-flex justify-content-between container-fluid">

@@ -1,30 +1,27 @@
 package app.project.gamestart.web.controllers;
 
-import app.project.gamestart.domain.entities.Book;
 import app.project.gamestart.domain.models.binding.BookAddBindingModel;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
-import app.project.gamestart.services.CloudinaryService;
+import app.project.gamestart.domain.models.views.AuthorViewModel;
+import app.project.gamestart.services.AuthorService;
 import app.project.gamestart.services.BookService;
 import app.project.gamestart.util.MultipartToFileTransferer;
-import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.awt.print.Book;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.lang.reflect.Type;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -33,24 +30,28 @@ public class BookController extends  BaseController {
 
     private final BookService bookService;
     private final ModelMapper modelMapper;
-    private final CloudinaryService cloudinaryService;
+    private final AuthorService authorService;
 
     @Autowired
-    public BookController(BookService bookService, ModelMapper modelMapper, CloudinaryService cloudinaryService) {
+    public BookController(BookService bookService, ModelMapper modelMapper, AuthorService authorService) {
         this.bookService = bookService;
         this.modelMapper = modelMapper;
-        this.cloudinaryService = cloudinaryService;
+        this.authorService = authorService;
     }
 
     @GetMapping("/add")
     public ModelAndView add() {
-        return super.view("/games/add", new BookAddBindingModel(), "Add Book");
+        BookAddBindingModel bookAddBindingModel = new BookAddBindingModel();
+        this.addAuthors(bookAddBindingModel);
+
+        return super.view("/games/add", bookAddBindingModel, "Add Book");
     }
 
     @PostMapping("/add")
     public ModelAndView addConfirm(@Valid @ModelAttribute("viewModel") BookAddBindingModel bindingModel, BindingResult bindingResult) throws IOException, ExecutionException, InterruptedException {
 
         if (bindingResult.hasErrors()) {
+            this.addAuthors(bindingModel);
             return super.view("/games/add", bindingModel, "Add Book");
         }
 
@@ -77,5 +78,10 @@ public class BookController extends  BaseController {
             e.printStackTrace();
             throw new IllegalArgumentException("File not found !");
         }
+    }
+
+    private void addAuthors(BookAddBindingModel bookAddBindingModel) {
+        Type type = new TypeToken<List<AuthorViewModel>>(){}.getType();
+        bookAddBindingModel.setAuthorViews(this.modelMapper.map(this.authorService.findAll(),type));
     }
 }
