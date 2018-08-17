@@ -24,7 +24,7 @@
                     <br>
                     <select id="select-genre" multiple="multiple" class="selectpicker" th:field="*{genres}">
                         <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.Genre).values()}">
-                            <option th:value="${genre}" th:text="${#strings.capitalize(#strings.toLowerCase(genre))}"></option>
+                            <option th:value="${genre}" th:text="${genre.getFullName()}"></option>
                         </th:block>
                     </select>
                     <br>

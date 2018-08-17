@@ -1,0 +1,16 @@
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:object="${viewModel}" class="d-flex justify-content-between  m-5">
+    <div class="d-flex justify-content-center w-50 m-3 rounded">
+        <img style="width: 400px; height: 600px" th:src="*{coverImageUrl}" class="rounded" />
+    </div>
+    <div class="d-flex w-50">
+        <div class="d-flex flex-column justify-content-center m-3 rounded">
+            <h3 th:text="*{title}" class="text-center text-white"></h3>
+
+            <pre style="white-space: pre-wrap; text-align: justify; text-indent: 10px" class="text-white m-3" th:text="*{description}"></pre>
+        </div>
+    </div>
+    <hr class="form-line"/>
+</div>

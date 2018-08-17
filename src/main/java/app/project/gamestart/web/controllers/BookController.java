@@ -2,13 +2,18 @@ package app.project.gamestart.web.controllers;
 
 import app.project.gamestart.domain.models.binding.BookAddBindingModel;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
+import app.project.gamestart.domain.models.service.BookServiceModel;
 import app.project.gamestart.domain.models.views.AuthorViewModel;
+import app.project.gamestart.domain.models.views.BookAllView;
 import app.project.gamestart.services.AuthorService;
 import app.project.gamestart.services.BookService;
 import app.project.gamestart.util.MultipartToFileTransferer;
+import app.project.gamestart.util.PageMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +21,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.awt.print.Book;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -44,7 +47,7 @@ public class BookController extends  BaseController {
         BookAddBindingModel bookAddBindingModel = new BookAddBindingModel();
         this.addAuthors(bookAddBindingModel);
 
-        return super.view("/games/add", bookAddBindingModel, "Add Book");
+        return super.view("/books/add", bookAddBindingModel, "Add Book");
     }
 
     @PostMapping("/add")
@@ -52,7 +55,7 @@ public class BookController extends  BaseController {
 
         if (bindingResult.hasErrors()) {
             this.addAuthors(bindingModel);
-            return super.view("/games/add", bindingModel, "Add Book");
+            return super.view("/books/add", bindingModel, "Add Book");
         }
 
         BookAddServiceModel serviceModel = this.modelMapper.map(bindingModel, BookAddServiceModel.class);
@@ -64,6 +67,23 @@ public class BookController extends  BaseController {
         this.bookService.addGame(serviceModel);
 
         return super.redirect("/", null, "Hello");
+    }
+
+    @GetMapping("/details/{id}")
+    public ModelAndView details(@PathVariable("id") String id){
+        BookServiceModel b = this.bookService.getOneById(id);
+        return super.view("/books/books-details",this.bookService.getOneById(id),"Details");
+    }
+
+    @GetMapping("/all")
+    public ModelAndView all(){
+        return super.view("/books/books-all",null,"All books");
+    }
+
+    @GetMapping(value = "/api/all", produces = "application/json")
+    public @ResponseBody Page<BookAllView> allBooksList(Pageable pageable){
+        Page<BookAllView> bookAllViews = PageMapper.mapPage(this.bookService.getAllBooks(pageable),BookAllView.class,modelMapper);
+        return  bookAllViews;
     }
 
     @GetMapping(value = "/download/{bookId}", produces = "application/epub+zip")

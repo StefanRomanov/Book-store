@@ -37,8 +37,8 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/css/**", "/js/**").permitAll()
                 .antMatchers("/").permitAll()
-                .antMatchers( "/users/login", "/users/register", "/postpic", "/users/login-error").anonymous()
-                .antMatchers("/users/home","/games/add").hasAnyAuthority("USER","ADMIN")
+                .antMatchers( "/users/login", "/users/register", "/users/login-error").anonymous()
+                .antMatchers("/users/home","/books/add").hasAnyAuthority("USER","ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .csrf().disable()
@@ -59,6 +59,5 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .logout().logoutUrl("/users/logout")
                 .logoutSuccessUrl("/users/login?logout=1");
-
     }
 }

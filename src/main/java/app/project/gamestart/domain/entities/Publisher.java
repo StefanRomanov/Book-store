@@ -18,7 +18,7 @@ public class Publisher extends BaseEntity{
     private String city;
     private String postalCode;
     private User user;
-    private Set<Author> authors;
+    private Set<Book> publishedBooks;
     private Boolean isApproved;
 
     public Publisher() {
@@ -51,13 +51,13 @@ public class Publisher extends BaseEntity{
         this.billingAddress = billingAddress;
     }
 
-    @OneToMany
-    public Set<Author> getAuthors() {
-        return authors;
+    @OneToMany(mappedBy = "publisher")
+    public Set<Book> getPublishedBooks() {
+        return publishedBooks;
     }
 
-    public void setAuthors(Set<Author> authors) {
-        this.authors = authors;
+    public void setPublishedBooks(Set<Book> publishedBooks) {
+        this.publishedBooks = publishedBooks;
     }
 
     @Column(nullable = false)

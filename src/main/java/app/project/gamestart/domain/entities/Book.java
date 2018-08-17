@@ -15,6 +15,7 @@ public class Book extends BaseEntity{
     private String title;
     private Set<Author> authors;
     private Set<Review> reviews;
+    private Publisher publisher;
     private Boolean approved;
     private Set<Genre> genres;
     private String description;
@@ -130,10 +131,12 @@ public class Book extends BaseEntity{
         this.users = users;
     }
 
-    private Integer reviewScore(){
-        int approved = this.getReviews().stream().filter(Review::getApproved).collect(Collectors.toList()).size();
-        int total = this.getReviews().size();
+    @ManyToOne
+    public Publisher getPublisher() {
+        return publisher;
+    }
 
-        return (approved * total) / 100;
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
     }
 }

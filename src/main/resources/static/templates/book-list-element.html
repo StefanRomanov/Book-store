@@ -1,0 +1,21 @@
+<div class="d-flex w-100 mt-2 justify-content-center book-list-element">
+    <a href="/books/details/{{id}}" class="w-75 book-list-element">
+        <div class="d-flex app-color-prime rounded">
+            <div class="w-10">
+                <img src="{{coverImageUrl}}" class="list-image mr-3">
+            </div>
+            <div class="w-25 mt-4 ml-3">
+                <p class="text-white">{{title}}</p>
+                <p class="text-muted text-white">by {{authorName}}</p>
+            </div>
+            <div class="w-50">
+            </div>
+            <div class="w-25 mb-3 mt-5 mr-2 d-inline-block">
+                <p class="text-white">Rating: {{reviewScore}}%</p>
+            </div>
+            <div class="w-15 mb-3 mt-5 ml-5">
+                <p class="text-white">{{price}}</p>
+            </div>
+        </div>
+    </a>
+</div>

@@ -3,16 +3,22 @@ package app.project.gamestart.services;
 import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.entities.Book;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
+import app.project.gamestart.domain.models.service.BookServiceModel;
 import app.project.gamestart.repositories.BookRepository;
+import app.project.gamestart.util.PageMapper;
 import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +48,7 @@ public class BookServiceImpl implements BookService {
 
         Book bookFinal = this.modelMapper.map(bookModel, Book.class);
 
-        Set<Author> authors = this.authorService.findAllByNameIn(bindingModel.getAuthors());
+        Set<Author> authors = this.authorService.findAllByIdIn(bindingModel.getAuthors());
 
         bookFinal.setAuthors(authors);
 
@@ -54,8 +60,8 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public Book getOneById(String id) {
-        return this.bookRepository.getOne(id);
+    public BookServiceModel getOneById(String id) {
+        return this.modelMapper.map(this.bookRepository.getOne(id),BookServiceModel.class);
     }
 
     @Override
@@ -69,5 +75,11 @@ public class BookServiceImpl implements BookService {
         return bytes;
     }
 
+    @Override
+    public Page<BookServiceModel> getAllBooks(Pageable pageable) {
+        Type type = new TypeToken<Page<BookServiceModel>>(){}.getType();
 
+        Page<BookServiceModel> serviceModels = PageMapper.mapPage(this.bookRepository.findAll(pageable),BookServiceModel.class,modelMapper);
+        return serviceModels;
+    }
 }

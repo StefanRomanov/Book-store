@@ -10,15 +10,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class BookServiceModel {
+
+    private String id;
     private String title;
-    private Platform platform;
-    private Author author;
+    private Set<Author> authors;
     private Set<Review> reviews;
     private Boolean approved;
     private Set<Genre> genres;
-    private PegiRatings pegiRating;
     private String description;
     private BigDecimal price;
     private String coverImageUrl;
@@ -30,6 +31,14 @@ public class BookServiceModel {
         this.genres = new HashSet<>();
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -38,20 +47,12 @@ public class BookServiceModel {
         this.title = title;
     }
 
-    public Platform getPlatform() {
-        return platform;
+    public Set<Author> getAuthors() {
+        return authors;
     }
 
-    public void setPlatform(Platform platform) {
-        this.platform = platform;
-    }
-
-    public Author getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(Author author) {
-        this.author = author;
+    public void setAuthors(Set<Author> authors) {
+        this.authors = authors;
     }
 
     public Set<Review> getReviews() {
@@ -76,14 +77,6 @@ public class BookServiceModel {
 
     public void setGenres(Set<Genre> genres) {
         this.genres = genres;
-    }
-
-    public PegiRatings getPegiRating() {
-        return pegiRating;
-    }
-
-    public void setPegiRating(PegiRatings pegiRating) {
-        this.pegiRating = pegiRating;
     }
 
     public String getDescription() {
@@ -124,5 +117,15 @@ public class BookServiceModel {
 
     public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
+    }
+
+    public Integer reviewScore(){
+        int approved = this.getReviews().stream().filter(Review::getApproved).collect(Collectors.toList()).size();
+        int total = this.getReviews().size();
+        if(total == 0){
+            return 100;
+        }
+
+        return (approved * total) / 100;
     }
 }

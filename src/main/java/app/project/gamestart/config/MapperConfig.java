@@ -1,18 +1,24 @@
 package app.project.gamestart.config;
 
+import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.domain.models.binding.BookAddBindingModel;
 import app.project.gamestart.domain.models.service.AuthorServiceModel;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
+import app.project.gamestart.domain.models.service.BookServiceModel;
 import app.project.gamestart.domain.models.service.PublisherServiceModel;
 import app.project.gamestart.domain.models.views.AuthorViewModel;
+import app.project.gamestart.domain.models.views.BookAllView;
 import app.project.gamestart.domain.models.views.PublisherApproveViewModel;
+import app.project.gamestart.services.BookService;
 import org.modelmapper.*;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Configuration
 public class MapperConfig{
@@ -30,6 +36,7 @@ public class MapperConfig{
         gameServiceModelMapping(modelMapper);
         publisherApproveViewModelMapping(modelMapper);
         authorViewModelMapping(modelMapper);
+        bookAllViewModelMapping(modelMapper);
     }
 
     private void gameServiceModelMapping(ModelMapper modelMapper){
@@ -92,6 +99,32 @@ public class MapperConfig{
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
                 dest.setDateOfBirth(source.getDateOfBirth().format(formatter));
+
+                return dest;
+            }
+        };
+
+        modelMapper.addConverter(converter);
+    }
+
+    private void bookAllViewModelMapping(ModelMapper modelMapper){
+        Converter<BookServiceModel,BookAllView> converter = new Converter<BookServiceModel, BookAllView>() {
+            @Override
+            public BookAllView convert(MappingContext<BookServiceModel, BookAllView> mappingContext) {
+                BookAllView dest = mappingContext.getDestination();
+                BookServiceModel source = mappingContext.getSource();
+
+                dest.setId(source.getId());
+                dest.setTitle(source.getTitle());
+                dest.setCoverImageUrl(source.getCoverImageUrl());
+                dest.setPrice(source.getPrice());
+
+                Set<String> authorNames = source.getAuthors().stream().map(Author::getName).collect(Collectors.toSet());
+                String names = String.join(", ", authorNames);
+
+                dest.setAuthorName(names);
+                dest.setReviewScore(source.reviewScore());
+                dest.setReleaseDate(source.getReleaseDate());
 
                 return dest;
             }
