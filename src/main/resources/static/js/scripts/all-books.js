@@ -4,14 +4,19 @@ $(document).ready(function () {
 
 function setSearchItems(total,current) {
     $('#current-page').val(current);
-    $('#total-pages').text(total);
+    if(total > 0){
+        $('#total-pages').text(total);
+    } else {
+        $('#total-pages').text(1);
+    }
+
     if(current === 1){
         $('#previous-page').prop( "disabled", true );
     } else {
         $('#previous-page').prop( "disabled", false );
     }
 
-    if(current === total){
+    if(current >= total){
         $('#next-page').prop( "disabled", true );
     } else {
         $('#next-page').prop( "disabled", false );
