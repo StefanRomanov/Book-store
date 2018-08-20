@@ -1,16 +1,63 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns="http://www.w3.org/1999/xhtml"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<div th:object="${viewModel}" class="d-flex justify-content-between  m-5">
-    <div class="d-flex justify-content-center w-50 m-3 rounded">
-        <img style="width: 400px; height: 600px" th:src="*{coverImageUrl}" class="rounded" />
-    </div>
-    <div class="d-flex w-50">
-        <div class="d-flex flex-column justify-content-center m-3 rounded">
-            <h3 th:text="*{title}" class="text-center text-white"></h3>
-
-            <pre style="white-space: pre-wrap; text-align: justify; text-indent: 10px" class="text-white m-3" th:text="*{description}"></pre>
+<div th:object="${viewModel}" class="d-flex flex-column justify-content-center  m-5">
+    <div class="d-flex flex-row justify-content-center app-color-prime rounder flex-wrap">
+        <div class="d-flex flex-column flex-wrap justify-content-center">
+            <h2 th:text="*{title}" class="mt-2 text-white text-center"></h2>
+            <h3 th:text="*{authors}" class="mb-2 text-muted text-center"></h3>
         </div>
     </div>
     <hr class="form-line"/>
+    <div class="d-flex flex-row justify-content-between">
+        <div class="d-flex flex-column w-50 justify-content-center">
+            <img th:src="*{coverImageUrl}" class="rounded w-75 align-self-center" />
+            <div class="d-flex flex-row justify-content-center">
+                <a th:if="${viewModel.isOwner()}" class="btn mt-2 btn-info w-50" th:href="|/books/download/${viewModel.id}|">Download</a>
+            </div>
+            <div class="d-flex flex-row justify-content-center mt-2" th:if="${!viewModel.isOwner()}">
+                <button class="btn btn-primary w-50" data-target="#buy-confirm" data-toggle="modal"> Buy </button>
+            </div>
+        </div>
+        <div class="d-flex flex-column w-50 justify-content-start">
+            <div class="d-flex flex-column app-color-prime h-100 flex-wrap rounded">
+                <div class="d-flex flex-column justify-content-start m-3 ">
+                    <pre style="white-space: pre-wrap; text-align: justify; text-indent: 10px" class="text-white m-3" th:text="*{description}"></pre>
+                </div>
+            </div>
+            <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-wrap app-color-prime flex-wrap rounded w-50 mt-2">
+                    <p class="w-100 text-white text-center"  th:text="${#numbers.formatCurrency(viewModel.price)}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal" id="buy-confirm" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Order confirmation</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body container">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <p th:text="${viewModel.title}" class="ml-2"></p>
+                        <p th:text="${viewModel.authors}" class="text-muted ml-2"></p>
+                    </div>
+                    <div class="col-sm-4">
+                        <p th:text="${#numbers.formatCurrency(viewModel.price)}"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a type="button" th:href="|/books/buy/${viewModel.id}|" class="btn btn-primary">Confirm</a>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
 </div>

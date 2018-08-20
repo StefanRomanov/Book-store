@@ -5,6 +5,7 @@ import app.project.gamestart.domain.enums.Genre;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ public class Book extends BaseEntity{
     private Set<User> users;
 
     public Book() {
+        this.users= new HashSet<>();
     }
 
     @Column(nullable = false)

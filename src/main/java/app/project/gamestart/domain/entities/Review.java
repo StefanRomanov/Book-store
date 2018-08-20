@@ -4,6 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "reviews")
@@ -11,9 +12,11 @@ public class Review extends BaseEntity{
 
     private String title;
     private String text;
+    private boolean approved;
+    private LocalDate submissionDate;
     private User user;
     private Book book;
-    private boolean approved;
+
 
     public Review() {
     }
@@ -61,5 +64,14 @@ public class Review extends BaseEntity{
 
     public void setApproved(boolean approved) {
         this.approved = approved;
+    }
+
+    @Column(nullable = false)
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public void setSubmissionDate(LocalDate submissionDate) {
+        this.submissionDate = submissionDate;
     }
 }

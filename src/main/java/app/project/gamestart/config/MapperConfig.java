@@ -9,6 +9,7 @@ import app.project.gamestart.domain.models.service.BookServiceModel;
 import app.project.gamestart.domain.models.service.PublisherServiceModel;
 import app.project.gamestart.domain.models.views.AuthorViewModel;
 import app.project.gamestart.domain.models.views.BookAllView;
+import app.project.gamestart.domain.models.views.BookDetailsView;
 import app.project.gamestart.domain.models.views.PublisherApproveViewModel;
 import app.project.gamestart.services.BookService;
 import org.modelmapper.*;
@@ -37,6 +38,7 @@ public class MapperConfig{
         publisherApproveViewModelMapping(modelMapper);
         authorViewModelMapping(modelMapper);
         bookAllViewModelMapping(modelMapper);
+        bookDetailsViewMapping(modelMapper);
     }
 
     private void gameServiceModelMapping(ModelMapper modelMapper){
@@ -77,11 +79,10 @@ public class MapperConfig{
                 dest.setCompanyName(source.getCompanyName());
                 dest.setId(source.getId());
                 dest.setCountry(source.getCountry().getFullName());
+
                 return dest;
             }
         };
-
-
         modelMapper.addConverter(converter);
     }
 
@@ -132,4 +133,30 @@ public class MapperConfig{
 
         modelMapper.addConverter(converter);
     }
+
+    private void bookDetailsViewMapping(ModelMapper modelMapper){
+        Converter<BookServiceModel, BookDetailsView> converter = new Converter<BookServiceModel, BookDetailsView>() {
+            @Override
+            public BookDetailsView convert(MappingContext<BookServiceModel, BookDetailsView> mappingContext) {
+                BookDetailsView dest = mappingContext.getDestination();
+                BookServiceModel source = mappingContext.getSource();
+
+                dest.setId(source.getId());
+                dest.setTitle(source.getTitle());
+                dest.setCoverImageUrl(source.getCoverImageUrl());
+                dest.setDescription(source.getDescription());
+                dest.setReleaseDate(source.getReleaseDate());
+                dest.setReviews(source.getReviews());
+                dest.setPrice(source.getPrice());
+                dest.setTextFile(source.getTextFile());
+                Set<String> authorNames = source.getAuthors().stream().map(Author::getName).collect(Collectors.toSet());
+                dest.setAuthors(String.join(", ", authorNames));
+
+                return dest;
+            }
+        };
+
+        modelMapper.addConverter(converter);
+     }
 }
+

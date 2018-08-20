@@ -27,6 +27,7 @@ public class User extends BaseEntity implements UserDetails {
         this.authorities = new HashSet<>();
         this.sales = new HashSet<>();
         this.reviews = new HashSet<>();
+        this.books = new HashSet<>();
     }
 
     @Override
@@ -97,7 +98,7 @@ public class User extends BaseEntity implements UserDetails {
         this.authorities = authorities;
     }
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     public Set<Book> getBooks() {
         return books;
     }
