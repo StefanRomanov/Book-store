@@ -5,6 +5,7 @@ import app.project.gamestart.services.BookService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,7 +26,21 @@ public class HomeController  extends BaseController{
     }
 
     @GetMapping(value = "/")
-    public ModelAndView index(){
+    public ModelAndView index(Authentication authentication){
+        if(authentication != null){
+            System.out.println(authentication.getClass());
+            System.out.println("------------");
+            System.out.println(authentication.getCredentials());
+            System.out.println("------------");
+            System.out.println(authentication.getPrincipal());
+            System.out.println("------------");
+            System.out.println(authentication.getDetails());
+            System.out.println("------------");
+            System.out.println(authentication.getName());
+            System.out.println("------------");
+            System.out.println(authentication.getAuthorities().iterator().next().getAuthority());
+            System.out.println("------------");
+        }
 
         Type type = new TypeToken<List<BookAllView>>(){}.getType();
 

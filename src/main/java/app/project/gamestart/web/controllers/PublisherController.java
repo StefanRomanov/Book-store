@@ -28,7 +28,7 @@ public class PublisherController extends BaseController{
     private final ModelMapper modelMapper;
 
     @Autowired
-    public PublisherController(PublisherService publisherService, ModelMapper modelMapper, UserService userService) {
+    public PublisherController(PublisherService publisherService, ModelMapper modelMapper) {
         this.publisherService = publisherService;
         this.modelMapper = modelMapper;
     }
@@ -48,9 +48,10 @@ public class PublisherController extends BaseController{
         PublisherServiceModel serviceModel = this.modelMapper.map(bindingModel,PublisherServiceModel.class);
         User user = (User) authentication.getPrincipal();
 
-        this.publisherService.addPublisher(serviceModel, user.getId(), bindingModel.getSameEmail());
 
-        return super.redirect("/", "Home");
+        this.publisherService.addPublisher(serviceModel, user.getId());
+
+        return super.redirect("/");
     }
 
     @GetMapping("/manage/{id}")
@@ -93,5 +94,19 @@ public class PublisherController extends BaseController{
         this.publisherService.delete(id);
 
         return super.redirect("/publishers/manage");
+    }
+
+    private void validateRegister(BindingResult bindingResult, PublisherAddBindingModel bindingModel){
+        if(this.publisherService.findByCompanyName(bindingModel.getCompanyName()) != null){
+            bindingResult.rejectValue("companyName","error.viewModel","Company already registered !");
+        }
+
+        if(this.publisherService.findByEmail(bindingModel.getCompanyEmail()) != null){
+            bindingResult.rejectValue("companyEmail","error.viewModel","Email already taken !");
+        }
+
+        if(this.publisherService.findByVatNumber(bindingModel.getVatNumber()) != null){
+            bindingResult.rejectValue("vatNumber","error.viewModel","VAT already registered !");
+        }
     }
 }

@@ -41,12 +41,8 @@ public class UserController extends BaseController {
     @PostMapping("/register")
     public ModelAndView registerConfirm(@Valid @ModelAttribute("viewModel") UserRegisterBindingModel bindingModel, BindingResult bindingResult){
 
-        if(this.userService.findUserByUsername(bindingModel.getUsername()) != null){
-            bindingResult.rejectValue("username","error.viewModel","User already exists !");
-        }
-        if(!bindingModel.getPassword().equals(bindingModel.getConfirmPassword())){
-            bindingResult.rejectValue("password","error.viewModel","Password doesn't match");
-        }
+        this.validateRegister(bindingResult,bindingModel);
+
         if(bindingResult.hasErrors()){
             return view("/users/register", bindingModel);
         }
@@ -91,5 +87,19 @@ public class UserController extends BaseController {
         this.userService.changeRole(bindingModel.getId(),bindingModel.getRole());
 
         return super.redirect("/users/roles");
+    }
+
+    private void validateRegister(BindingResult bindingResult, UserRegisterBindingModel bindingModel){
+        if(this.userService.findUserByUsername(bindingModel.getUsername()) != null){
+            bindingResult.rejectValue("username","error.viewModel","User already exists !");
+        }
+
+        if(this.userService.findByEmail(bindingModel.getEmail()) != null){
+            bindingResult.rejectValue("email","error.viewModel","Email already taken !");
+        }
+
+        if(!bindingModel.getPassword().equals(bindingModel.getConfirmPassword())){
+            bindingResult.rejectValue("password","error.viewModel","Password doesn't match");
+        }
     }
 }

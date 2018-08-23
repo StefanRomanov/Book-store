@@ -27,7 +27,7 @@ public class Publisher extends BaseEntity{
     public Publisher() {
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotEmpty
     public String getCompanyName() {
         return companyName;
@@ -37,7 +37,7 @@ public class Publisher extends BaseEntity{
         this.companyName = companyName;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @NotEmpty
     @Length(min = 10)
     public String getVatNumber() {
@@ -96,7 +96,7 @@ public class Publisher extends BaseEntity{
         this.legalForm = legalForm;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @EmailValidator
     public String getCompanyEmail() {
         return companyEmail;
@@ -107,7 +107,6 @@ public class Publisher extends BaseEntity{
     }
 
     @Enumerated(value = EnumType.STRING)
-    @NotEmpty
     public Country getCountry() {
         return country;
     }

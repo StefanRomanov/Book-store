@@ -17,4 +17,5 @@ public interface UserService extends UserDetailsService {
     Page<UserServiceModel> getUserPageByUsername(Pageable pageable, String username, String userId);
     void changeRole(String userId, String role);
     User findUserByUsername(String username);
+    UserServiceModel findByEmail (String email);
 }

@@ -66,10 +66,6 @@
                     <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{companyEmail}" placeholder="Company email">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('companyEmail')}" th:errors="*{companyEmail}"></span>
                 </div>
-                <div>
-                    <label class="text-white" th:for="${#ids.next('companyEmai')}">Use user email ?</label>
-                    <input type="checkbox" th:field="*{sameEmail}">
-                </div>
             </div>
             <input type="hidden" th:name="${_csrf.parameterName}"
                    th:value="${_csrf.token}" />

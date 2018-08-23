@@ -89,6 +89,8 @@ public class BookController extends  BaseController {
     public ModelAndView details(@PathVariable("id") String id, Authentication authentication, @ModelAttribute("ReviewBindingModel") ReviewAddBindingModel reviewAddBindingModel){
         BookDetailsView view = this.modelMapper.map(this.bookService.getOneById(id), BookDetailsView.class);
 
+
+
         if(authentication == null){
             view.setOwner(false);
             view.setReviewed(false);

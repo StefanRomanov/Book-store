@@ -4,12 +4,9 @@ import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.Review;
 import app.project.gamestart.domain.enums.Genre;
-import app.project.gamestart.domain.enums.PegiRatings;
-import app.project.gamestart.domain.enums.Platform;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 

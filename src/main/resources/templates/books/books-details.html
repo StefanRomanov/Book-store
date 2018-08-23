@@ -49,13 +49,13 @@
         <a th:href="|/books/approve/${viewModel.id}|" class="btn btn-primary mx-2" th:if="${!viewModel.approved}">
             Approve
         </a>
-        <a th:href="|/books/delete/${viewModel.id}|" class="btn btn-danger mx-2" th:if="${!viewModel.approved}">
+        <a th:href="|/books/delete/${viewModel.id}|" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" class="btn btn-danger mx-2" th:if="${!viewModel.approved}">
             Don't Approve
         </a>
         <a th:href="|/books/edit/${viewModel.id}|" class="btn btn-info mx-2">
             Edit
         </a>
-        <a th:href="|/books/delete/${viewModel.id}|"  class=" btn btn-danger mx-2" sec:authorize="hasAuthority('ROOT')">
+        <a th:href="|/books/delete/${viewModel.id}|"  class=" btn btn-danger mx-2" th:if="${!viewModel.approved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')">
             Delete
         </a>
     </div>

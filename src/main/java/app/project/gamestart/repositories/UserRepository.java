@@ -14,5 +14,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User,String> {
     User getFirstByUsername(String username);
     Page<User> findAllByAuthoritiesInAndIdNot(Pageable pageable, List<UserRole> roles, String userId);
-    Page<User> findFirstByAuthoritiesInAndIdNotAndUsername(Pageable pageable, List<UserRole> roles, String userId, String username);
+    Page<User> findFirstByAuthoritiesInAndIdNotAndUsernameContains(Pageable pageable, List<UserRole> roles, String userId, String username);
+    User findFirstByEmail(String email);
 }

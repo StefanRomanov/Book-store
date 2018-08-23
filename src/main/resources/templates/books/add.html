@@ -52,7 +52,7 @@
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('coverImageUrl')}" th:errors="*{coverImageUrl}"></span>
                 </div>
                 <div class="custom-file form-group mx-2">
-                    <input type="file" class="custom-file-input" id="otherImages" aria-describedby="fileHelp" multiple th:field="*{textFile}">
+                    <input type="file" class="custom-file-input" id="otherImages" th:errorclass="is-invalid" aria-describedby="fileHelp" multiple th:field="*{textFile}">
                     <label class="custom-file-label" for="otherImages">
                         Select book text file
                     </label>

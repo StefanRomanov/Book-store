@@ -1,4 +1,10 @@
-<a class="dropdown-item text-white" sec:authorize="!hasAuthority('PARTNER')" href="/publishers/register" th:text="|Become partner|"></a>
-<a class="dropdown-item text-white" sec:authorize="hasAuthority('PARTNER')" href="/books/add" th:text="|Add game|"></a>
-<a class="dropdown-item text-white" sec:authorize="hasAuthority('PARTNER')" href="/authors/add" th:text="|Add author|"></a>
-<a class="dropdown-item text-white" sec:authorize="hasAuthority('PARTNER')" href="/books/published" th:text="|Published books|"></a>
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="|Partner|">
+    </a>
+    <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item text-white" href="/books/add" th:text="|Add book|"></a>
+        <a class="dropdown-item text-white" href="/authors/add" th:text="|Add author|"></a>
+        <a class="dropdown-item text-white" href="/books/published" th:text="|Published books|"></a>
+    </div>
+</li>

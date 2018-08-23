@@ -59,7 +59,7 @@ public class BookServiceImpl implements BookService {
 
         BookAddServiceModel bookModel = this.modelMapper.map(bindingModel, BookAddServiceModel.class);
 
-        Publisher publisher = this.publisherRepository.getOne(userId);
+        Publisher publisher = this.publisherRepository.findFirstByUser(this.userService.getUserById(userId));
 
         Book bookFinal = this.modelMapper.map(bookModel, Book.class);
         bookFinal.setPublisher(publisher);
@@ -152,7 +152,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Page<BookServiceModel> getPublishedBooksList(Pageable pageable, boolean approved,String title,String genre, String userId){
-        Publisher publisher = this.publisherRepository.getOne(userId);
+        Publisher publisher = this.publisherRepository.findFirstByUser(this.userService.getUserById(userId));
         if(genre != null && !genre.equals("")){
             return PageMapper.mapPage(this.bookRepository.findAllByApprovedAndPublisherAndTitleContainsAndGenre(pageable,approved,publisher,title,Genre.valueOf(genre)),BookServiceModel.class,modelMapper);
         } else if(title != null){

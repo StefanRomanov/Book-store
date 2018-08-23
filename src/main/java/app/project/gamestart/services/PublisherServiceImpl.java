@@ -35,15 +35,13 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void addPublisher(PublisherServiceModel serviceModel, String userId, Boolean sameEmail) {
+    public void addPublisher(PublisherServiceModel serviceModel, String userId) {
 
         Publisher publisher = this.modelMapper.map(serviceModel,Publisher.class);
         User user = this.userService.getUserById(userId);
 
-        if(sameEmail){
-            publisher.setCompanyEmail(user.getEmail());
-        }
 
+        this.userService.addRole(user.getId(),"PENDING");
         publisher.setApproved(false);
         publisher.setUser(user);
 
@@ -76,11 +74,6 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public Publisher getPublisherByUserId(String userId) {
-        return this.publisherRepository.findFirstByUser(this.userService.getUserById(userId));
-    }
-
-    @Override
     public void delete(String id) throws Exception {
         Publisher publisher = this.publisherRepository.getOne(id);
         User user = publisher.getUser();
@@ -92,5 +85,37 @@ public class PublisherServiceImpl implements PublisherService {
         }
 
         this.publisherRepository.delete(publisher);
+    }
+
+    @Override
+    public PublisherServiceModel findByCompanyName(String companyName) {
+
+        Publisher publisher = this.publisherRepository.findFirstByCompanyName(companyName);
+
+        if(publisher == null){
+            return null;
+        }
+
+        return this.modelMapper.map(publisher, PublisherServiceModel.class);
+    }
+
+    @Override
+    public PublisherServiceModel findByVatNumber(String vatNumber) {
+        Publisher publisher = this.publisherRepository.findFirstByVatNumber(vatNumber);
+
+        if(publisher == null){
+            return null;
+        }
+        return this.modelMapper.map(publisher, PublisherServiceModel.class);
+    }
+
+    @Override
+    public PublisherServiceModel findByEmail(String email) {
+        Publisher publisher = this.publisherRepository.findFirstByCompanyEmail(email);
+
+        if(publisher == null){
+            return null;
+        }
+        return this.modelMapper.map(publisher, PublisherServiceModel.class);
     }
 }

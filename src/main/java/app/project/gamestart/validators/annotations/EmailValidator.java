@@ -14,7 +14,7 @@ import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 @Email(message="Please provide a valid email address")
-@Pattern(regexp="[a-z0-9]+@[a-z0-9]+\\.[a-z]+", message="Please provide a valid email address")
+@Pattern(regexp="[a-zA-Z0-9_-]+@[a-z0-9-]+\\.[a-z]+", message="Please provide a valid email address")
 @Target( { METHOD, FIELD, ANNOTATION_TYPE })
 @Retention(RUNTIME)
 @Constraint(validatedBy = {})

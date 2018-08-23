@@ -39,12 +39,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers( "/users/login", "/users/register", "/users/login-error").anonymous()
                     .antMatchers("/publishers/register").hasAuthority("USER")
                     .antMatchers("/books/add", "/books/published", "/books/api/published").hasAnyAuthority("PARTNER")
-                    .antMatchers("/books/buy/**","/reviews/add/**", "/books/my", "/books/api/my").hasAnyAuthority("USER","PARTNER")
+                    .antMatchers("/books/buy/**","/reviews/add/**", "/books/my", "/books/api/my").hasAnyAuthority("USER","PARTNER","PENDING")
                     .antMatchers("/authors/add").hasAnyAuthority("PARTNER","ADMIN","ROOT")
-                    .antMatchers("/books/delete/**", "/publishers/delete/**").hasAuthority("ROOT")
                     .antMatchers("/books/manage","/books/api/manage","/books/approve/**",
                                                 "/books/edit/**","/publishers/manage",
-                                                "/publishers/manage/**", "/publishers/approve/**", "/users/roles", "/users/rolechange").hasAnyAuthority("ADMIN", "ROOT")
+                                                "/publishers/manage/**", "/publishers/approve/**", "/users/roles", "/users/rolechange", "/books/delete/**", "/publishers/delete/**").hasAnyAuthority("ADMIN", "ROOT")
                     .anyRequest().authenticated()
                 .and()
                     .csrf()

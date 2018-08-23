@@ -56,7 +56,8 @@
             <hr class="form-line">
             <div class="d-flex justify-content-center justify-content-around">
                 <button class="btn btn-primary" type="submit" th:if="!*{isApproved}">Approve</button>
-                <a class="btn btn-danger" sec:authorize="hasAuthority('ROOT')" th:href="|/publishers/delete/*{id}|">Delete</a>
+                <a class="btn btn-danger" th:if="!*{isApproved}" th:href="|/publishers/delete/*{id}|">Dont approve</a>
+                <a class="btn btn-danger" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/delete/*{id}|">Delete</a>
                 <a class="btn btn-info" href="/publishers/manage">Cancel</a>
             </div>
         </form>

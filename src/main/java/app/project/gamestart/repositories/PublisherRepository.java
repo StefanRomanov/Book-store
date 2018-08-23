@@ -17,4 +17,10 @@ public interface PublisherRepository extends JpaRepository<Publisher, String> {
 
     Publisher findFirstByUser(User user);
 
+    Publisher findFirstByCompanyEmail(String email);
+
+    Publisher findFirstByCompanyName(String companyName);
+
+    Publisher findFirstByVatNumber(String vatNumber);
+
 }

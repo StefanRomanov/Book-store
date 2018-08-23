@@ -25,12 +25,14 @@
             <form method="post" action="/users/rolechange" class="form-inline m-3">
                 <div class="d-flex align-self-center">
                     <select id="select-role" class="selectpicker" name="role">
-                        <th:block th:each="role : ${T(app.project.gamestart.domain.enums.UserRoleEnum).values()}" th:if="${role.name() != 'ROOT' and role.name() != 'PARTNER'}">
+                        <th:block th:each="role : ${T(app.project.gamestart.domain.enums.UserRoleEnum).values()}" th:if="${role.name() != 'ROOT' and role.name() != 'PARTNER' and role.name() != 'PENDING'}">
                             <option th:value="${role}" th:text="${role}" th:selected="${user.userRole} == ${role.name()}" ></option>
                         </th:block>
                     </select>
                 </div>
                 <input th:value="${user.id}" name="id" hidden>
+                <input type="hidden" th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}" />
                 <div class="d-flex align-self-center ml-3">
                     <button class="btn btn-info" id="change">Change</button>
                 </div>

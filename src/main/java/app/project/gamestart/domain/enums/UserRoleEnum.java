@@ -4,5 +4,6 @@ public enum UserRoleEnum {
     ROOT,
     ADMIN,
     USER,
-    PARTNER
+    PARTNER,
+    PENDING
 }

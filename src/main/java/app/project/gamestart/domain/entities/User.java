@@ -42,7 +42,7 @@ public class User extends BaseEntity implements UserDetails {
         this.username = username;
     }
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     @EmailValidator
     public String getEmail() {
         return this.email;

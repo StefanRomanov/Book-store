@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.models.binding;
 
 import app.project.gamestart.domain.models.views.AuthorViewModel;
+import app.project.gamestart.validators.annotations.FileSizeValidation;
 import app.project.gamestart.validators.annotations.NotEmptyFile;
 
 import org.hibernate.validator.constraints.Length;
@@ -41,6 +42,9 @@ public class BookAddBindingModel {
         this.title = title;
     }
 
+    @NotNull
+    @NotEmptyFile
+    @FileSizeValidation
     public MultipartFile getTextFile() {
         return textFile;
     }
@@ -78,6 +82,7 @@ public class BookAddBindingModel {
 
     @NotNull
     @NotEmptyFile
+    @FileSizeValidation
     public MultipartFile getCoverImageUrl() {
         return coverImageUrl;
     }

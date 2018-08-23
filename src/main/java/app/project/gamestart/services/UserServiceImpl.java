@@ -1,6 +1,5 @@
 package app.project.gamestart.services;
 
-import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.User;
 import app.project.gamestart.domain.entities.UserRole;
 import app.project.gamestart.domain.models.binding.UserRegisterBindingModel;
@@ -71,6 +70,7 @@ public class UserServiceImpl implements UserService{
         user.getAuthorities().clear();
 
         user.getAuthorities().add(userRole);
+        this.userRepository.saveAndFlush(user);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService{
         allowedRoles.add(this.roleService.findByAuthority("ADMIN"));
         allowedRoles.add(this.roleService.findByAuthority("USER"));
 
-        Page<UserServiceModel> serviceModels = PageMapper.mapPage(this.userRepository.findFirstByAuthoritiesInAndIdNotAndUsername(pageable,allowedRoles,userId, username), UserServiceModel.class,modelMapper);
+        Page<UserServiceModel> serviceModels = PageMapper.mapPage(this.userRepository.findFirstByAuthoritiesInAndIdNotAndUsernameContains(pageable,allowedRoles,userId, username), UserServiceModel.class,modelMapper);
 
         return serviceModels;
     }
@@ -110,5 +110,17 @@ public class UserServiceImpl implements UserService{
     @Override
     public User findUserByUsername(String username) {
         return this.userRepository.getFirstByUsername(username);
+    }
+
+    @Override
+    public UserServiceModel findByEmail(String email) {
+
+        User user = this.userRepository.findFirstByEmail(email);
+
+        if(user == null){
+            return null;
+        }
+
+        return this.modelMapper.map(user,UserServiceModel.class);
     }
 }

@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface PublisherService {
-    void addPublisher(PublisherServiceModel serviceModel, String userId, Boolean sameEmail);
+    void addPublisher(PublisherServiceModel serviceModel, String userId);
 
     PublisherServiceModel getPublisherById(String id);
 
@@ -17,7 +17,9 @@ public interface PublisherService {
 
     Page<PublisherServiceModel> getAllPublishersByApprovedAndCompanyName(Pageable pageable, boolean approved, String companyName);
 
-    Publisher getPublisherByUserId(String userId);
-
     void delete(String id) throws Exception;
+
+    PublisherServiceModel findByCompanyName(String companyName);
+    PublisherServiceModel findByVatNumber(String vatNumber);
+    PublisherServiceModel findByEmail(String email);
 }

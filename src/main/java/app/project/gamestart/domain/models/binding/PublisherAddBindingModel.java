@@ -1,9 +1,11 @@
 package app.project.gamestart.domain.models.binding;
 
 import app.project.gamestart.validators.annotations.EmailValidator;
+import app.project.gamestart.validators.annotations.NotEmptyFile;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class PublisherAddBindingModel {
@@ -67,15 +69,8 @@ public class PublisherAddBindingModel {
         this.companyEmail = companyEmail;
     }
 
-    public boolean getSameEmail() {
-        return sameEmail;
-    }
-
-    public void setSameEmail(boolean sameEmail) {
-        this.sameEmail = sameEmail;
-    }
-
-    @NotEmpty(message = "Please enter country of registration.")
+    @NotNull
+    @NotEmpty
     public String getCountry() {
         return country;
     }
