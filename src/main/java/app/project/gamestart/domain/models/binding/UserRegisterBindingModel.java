@@ -1,5 +1,8 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.validators.annotations.EmailValidator;
+import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -13,8 +16,8 @@ public class UserRegisterBindingModel {
     public UserRegisterBindingModel() {
     }
 
-    @NotEmpty
-    @NotNull
+    @NotEmpty(message = "Enter username")
+    @Length(min = 3, message = "Minimum 3 characters")
     public String getUsername() {
         return username;
     }
@@ -23,8 +26,8 @@ public class UserRegisterBindingModel {
         this.username = username;
     }
 
-    @NotEmpty
-    @NotNull
+
+    @EmailValidator
     public String getEmail() {
         return email;
     }
@@ -33,8 +36,8 @@ public class UserRegisterBindingModel {
         this.email = email;
     }
 
-    @NotEmpty
-    @NotNull
+    @NotEmpty(message = "Enter password")
+    @Length(min = 3, message = "Minimum 3 characters")
     public String getPassword() {
         return password;
     }
@@ -43,8 +46,8 @@ public class UserRegisterBindingModel {
         this.password = password;
     }
 
-    @NotEmpty
-    @NotNull
+    @NotEmpty(message = "Enter password again")
+    @Length(min = 3, message = "Minimum 3 characters")
     public String getConfirmPassword() {
         return confirmPassword;
     }

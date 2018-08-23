@@ -1,16 +1,19 @@
 package app.project.gamestart.domain.models.views;
 
+import app.project.gamestart.domain.enums.Genre;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class BookAllView {
     private String id;
     private String coverImageUrl;
+    private String genre;
     private BigDecimal price;
     private String authorName;
     private String title;
     private LocalDate releaseDate;
-    private Integer reviewScore;
+    private String reviewScore;
 
     public BookAllView() {
     }
@@ -63,11 +66,19 @@ public class BookAllView {
         this.releaseDate = releaseDate;
     }
 
-    public Integer getReviewScore() {
+    public String getReviewScore() {
         return reviewScore;
     }
 
-    public void setReviewScore(Integer reviewScore) {
+    public void setReviewScore(String reviewScore) {
         this.reviewScore = reviewScore;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }

@@ -46,7 +46,7 @@ div.form-group{
 
 input.form-control{
      background-color: #818182;
- }
+}
 
 input.form-control:focus{
     background-color: #818182;
@@ -94,6 +94,22 @@ textarea.form-control::placeholder{
 .w-5{
     width: 5%;
 }
+.h-95{
+     height: 95%;
+ }
+
+.h-90{
+    height: 90%;
+}
+
+.h-85{
+    height: 85%;
+}
+
+.h-15{
+    height: 15%;
+}
+
 
 .custom-file-upload {
     border: 1px solid #ccc;
@@ -115,4 +131,14 @@ img.list-image {
 
 .book-list-element{
     display: inline-block;
+}
+
+.details-box{
+    height: 750px;
+    width: 750px;
+}
+
+.front-page-img {
+    height: 250px;
+    width: 200px;
 }

@@ -1,17 +1,24 @@
 package app.project.gamestart.services;
 
+import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.User;
 import app.project.gamestart.domain.entities.UserRole;
 import app.project.gamestart.domain.models.binding.UserRegisterBindingModel;
+import app.project.gamestart.domain.models.service.UserServiceModel;
 import app.project.gamestart.repositories.UserRepository;
+import app.project.gamestart.util.PageMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional
@@ -42,7 +49,7 @@ public class UserServiceImpl implements UserService{
         user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 
         if(this.userRepository.findAll().size() < 1){
-            user.getAuthorities().add(this.roleService.findByAuthority("ADMIN"));
+            user.getAuthorities().add(this.roleService.findByAuthority("ROOT"));
         } else {
             user.getAuthorities().add(this.roleService.findByAuthority("USER"));
         }
@@ -61,6 +68,47 @@ public class UserServiceImpl implements UserService{
         User user = this.userRepository.getOne(userId);
         UserRole userRole = this.roleService.findByAuthority(role);
 
+        user.getAuthorities().clear();
+
         user.getAuthorities().add(userRole);
+    }
+
+    @Override
+    public Page<UserServiceModel> getAllUsersPage(Pageable pageable, String userId) {
+
+        List<UserRole> allowedRoles = new ArrayList<>();
+        allowedRoles.add(this.roleService.findByAuthority("ADMIN"));
+        allowedRoles.add(this.roleService.findByAuthority("USER"));
+
+        Page<UserServiceModel> serviceModels = PageMapper.mapPage(this.userRepository.findAllByAuthoritiesInAndIdNot(pageable,allowedRoles,userId), UserServiceModel.class,modelMapper);
+
+        return serviceModels;
+    }
+
+    @Override
+    public Page<UserServiceModel> getUserPageByUsername(Pageable pageable, String username, String userId) {
+
+        List<UserRole> allowedRoles = new ArrayList<>();
+        allowedRoles.add(this.roleService.findByAuthority("ADMIN"));
+        allowedRoles.add(this.roleService.findByAuthority("USER"));
+
+        Page<UserServiceModel> serviceModels = PageMapper.mapPage(this.userRepository.findFirstByAuthoritiesInAndIdNotAndUsername(pageable,allowedRoles,userId, username), UserServiceModel.class,modelMapper);
+
+        return serviceModels;
+    }
+
+    @Override
+    public void changeRole(String userId, String role) {
+        User user = this.userRepository.getOne(userId);
+
+        user.getAuthorities().clear();
+        user.getAuthorities().add(this.roleService.findByAuthority(role));
+
+        this.userRepository.saveAndFlush(user);
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        return this.userRepository.getFirstByUsername(username);
     }
 }

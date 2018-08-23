@@ -1,22 +1,17 @@
 package app.project.gamestart.config;
 
 import app.project.gamestart.domain.entities.Author;
+import app.project.gamestart.domain.entities.Review;
 import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.domain.models.binding.BookAddBindingModel;
-import app.project.gamestart.domain.models.service.AuthorServiceModel;
-import app.project.gamestart.domain.models.service.BookAddServiceModel;
-import app.project.gamestart.domain.models.service.BookServiceModel;
-import app.project.gamestart.domain.models.service.PublisherServiceModel;
-import app.project.gamestart.domain.models.views.AuthorViewModel;
-import app.project.gamestart.domain.models.views.BookAllView;
-import app.project.gamestart.domain.models.views.BookDetailsView;
-import app.project.gamestart.domain.models.views.PublisherApproveViewModel;
-import app.project.gamestart.services.BookService;
+import app.project.gamestart.domain.models.service.*;
+import app.project.gamestart.domain.models.views.*;
 import org.modelmapper.*;
 import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.lang.reflect.Type;
 import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,14 +29,17 @@ public class MapperConfig{
 
 
     private void addMappings(ModelMapper modelMapper) {
-        gameServiceModelMapping(modelMapper);
+        bookServiceModelMapping(modelMapper);
         publisherApproveViewModelMapping(modelMapper);
         authorViewModelMapping(modelMapper);
         bookAllViewModelMapping(modelMapper);
         bookDetailsViewMapping(modelMapper);
+        addUsernameToReviewServiceModelMapping(modelMapper);
+        userRoleViewMapping(modelMapper);
+        allPublishersView(modelMapper);
     }
 
-    private void gameServiceModelMapping(ModelMapper modelMapper){
+    private void bookServiceModelMapping(ModelMapper modelMapper){
         Converter<BookAddBindingModel, BookAddServiceModel> converter = new AbstractConverter<BookAddBindingModel, BookAddServiceModel>() {
             @Override
             protected BookAddServiceModel convert(BookAddBindingModel source) {
@@ -50,9 +48,7 @@ public class MapperConfig{
                 destination.setApproved(false);
                 destination.setDescription(source.getDescription());
                 destination.setAuthors(source.getAuthors());
-                for (String genreName : source.getGenres()) {
-                    destination.getGenres().add(Genre.valueOf(genreName));
-                }
+                destination.setGenre(Genre.valueOf(source.getGenre()));
                 destination.setPrice(source.getPrice());
                 destination.setReleaseDate(source.getReleaseDate());
 
@@ -77,6 +73,7 @@ public class MapperConfig{
                 dest.setCity(source.getCity());
                 dest.setCompanyEmail(source.getCompanyEmail());
                 dest.setCompanyName(source.getCompanyName());
+                dest.setApproved(source.getApproved());
                 dest.setId(source.getId());
                 dest.setCountry(source.getCountry().getFullName());
 
@@ -119,7 +116,7 @@ public class MapperConfig{
                 dest.setTitle(source.getTitle());
                 dest.setCoverImageUrl(source.getCoverImageUrl());
                 dest.setPrice(source.getPrice());
-
+                dest.setGenre(source.getGenre().getFullName());
                 Set<String> authorNames = source.getAuthors().stream().map(Author::getName).collect(Collectors.toSet());
                 String names = String.join(", ", authorNames);
 
@@ -146,7 +143,13 @@ public class MapperConfig{
                 dest.setCoverImageUrl(source.getCoverImageUrl());
                 dest.setDescription(source.getDescription());
                 dest.setReleaseDate(source.getReleaseDate());
-                dest.setReviews(source.getReviews());
+                dest.setPublisher(source.getPublisher().getCompanyName());
+                dest.setGenre(source.getGenre().getFullName());
+
+                Type type = new TypeToken<Set<ReviewViewModel>>(){}.getType();
+
+                dest.setReviews(modelMapper.map(source.getReviews(),type));
+                dest.setApproved(source.getApproved());
                 dest.setPrice(source.getPrice());
                 dest.setTextFile(source.getTextFile());
                 Set<String> authorNames = source.getAuthors().stream().map(Author::getName).collect(Collectors.toSet());
@@ -157,6 +160,66 @@ public class MapperConfig{
         };
 
         modelMapper.addConverter(converter);
-     }
+    }
+
+    private void addUsernameToReviewServiceModelMapping(ModelMapper modelMapper){
+    Converter<Review,ReviewServiceModel> converter = new Converter<Review, ReviewServiceModel>() {
+        @Override
+        public ReviewServiceModel convert(MappingContext<Review, ReviewServiceModel> mappingContext) {
+            Review source = mappingContext.getSource();
+            ReviewServiceModel dest = mappingContext.getDestination();
+
+            dest.setTitle(source.getTitle());
+            dest.setText(source.getText());
+            dest.setUser(source.getUser());
+            dest.setUsername(source.getUser().getUsername());
+            dest.setSubmissionDate(source.getSubmissionDate());
+            dest.setRecommended(source.getRecommended());
+            dest.setBook(source.getBook());
+            dest.setId(source.getId());
+
+            return dest;
+        }
+    };
+
+    modelMapper.addConverter(converter);
+    }
+
+    private void userRoleViewMapping(ModelMapper modelMapper){
+    Converter<UserServiceModel,UserRoleView> converter = new Converter<UserServiceModel, UserRoleView>() {
+        @Override
+        public UserRoleView convert(MappingContext<UserServiceModel, UserRoleView> mappingContext) {
+            UserServiceModel source = mappingContext.getSource();
+            UserRoleView dest = mappingContext.getDestination();
+
+            dest.setId(source.getId());
+            dest.setUsername(source.getUsername());
+            dest.setUserRole(source.getAuthorities().iterator().next().getAuthority());
+
+            return dest;
+        }
+    };
+
+    modelMapper.addConverter(converter);
+    }
+
+    private void allPublishersView(ModelMapper modelMapper){
+        Converter<PublisherServiceModel, AllPublishersViewModel> converter = new Converter<PublisherServiceModel, AllPublishersViewModel>() {
+            @Override
+            public AllPublishersViewModel convert(MappingContext<PublisherServiceModel, AllPublishersViewModel> mappingContext) {
+                PublisherServiceModel source = mappingContext.getSource();
+                AllPublishersViewModel dest = mappingContext.getDestination();
+
+                dest.setCountry(source.getCountry().getFullName());
+                dest.setCompanyName(source.getCompanyName());
+                dest.setId(source.getId());
+                dest.setVatNumber(source.getVatNumber());
+
+                return dest;
+            }
+        };
+
+        modelMapper.addConverter(converter);
+    }
 }
 

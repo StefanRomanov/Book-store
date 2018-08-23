@@ -12,13 +12,17 @@ public class BookDetailsView {
     private String id;
     private String title;
     private String authors;
-    private Set<Review> reviews;
+    private Set<ReviewViewModel> reviews;
     private String description;
+    private String publisher;
+    private String genre;
     private BigDecimal price;
     private String coverImageUrl;
     private String textFile;
     private LocalDate releaseDate;
+    private boolean approved;
     private boolean isOwner;
+    private boolean isReviewed;
 
     public BookDetailsView() {
     }
@@ -47,11 +51,11 @@ public class BookDetailsView {
         this.authors = authors;
     }
 
-    public Set<Review> getReviews() {
+    public Set<ReviewViewModel> getReviews() {
         return reviews;
     }
 
-    public void setReviews(Set<Review> reviews) {
+    public void setReviews(Set<ReviewViewModel> reviews) {
         this.reviews = reviews;
     }
 
@@ -101,5 +105,37 @@ public class BookDetailsView {
 
     public void setOwner(boolean owner) {
         isOwner = owner;
+    }
+
+    public boolean isReviewed() {
+        return isReviewed;
+    }
+
+    public void setReviewed(boolean reviewed) {
+        isReviewed = reviewed;
+    }
+
+    public boolean getApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public String getPublisher() {
+        return publisher;
+    }
+
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 }

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<h1 class="text-white text-center">All Books</h1>
+<hr class="form-line">
+<div class="d-flex justify-content-center my-auto">
+    <div class="d-flex w-50 justify-content-center d-inline">
+        <form class="form-inline flex-row flex-wrap">
+            <input type="text" id="search-text" class=" form-control rounded" placeholder="Username">
+            <button class="btn btn-info ml-3  form-control" id="search">Search</button>
+        </form>
+    </div>
+</div>
+<hr class="form-line">
+<div class="container d-flex flex-column align-content-center" th:object="${viewModel}">
+    <th:block th:each="user : *{content}">
+        <div class="d-flex align-self-center justify-content-between w-75 app-color-prime rounded">
+            <div class="d-flex align-self-center m-3">
+                <p th:text="${user.username}" class="text-center text-white"></p>
+            </div>
+            <div class="align-self-center">
+                <p th:text="|Current role: ${user.userRole}|" class="text-center text-white"></p>
+            </div>
+            <form method="post" action="/users/rolechange" class="form-inline m-3">
+                <div class="d-flex align-self-center">
+                    <select id="select-role" class="selectpicker" name="role">
+                        <th:block th:each="role : ${T(app.project.gamestart.domain.enums.UserRoleEnum).values()}" th:if="${role.name() != 'ROOT' and role.name() != 'PARTNER'}">
+                            <option th:value="${role}" th:text="${role}" th:selected="${user.userRole} == ${role.name()}" ></option>
+                        </th:block>
+                    </select>
+                </div>
+                <input th:value="${user.id}" name="id" hidden>
+                <div class="d-flex align-self-center ml-3">
+                    <button class="btn btn-info" id="change">Change</button>
+                </div>
+            </form>
+        </div><br>
+    </th:block>
+</div>
+<div class="d-flex align-self-center justify-content-center mt-3">
+    <a class="btn page-link rounded font-weight-bold" id="previous-page" th:href="@{/users/roles(page=${viewModel.getNumber() - 1})}" th:classappend="${viewModel.hasPrevious()}? '' : disabled"><</a>
+    <input type="text" class="page-link w-5 rounded font-weight-bold text-center" id="page" th:value="${viewModel.getNumber() + 1}">
+    <button class="page-link rounded w-5 font-weight-bold" th:text="${viewModel.getTotalPages()}" disabled></button>
+    <a class="btn page-link rounded font-weight-bold" th:href="@{/users/roles(page=${viewModel.getNumber() + 1})}" th:classappend="${viewModel.hasNext()}? '' : disabled">></a>
+</div>
+<script src="/js/scripts/all-users.js">
+
+</script>

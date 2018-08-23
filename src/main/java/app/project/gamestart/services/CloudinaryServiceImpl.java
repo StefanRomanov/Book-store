@@ -6,11 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class CloudinaryServiceImpl implements CloudinaryService {
@@ -27,9 +23,6 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
         Map<String,String> options = new HashMap<>();
         options.put("resource_type", "raw");
-        options.put("type", "authenticated");
-        options.put("access_mode", "authenticated");
-
 
         String result = this.cloudinary
                 .uploader()
@@ -57,7 +50,13 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
 
     @Override
-    public String deleteImage(String imageId){
-        return null;
+    public String deleteImage(String url) throws Exception {
+        String[] parts = url.split("/");
+        String fileName = parts[parts.length - 1];
+        Map<String,String> options = new HashMap<>();
+        options.put("resource_type", "raw");
+
+        System.out.println(cloudinary.uploader().destroy(fileName, options));
+        return fileName;
     }
 }

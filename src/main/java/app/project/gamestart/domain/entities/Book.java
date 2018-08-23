@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "books")
@@ -18,7 +17,7 @@ public class Book extends BaseEntity{
     private Set<Review> reviews;
     private Publisher publisher;
     private Boolean approved;
-    private Set<Genre> genres;
+    private Genre genre;
     private String description;
     private BigDecimal price;
     private String coverImageUrl;
@@ -112,18 +111,15 @@ public class Book extends BaseEntity{
         this.textFile = textFile;
     }
 
-    @ElementCollection(targetClass = Genre.class)
-    @CollectionTable(name = "genres", joinColumns = @JoinColumn(name = "game_id"))
-    @Column(name = "genre")
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    public Set<Genre> getGenres() {
-        return genres;
+    public Genre getGenre() {
+        return genre;
     }
 
-    public void setGenres(Set<Genre> genres) {
-        this.genres = genres;
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
-
     @ManyToMany(mappedBy = "books")
     public Set<User> getUsers() {
         return users;

@@ -1,11 +1,23 @@
-<div class="app-color-prime rounded container">
-    <div class="col-sm-8">
-        <h3>{{title}}</h3>
-        <h5 class="text-white text=muted">{{submissionDate}}</h5>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div class="app-color-prime rounded mt-2 d-flex w-50 align-self-center container-fluid"  id="{{id}}">
+    <div class="col-sm-8 m-2">
+        <h3 class="text-white">{{title}}</h3>
+        <h5 class="text-muted">by {{username}}</h5>
+        <h5 class=" text-muted">{{submissionDate}}</h5>
     </div>
-    <div class="col-sm-4">
-        <p>{{approve}}</p>
-        <button class="btn-info" data-toggle="modal">Read</button>
+    <div class="col-sm-4 m-2 container flex-wrap">
+        <div class="bg-success recommended container w-75 rounded m-2 position-relative" style="display: none; text-overflow: ellipsis; overflow: hidden" >
+            <p class="m-1" >Recommended</p>
+        </div>
+        <div class="bg-danger not-recommended container w-75 rounded m-2 position-relative" style="display: none; text-overflow: ellipsis; overflow: hidden" >
+            <p class="m-1">Not recommended</p>
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-info align-bottom" data-toggle="modal" data-target="#exampleModalLong">Read</button>
+            <a class="btn btn-danger flex-wrap" id="delete" href="/reviews/delete/{{id}}" style="display: none" >Delete</a>
+        </div>
     </div>
 </div>
 
@@ -26,4 +38,4 @@
             </div>
         </div>
     </div>
-</div>z
+</div>

@@ -1,6 +1,5 @@
 package app.project.gamestart.domain.models.service;
 
-import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.entities.Review;
 import app.project.gamestart.domain.entities.User;
 import app.project.gamestart.domain.enums.Genre;
@@ -17,7 +16,7 @@ public class BookAddServiceModel {
     private Set<String> authors;
     private Set<Review> reviews;
     private Boolean approved;
-    private Set<Genre> genres;
+    private Genre genre;
     private String description;
     private BigDecimal price;
     private File coverImageUrl;
@@ -26,7 +25,6 @@ public class BookAddServiceModel {
     private Set<User> users;
 
     public BookAddServiceModel() {
-        this.genres = new HashSet<>();
         this.reviews = new HashSet<>();
         this.users = new HashSet<>();
     }
@@ -63,12 +61,12 @@ public class BookAddServiceModel {
         this.approved = approved;
     }
 
-    public Set<Genre> getGenres() {
-        return genres;
+    public Genre getGenre() {
+        return genre;
     }
 
-    public void setGenres(Set<Genre> genres) {
-        this.genres = genres;
+    public void setGenre(Genre genre) {
+        this.genre = genre;
     }
 
     public String getDescription() {

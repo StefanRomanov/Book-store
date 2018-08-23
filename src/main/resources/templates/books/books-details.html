@@ -10,26 +10,86 @@
     </div>
     <hr class="form-line"/>
     <div class="d-flex flex-row justify-content-between">
-        <div class="d-flex flex-column w-50 justify-content-center">
-            <img th:src="*{coverImageUrl}" class="rounded w-75 align-self-center" />
+        <div class="d-flex flex-column w-50 justify-content-start details-box">
+            <img th:src="*{coverImageUrl}" class="img-fluid rounded w-75 h-90 align-self-center"/>
             <div class="d-flex flex-row justify-content-center">
-                <a th:if="${viewModel.isOwner()}" class="btn mt-2 btn-info w-50" th:href="|/books/download/${viewModel.id}|">Download</a>
+                <a th:if="${viewModel.isOwner() or #authorization.expression('hasAnyAuthority(''ADMIN'',''ROOT'')')}" class="btn mt-2 btn-info w-50" th:href="|/books/download/${viewModel.id}|">Download</a>
             </div>
-            <div class="d-flex flex-row justify-content-center mt-2" th:if="${!viewModel.isOwner()}">
+            <div class="d-flex flex-row justify-content-center mt-2" th:if="${!viewModel.isOwner()}" sec:authorize="hasAnyAuthority('USER','PARTNER')">
                 <button class="btn btn-primary w-50" data-target="#buy-confirm" data-toggle="modal"> Buy </button>
             </div>
+            <div class="d-flex flex-row justify-content-center mt-2" th:if="${!viewModel.isOwner()}" sec:authorize="isAnonymous()">
+                <a class="btn btn-primary w-50" data-target="#buy-confirm" href="/users/login"> Login to Buy </a>
+            </div>
         </div>
-        <div class="d-flex flex-column w-50 justify-content-start">
-            <div class="d-flex flex-column app-color-prime h-100 flex-wrap rounded">
+        <div class="d-flex flex-column w-50 justify-content-start details-box">
+            <div class="d-flex flex-column app-color-prime h-75 rounded d-inline-block">
                 <div class="d-flex flex-column justify-content-start m-3 ">
                     <pre style="white-space: pre-wrap; text-align: justify; text-indent: 10px" class="text-white m-3" th:text="*{description}"></pre>
                 </div>
             </div>
             <div class="d-flex flex-row justify-content-center">
-                <div class="d-flex flex-wrap app-color-prime flex-wrap rounded w-50 mt-2">
-                    <p class="w-100 text-white text-center"  th:text="${#numbers.formatCurrency(viewModel.price)}"></p>
+                <div class="d-flex flex-column app-color-prime rounded w-50 justify-content-center mt-2">
+                    <p th:text="|Publisher: *{publisher}|" class="text-white mt-2 text-center"></p>
+                    <p th:text="|Genre: *{genre}|" class="text-white text-center"></p>
                 </div>
             </div>
+            <div class="d-flex flex-row justify-content-center">
+                <div class="d-flex flex-wrap app-color-prime flex-wrap rounded w-50 mt-2">
+                    <p class="w-100 text-white text-center mt-2"  th:text="${#numbers.formatCurrency(viewModel.price)}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex flex-column justify-content-center d-inline-block" sec:authorize="hasAnyAuthority('ADMIN', 'ROOT')">
+    <hr class=" form-line w-75">
+    <div class="d-flex flex-row justify-content-center d-inline-block">
+        <a th:href="|/books/approve/${viewModel.id}|" class="btn btn-primary mx-2" th:if="${!viewModel.approved}">
+            Approve
+        </a>
+        <a th:href="|/books/delete/${viewModel.id}|" class="btn btn-danger mx-2" th:if="${!viewModel.approved}">
+            Don't Approve
+        </a>
+        <a th:href="|/books/edit/${viewModel.id}|" class="btn btn-info mx-2">
+            Edit
+        </a>
+        <a th:href="|/books/delete/${viewModel.id}|"  class=" btn btn-danger mx-2" sec:authorize="hasAuthority('ROOT')">
+            Delete
+        </a>
+    </div>
+</div>
+<hr class="form-line w-75">
+<h3 class="text-white text-center">Reviews</h3>
+<hr class="form-line w-50">
+<div id="result">
+
+</div>
+<div class="d-flex align-self-center justify-content-center mt-3">
+    <button class="page-link rounded font-weight-bold" id="previous-page"><</button>
+    <input type="text" class="page-link w-5 rounded font-weight-bold text-center" id="current-page">
+    <button class="page-link rounded w-5 font-weight-bold" id="total-pages" disabled></button>
+    <button class="page-link rounded font-weight-bold" id="next-page">></button>
+</div>
+<hr class="form-line w-50">
+<div class="container w-50" th:if="${viewModel.isOwner() && !viewModel.isReviewed()}">
+    <h4 class="text-white text-center">Add review</h4>
+    <div class="d-flex flex-row mt-3 justify-content-center">
+        <div  class="flex-column w-50 justify-content-center">
+            <form th:action="|/reviews/add/${viewModel.id}|" method="post" th:object="${secondModel}">
+                <input type="text" th:field="*{title}" class="align-self-center form-control" placeholder="Title">
+                <br>
+                <textarea class="form-control text-area mt-2" th:field="*{text}" placeholder="Text"></textarea>
+                <br>
+                <div class="mt-2">
+                    <input type="checkbox" th:field="*{recommended}" id="recommend">
+                    <label for="recommend" class="text-white">Recommend</label>
+                </div>
+                <input type="hidden" th:name="${_csrf.parameterName}"
+                       th:value="${_csrf.token}" />
+                <button type="submit" class="btn btn-info mt-2 justify-content-center"> Submit</button>
+            </form>
         </div>
     </div>
 </div>
@@ -61,3 +121,4 @@
         </div>
     </div>
 </div>
+<script src="/js/scripts/details-books.js"></script>

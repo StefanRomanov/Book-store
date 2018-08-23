@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.models.service;
 
 import app.project.gamestart.domain.entities.Author;
+import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.Review;
 import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.domain.enums.PegiRatings;
@@ -18,8 +19,9 @@ public class BookServiceModel {
     private String title;
     private Set<Author> authors;
     private Set<Review> reviews;
+    private Publisher publisher;
     private Boolean approved;
-    private Set<Genre> genres;
+    private Genre genre;
     private String description;
     private BigDecimal price;
     private String coverImageUrl;
@@ -27,7 +29,6 @@ public class BookServiceModel {
     private LocalDate releaseDate;
 
     public BookServiceModel() {
-        this.genres = new HashSet<>();
     }
 
     public String getId() {
@@ -70,12 +71,12 @@ public class BookServiceModel {
         this.approved = approved;
     }
 
-    public Set<Genre> getGenres() {
-        return genres;
+    public Genre getGenre() {
+        return genre;
     }
 
-    public void setGenres(Set<Genre> genres) {
-        this.genres = genres;
+    public void setGenre(Genre genres) {
+        this.genre = genres;
     }
 
     public String getDescription() {
@@ -118,13 +119,25 @@ public class BookServiceModel {
         this.releaseDate = releaseDate;
     }
 
-    public Integer reviewScore(){
-        int approved = this.getReviews().stream().filter(Review::getApproved).collect(Collectors.toList()).size();
-        int total = this.getReviews().size();
-        if(total == 0){
-            return 100;
-        }
+    public Publisher getPublisher() {
+        return publisher;
+    }
 
-        return (approved * total) / 100;
+    public void setPublisher(Publisher publisher) {
+        this.publisher = publisher;
+    }
+
+    public String reviewScore(){
+        double approved = (double) this.getReviews().stream().filter(Review::getRecommended).collect(Collectors.toList()).size();
+
+        double total = (double) this.getReviews().size();
+
+        if(total == 0){
+            return "No reviews";
+        }
+        Double result = (approved / total) * 100.0;
+
+
+        return String.format("%.2f",result) + "%";
     }
 }

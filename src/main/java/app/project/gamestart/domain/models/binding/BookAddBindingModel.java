@@ -1,10 +1,9 @@
 package app.project.gamestart.domain.models.binding;
 
-import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.models.views.AuthorViewModel;
 import app.project.gamestart.validators.annotations.NotEmptyFile;
-import java.io.File;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +20,7 @@ public class BookAddBindingModel {
 
     private String title;
     private Set<String> authors;
-    private Set<String> genres;
+    private String genre;
     private String description;
     private BigDecimal price;
     private MultipartFile coverImageUrl;
@@ -29,8 +28,7 @@ public class BookAddBindingModel {
     private LocalDate releaseDate;
     private List<AuthorViewModel> authorViews;
 
-    public BookAddBindingModel() {
-        this.genres = new HashSet<>();
+    public BookAddBindingModel(){
     }
 
 
@@ -51,16 +49,16 @@ public class BookAddBindingModel {
         this.textFile = textFile;
     }
 
-    @NotNull
-    @Size(min = 1,message = "Select at least one genre !")
-    public Set<String> getGenres() {
-        return genres;
+    @NotEmpty(message = "Select genre !")
+    public String getGenre() {
+        return genre;
     }
 
-    public void setGenres(Set<String> genres) {
-        this.genres = genres;
+    public void setGenre(String genre) {
+        this.genre = genre;
     }
 
+    @Length(max = 2000, message = "Maximum 2000 characters")
     public String getDescription() {
         return description;
     }

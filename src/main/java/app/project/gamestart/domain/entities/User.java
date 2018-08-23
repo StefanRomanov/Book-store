@@ -1,8 +1,10 @@
 package app.project.gamestart.domain.entities;
 
+import app.project.gamestart.validators.annotations.EmailValidator;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Override
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     public String getUsername() {
         return this.username;
     }
@@ -41,6 +43,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Column(nullable = false)
+    @EmailValidator
     public String getEmail() {
         return this.email;
     }
@@ -67,7 +70,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     public Set<Review> getReviews() {
         return reviews;
     }

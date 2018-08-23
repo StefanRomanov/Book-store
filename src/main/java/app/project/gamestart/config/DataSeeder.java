@@ -2,6 +2,7 @@ package app.project.gamestart.config;
 
 
 import app.project.gamestart.domain.entities.UserRole;
+import app.project.gamestart.domain.enums.UserRoleEnum;
 import app.project.gamestart.services.UserRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -30,16 +31,12 @@ public class DataSeeder implements ApplicationListener<ApplicationReadyEvent> {
 
     private void seedData() {
         if(this.roleService.findAll().isEmpty()){
-            UserRole adminRole = new UserRole();
-            UserRole partnerRole = new UserRole();
-            UserRole userRole = new UserRole();
-            adminRole.setAuthority("ADMIN");
-            partnerRole.setAuthority("PARTNER");
-            userRole.setAuthority("USER");
 
-            this.roleService.saveRole(adminRole);
-            this.roleService.saveRole(partnerRole);
-            this.roleService.saveRole(userRole);
+            for (UserRoleEnum role : UserRoleEnum.values()){
+                UserRole userRole = new UserRole();
+                userRole.setAuthority(role.name());
+                this.roleService.saveRole(userRole);
+            }
         }
     }
 }

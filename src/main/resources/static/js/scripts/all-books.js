@@ -1,8 +1,8 @@
 $(document).ready(function () {
-    fetchData(0)
+    fetchData(0,"")
 });
 
-function setSearchItems(total,current) {
+function setPageItems(total, current) {
     $('#current-page').val(current);
     if(total > 0){
         $('#total-pages').text(total);
@@ -24,7 +24,10 @@ function setSearchItems(total,current) {
 }
 
 $("#current-page").change(function () {
-    fetchData(($(this).val() - 1))
+
+    let query = window.location.search.substring(1);
+
+    fetchData(($(this).val() - 1),query)
 });
 
 $('#previous-page').click(function () {
@@ -44,9 +47,6 @@ $('#next-page').click(function () {
     let nextPage = $('#total-pages').text();
     let currentPage = $(element).val();
 
-    console.log(nextPage);
-    console.log(currentPage);
-
     if(parseInt(currentPage) === parseInt(nextPage)){
         return
     }
@@ -55,21 +55,23 @@ $('#next-page').click(function () {
     $(element).trigger('change');
 });
 
-function fetchData(pageNumber) {
+function fetchData(pageNumber, query) {
     $('#result').empty();
+
+    let url = 'http://localhost:8080/books/api/all?page='+ pageNumber + '&' + query;
 
     $.ajax({
         type: 'GET',
-        url:'http://localhost:8080/books/api/all?page='+ pageNumber,
+        url:url,
         success: function (data) {
 
-            setSearchItems(data['totalPages'],data['number'] + 1);
+            setPageItems(data['totalPages'],data['number'] + 1);
 
             $.get('/templates/book-list-element.html', function (template){
 
                 let renderedElement = template;
 
-                let repeatableElements = ['id', 'title', 'releaseDate', 'authorName', 'reviewScore', 'price', 'coverImageUrl'];
+                let repeatableElements = ['id', 'title', 'releaseDate', 'authorName', 'reviewScore', 'price', 'coverImageUrl', 'genre'];
 
                 if(data['content'].length > 0){
                     for(const object of data['content']){
@@ -90,12 +92,10 @@ function fetchData(pageNumber) {
                                         + '}}', valueToReplace);
                             }
                         }
+                        $('#result').append(renderedElement);
+                        renderedElement = template;
                     }
-
-                    $('#result').append(renderedElement)
                 }
-
-
             })
         },
         error: function (err) {
@@ -103,3 +103,22 @@ function fetchData(pageNumber) {
         }
     })
 }
+
+function setTitle() {
+    return $('#search-text').val();
+}
+
+function setGenre() {
+    return $('#select-genre').val();
+}
+
+$("#search").click(function (event) {
+    event.preventDefault();
+
+    let query = 'title=' + setTitle();
+
+    if(setGenre() !== "" || setGenre() != null){
+        query = query + "&genre=" + setGenre();
+    }
+    fetchData(0,query)
+});

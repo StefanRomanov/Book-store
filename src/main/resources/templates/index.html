@@ -10,6 +10,21 @@
         </div>
 
     </div>
-    <div id="result" class="d-flex w-100">
+    <hr class="form-line">
+    <h4 class="text-center text-white">Top Rated Books</h4>
+    <hr class="form-line">
+    <div id="result" class="d-flex flex-row w-100 justify-content-center">
+        <th:block th:each="book : ${viewModel}" th:object="${book}">
+                <a th:href="|/books/details/*{id}|" class="d-flex flex-column w-20 rounded app-color-prime mx-auto justify-content-center book-list-element">
+                    <div class="d-flex flex-row rounded w-75">
+                        <img th:src="*{coverImageUrl}" class="front-page-img align-self-center m-2">
+                    </div>
+                    <div class="d-flex flex-column w-100 rounded">
+
+                        <h6 class="text-white text-center" th:text="*{title}" ></h6>
+                        <h6 class=" text-muted text-center" th:text="|by *{authorName}|" ></h6>
+                    </div>
+                </a>
+        </th:block>
     </div>
 </div>

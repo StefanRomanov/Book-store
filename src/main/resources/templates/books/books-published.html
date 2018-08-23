@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<h1 class="text-white text-center">All Published Books</h1>
+<hr class="form-line">
+<div class="w-75 mx-auto d-flex justify-content-between my-auto">
+    <div class="d-flex w-50 justify-content-center d-inline">
+        <form class="form-inline">
+            <input type="text" id="search-text" class=" form-control rounded" placeholder="Company name">
+            <button class="btn btn-info ml-3  form-control" id="search">Search</button>
+        </form>
+    </div>
+    <div class="d-flex w-50 justify-content-center">
+        <select id="select-genre" class="selectpicker">
+            <option value=""></option>
+            <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.Genre).values()}">
+                <option th:value="${genre}" th:text="${genre.getFullName()}"></option>
+            </th:block>
+        </select>
+    </div>
+</div>
+<hr class="form-line">
+<div id="result">
+</div>
+<div class="d-flex align-self-center justify-content-center mt-3">
+    <button class="page-link rounded font-weight-bold" id="previous-page"><</button>
+    <input type="text" class="page-link w-5 rounded font-weight-bold text-center" id="current-page">
+    <button class="page-link rounded w-5 font-weight-bold" id="total-pages" disabled></button>
+    <button class="page-link rounded font-weight-bold" id="next-page">></button>
+</div>
+<script src="/js/scripts/published-books.js"></script>

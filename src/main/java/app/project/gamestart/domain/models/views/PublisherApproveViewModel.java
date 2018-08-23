@@ -9,6 +9,7 @@ public class PublisherApproveViewModel {
     private String billingAddress;
     private String legalForm;
     private String companyEmail;
+    private boolean isApproved;
     private String country;
     private String city;
     private String postalCode;
@@ -86,5 +87,13 @@ public class PublisherApproveViewModel {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public boolean getIsApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 }

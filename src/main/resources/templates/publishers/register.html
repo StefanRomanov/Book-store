@@ -71,6 +71,8 @@
                     <input type="checkbox" th:field="*{sameEmail}">
                 </div>
             </div>
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}" />
             <hr class="form-line">
             <button class="btn app-color offset-md-5" type="submit">Send application</button>
         </form>

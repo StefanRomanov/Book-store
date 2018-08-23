@@ -1,18 +1,20 @@
 package app.project.gamestart.web.controllers;
 
 import app.project.gamestart.domain.entities.BaseEntity;
+import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.User;
 import app.project.gamestart.domain.models.binding.BookAddBindingModel;
+import app.project.gamestart.domain.models.binding.BookEditBindingModel;
+import app.project.gamestart.domain.models.binding.ReviewAddBindingModel;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
+import app.project.gamestart.domain.models.service.BookEditServiceModel;
+import app.project.gamestart.domain.models.service.BookServiceModel;
 import app.project.gamestart.domain.models.views.AuthorViewModel;
 import app.project.gamestart.domain.models.views.BookAllView;
 import app.project.gamestart.domain.models.views.BookDetailsView;
-import app.project.gamestart.services.AuthorService;
-import app.project.gamestart.services.BookService;
-import app.project.gamestart.services.SaleService;
+import app.project.gamestart.services.*;
 import app.project.gamestart.util.MultipartToFileTransferer;
 import app.project.gamestart.util.PageMapper;
-import org.dom4j.rule.Mode;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 @Controller
@@ -41,13 +43,17 @@ public class BookController extends  BaseController {
     private final ModelMapper modelMapper;
     private final AuthorService authorService;
     private final SaleService saleService;
+    private final UserService userService;
+    private final PublisherService publisherService;
 
     @Autowired
-    public BookController(BookService bookService, ModelMapper modelMapper, AuthorService authorService, SaleService saleService) {
+    public BookController(BookService bookService, ModelMapper modelMapper, AuthorService authorService, SaleService saleService, UserService userService, PublisherService publisherService) {
         this.bookService = bookService;
         this.modelMapper = modelMapper;
         this.authorService = authorService;
         this.saleService = saleService;
+        this.userService = userService;
+        this.publisherService = publisherService;
     }
 
     @GetMapping("/add")
@@ -59,7 +65,7 @@ public class BookController extends  BaseController {
     }
 
     @PostMapping("/add")
-    public ModelAndView addConfirm(@Valid @ModelAttribute("viewModel") BookAddBindingModel bindingModel, BindingResult bindingResult) throws IOException, ExecutionException, InterruptedException {
+    public ModelAndView addConfirm(@Valid @ModelAttribute("viewModel") BookAddBindingModel bindingModel, BindingResult bindingResult, Authentication authentication) throws IOException{
 
         if (bindingResult.hasErrors()) {
             this.addAuthors(bindingModel);
@@ -68,24 +74,38 @@ public class BookController extends  BaseController {
 
         BookAddServiceModel serviceModel = this.modelMapper.map(bindingModel, BookAddServiceModel.class);
 
-        serviceModel.setTextFile(MultipartToFileTransferer.convertOne(bindingModel.getCoverImageUrl()));
-        serviceModel.setCoverImageUrl(MultipartToFileTransferer.convertOne(bindingModel.getTextFile()));
+        User authUser = (User) authentication.getPrincipal();
+
+        serviceModel.setCoverImageUrl(MultipartToFileTransferer.convertOne(bindingModel.getCoverImageUrl()));
+        serviceModel.setTextFile(MultipartToFileTransferer.convertOne(bindingModel.getTextFile()));
 
 
-        this.bookService.addGame(serviceModel);
+        this.bookService.addBook(serviceModel, this.userService.getUserById(authUser.getId()).getId());
 
         return super.redirect("/", null, "Hello");
     }
 
     @GetMapping("/details/{id}")
-    public ModelAndView details(@PathVariable("id") String id, Authentication authentication){
+    public ModelAndView details(@PathVariable("id") String id, Authentication authentication, @ModelAttribute("ReviewBindingModel") ReviewAddBindingModel reviewAddBindingModel){
         BookDetailsView view = this.modelMapper.map(this.bookService.getOneById(id), BookDetailsView.class);
-        User user = (User)authentication.getPrincipal();
-        List<String> ids = user.getBooks().stream().map(BaseEntity::getId).collect(Collectors.toList());
 
-        view.setOwner(user.getBooks().stream().map(BaseEntity::getId).collect(Collectors.toList()).contains(view.getId()));
+        if(authentication == null){
+            view.setOwner(false);
+            view.setReviewed(false);
+        } else {
+            User authUser = (User)authentication.getPrincipal();
+            User user = this.userService.getUserById(authUser.getId());
+            view.setOwner(user.getBooks().stream().map(BaseEntity::getId).collect(Collectors.toList()).contains(view.getId()));
+            view.setReviewed(user.getReviews().stream().map(r -> r.getBook().getId()).collect(Collectors.toList()).contains(view.getId()));
+        }
 
-        return super.view("/books/books-details",view,"Details");
+
+        ReviewAddBindingModel reviewModel = new ReviewAddBindingModel();
+        if(reviewAddBindingModel != null){
+            reviewModel = reviewAddBindingModel;
+        }
+
+        return super.view("/books/books-details",view,reviewModel,"Details");
     }
 
     @GetMapping("/all")
@@ -93,16 +113,58 @@ public class BookController extends  BaseController {
         return super.view("/books/books-all",null,"All books");
     }
 
+    @GetMapping("/my")
+    public ModelAndView myBooks(){
+        return super.view("/books/books-my",null,"My books");
+    }
+
+    @GetMapping(value = "/api/my", produces = "application/json")
+    public @ResponseBody Page<BookAllView> myBooksList(Pageable pageable,
+                                                       @RequestParam(value = "title",required = false) String title,
+                                                       @RequestParam(value = "genre",required = false) String genre,
+                                                       Authentication authentication){
+        User authUser = (User)authentication.getPrincipal();
+
+        return PageMapper.mapPage(this.bookService.getMyBooksList(pageable,true,title,genre,authUser.getId()), BookAllView.class, this.modelMapper);
+    }
+
+    @GetMapping("/published")
+    public ModelAndView publishedBooks(){
+        return super.view("/books/books-published",null,"My books");
+    }
+
+    @GetMapping(value = "/api/published", produces = "application/json")
+    public @ResponseBody Page<BookAllView> publishedBooksList(Pageable pageable,
+                                                       @RequestParam(value = "title",required = false) String title,
+                                                       @RequestParam(value = "genre",required = false) String genre,
+                                                       Authentication authentication){
+        User authUser = (User)authentication.getPrincipal();
+
+        return PageMapper.mapPage(this.bookService.getPublishedBooksList(pageable,true,title,genre,authUser.getId()), BookAllView.class, this.modelMapper);
+    }
+
     @GetMapping(value = "/api/all", produces = "application/json")
-    public @ResponseBody Page<BookAllView> allBooksList(Pageable pageable){
-        Page<BookAllView> bookAllViews = PageMapper.mapPage(this.bookService.getAllBooks(pageable),BookAllView.class,modelMapper);
-        return  bookAllViews;
+    public @ResponseBody Page<BookAllView> allBooksList(Pageable pageable,
+                                                        @RequestParam(value = "title",required = false) String title,
+                                                        @RequestParam(value = "genre",required = false) String genre){
+
+        return  PageMapper.mapPage(this.bookService.getAllBooksList(pageable,true,title,genre),BookAllView.class,modelMapper);
     }
 
     @GetMapping(value = "/download/{bookId}", produces = "application/epub+zip")
     public @ResponseBody
-    byte[] download(Principal principal, @PathVariable("bookId") String bookId, HttpServletResponse response) {
-        String bookTitle = this.bookService.getOneById(bookId).getTitle();
+    byte[] download(@PathVariable("bookId") String bookId, HttpServletResponse response, Authentication authentication) throws AccessDeniedException {
+
+        User authUser = (User) authentication.getPrincipal();
+        User user = this.userService.getUserById(authUser.getId());
+        BookServiceModel bookServiceModel = this.bookService.getOneById(bookId);
+
+        if(!user.getBooks().stream().map(BaseEntity::getId).collect(Collectors.toList()).contains(bookId) &&
+                (!user.getAuthorities().iterator().next().getAuthority().equals("ADMIN") && !user.getAuthorities().iterator().next().getAuthority().equals("ROOT") )){
+            throw new AccessDeniedException("Forbidden");
+        }
+
+        String bookTitle = bookServiceModel.getTitle();
 
         try {
             response.setHeader("Content-Disposition", "inline; filename=" + bookTitle + ".epub");
@@ -121,6 +183,69 @@ public class BookController extends  BaseController {
         this.saleService.registerSale(user.getId(),bookId);
 
         return super.redirect("/books/all",null);
+    }
+
+    @GetMapping("/manage")
+    public ModelAndView manageBooks(){
+        return super.view("/admin/manage-books");
+    }
+
+    @GetMapping(value = "/api/manage", produces = "application/json")
+    public @ResponseBody Page<BookAllView> booksForManaging(Pageable pageable,
+                                                            @RequestParam(value = "approved") boolean approved,
+                                                            @RequestParam(value = "title", required = false) String title){
+
+        return  PageMapper.mapPage(this.bookService.getAllBooksList(pageable, approved, title,null),BookAllView.class,modelMapper);
+    }
+
+    @GetMapping("/approve/{id}")
+    public ModelAndView approve(@PathVariable("id") String id, Authentication authentication){
+        if(!authentication.getAuthorities().iterator().next().getAuthority().equals("ADMIN") &&
+                !authentication.getAuthorities().iterator().next().getAuthority().equals("ROOT")){
+            return super.redirect("/forbidden");
+        }
+
+        this.bookService.bookApprove(id);
+
+        return super.redirect("/books/details/" + id);
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView edit(@PathVariable("id") String id){
+        BookServiceModel serviceModel = this.bookService.getOneById(id);
+        BookEditBindingModel bookEditBindingModel = this.modelMapper.map(serviceModel,BookEditBindingModel.class);
+
+        return super.view("/books/books-edit", bookEditBindingModel, serviceModel.getTitle(),"Edit");
+    }
+
+    @PostMapping("/edit/{id}")
+    public ModelAndView editConfirm(@PathVariable("id") String id, @Valid @ModelAttribute BookEditBindingModel bookEditBindingModel, BindingResult bindingResult) throws IOException {
+
+        if(bindingResult.hasErrors()){
+            return super.view("/books/books-edit", bookEditBindingModel,this.bookService.getOneById(id).getTitle(), "Edit");
+        }
+
+        BookEditServiceModel serviceModel = this.modelMapper.map(bookEditBindingModel, BookEditServiceModel.class);
+
+        if(bookEditBindingModel.getCoverImageUrl().getSize() > 0){
+            serviceModel.setCoverImageUrl(MultipartToFileTransferer.convertOne(bookEditBindingModel.getCoverImageUrl()));
+        }
+
+        try{
+            this.bookService.editBook(id,serviceModel);
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+            throw new IllegalArgumentException();
+        }
+
+        return super.redirect("/books/details/" + id);
+    }
+
+    @GetMapping("/delete/{id}")
+    public ModelAndView delete(@PathVariable("id") String id) throws Exception {
+        this.bookService.deleteBook(id);
+
+        return super.redirect("/books/all");
     }
 
     private void addAuthors(BookAddBindingModel bookAddBindingModel) {

@@ -1,15 +1,15 @@
 <html xmlns:th="http://www.thymeleaf.org" lang="en"
       xmlns="http://www.w3.org/1999/xhtml">
 <div class="jumbotron-fluid">
-    <h2 class="text-center text-white">ADD A GAME</h2>
+    <h2 class="text-center text-white">Edit Book</h2>
 </div>
 <hr class="form-line">
-<div class="d-flex justify-content-around">
-    <div class=" rounded w-85 app-color-prime container-fluid">
+<div class="d-flex justify-content-center container">
+    <div class="d-flex justify-content-center rounded w-85 app-color-prime">
         <form th:action="@{/books/add}" method="post" enctype=multipart/form-data th:object="${viewModel}">
             <br>
-            <div class="d-flex justify-content-center">
-                <div class="form-group w-50" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
+            <div class="d-flex  justify-content-center ">
+                <div class="form-group w-100" th:classappend="${#fields.hasErrors('title')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('title')}">Title</label>
                     <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{title}" placeholder="Game title...">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
@@ -17,21 +17,20 @@
                 <br>
             </div>
             <br>
-            <div class="d-flex justify-content-between justify-content-around justify-content-center">
-
-                <div class="form-group w-20">
+            <div class="d-flex justify-content-center">
+                <div class="form-group mx-auto justify-content-center">
                     <label class="text-white">Genre</label>
                     <br>
-                    <select id="select-genre" multiple="multiple" class="selectpicker" th:field="*{genres}">
+                    <select id="select-genre" class="selectpicker" th:field="*{genre}">
                         <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.Genre).values()}">
                             <option th:value="${genre}" th:text="${genre.getFullName()}"></option>
                         </th:block>
                     </select>
                     <br>
-                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('genres')}" th:errors="*{genres}"></span>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}"></span>
                     <br>
                 </div>
-                <div class="form-group w-20">
+                <div class="form-group w-50 mx-auto">
                     <label class="text-white">Release date</label>
                     <br>
                     <div class="input-group date" data-provide="datepicker" data-date-format="dd-mm-yyyy">
@@ -44,18 +43,18 @@
                     <br>
                 </div>
             </div>
-            <div class="d-flex justify-content-around">
-                <div class="custom-file w-25 form-group" >
+            <div class="d-flex justify-content-between">
+                <div class="custom-file form-group mx-2" >
                     <input type="file" class="custom-file-input" id="titleImage" th:errorclass="is-invalid" aria-describedby="fileHelp" th:field="*{coverImageUrl}">
                     <label class="custom-file-label" for="titleImage">
-                        Select title image
+                        Select cover image
                     </label>
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('coverImageUrl')}" th:errors="*{coverImageUrl}"></span>
                 </div>
-                <div class="custom-file w-25 form-group">
+                <div class="custom-file form-group mx-2">
                     <input type="file" class="custom-file-input" id="otherImages" aria-describedby="fileHelp" multiple th:field="*{textFile}">
                     <label class="custom-file-label" for="otherImages">
-                        Select book textFile
+                        Select book text file
                     </label>
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('textFile')}" th:errors="*{textFile}"></span>
                 </div>
@@ -63,25 +62,25 @@
             <br>
             <div class="d-flex justify-content-center">
                 <br>
-                <div class="form-group w-75" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'">
+                <div class="form-group w-100" th:classappend="${#fields.hasErrors('description')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('description')}">Description</label>
-                    <textarea class="form-control text-white text-area" id="summernote" th:errorclass="is-invalid" th:field="*{description}" placeholder="Game Description..."></textarea>
+                    <textarea class="form-control text-white text-area" rows="7" id="summernote" th:errorclass="is-invalid" th:field="*{description}" placeholder="Game Description..."></textarea>
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
                 </div>
                 <br>
             </div>
             <div class="d-flex justify-content-center">
                 <br>
-                <div class="form-group w-25" th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
+                <div class="form-group w-35 align-self-start" th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('price')}">Price</label>
                     <input type="number" step=".01" class="form-control" th:errorclass="is-invalid" th:field="*{price}"/>
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
                 </div>
                 <br>
-                <div class="form-group w-20">
+                <div class="form-group w-25 mx-auto">
                     <label class="text-white">Author</label>
                     <br>
-                    <select id="select-author" data-live-search="true" multiple="multiple" class="selectpicker" th:field="*{authors}">
+                    <select id="select-author" data-live-search="true" multiple="multiple" class="selectpicker align-self-end" th:field="*{authors}">
                         <th:block th:each="author : *{authorViews}">
                             <option th:value="${author.id}" th:text="${author.name}" th:data-subtext="|born ${author.dateOfBirth}, ${author.country}|"></option>
                         </th:block>
@@ -91,6 +90,8 @@
                     <br>
                 </div>
             </div>
+            <input type="hidden" th:name="${_csrf.parameterName}"
+                   th:value="${_csrf.token}" />
             <hr class="form-line">
             <div class="d-flex justify-content-center mb-3">
                 <button class="btn app-color" type="submit">Add</button>

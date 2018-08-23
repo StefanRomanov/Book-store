@@ -1,5 +1,7 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.validators.annotations.EmailValidator;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -55,7 +57,8 @@ public class PublisherAddBindingModel {
         this.legalForm = legalForm;
     }
 
-    @Email(message = "Please input company email.")
+
+    @EmailValidator
     public String getCompanyEmail() {
         return companyEmail;
     }

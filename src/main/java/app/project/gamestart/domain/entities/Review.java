@@ -1,9 +1,8 @@
 package app.project.gamestart.domain.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import org.springframework.stereotype.Controller;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 
 @Entity
@@ -12,7 +11,7 @@ public class Review extends BaseEntity{
 
     private String title;
     private String text;
-    private boolean approved;
+    private boolean recommended;
     private LocalDate submissionDate;
     private User user;
     private Book book;
@@ -39,7 +38,7 @@ public class Review extends BaseEntity{
         this.text = text;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     public User getUser() {
         return user;
     }
@@ -53,17 +52,18 @@ public class Review extends BaseEntity{
         return book;
     }
 
+
     public void setBook(Book book) {
         this.book = book;
     }
 
     @Column(nullable = false)
-    public boolean getApproved() {
-        return approved;
+    public boolean getRecommended() {
+        return recommended;
     }
 
-    public void setApproved(boolean approved) {
-        this.approved = approved;
+    public void setRecommended(boolean recommended) {
+        this.recommended = recommended;
     }
 
     @Column(nullable = false)

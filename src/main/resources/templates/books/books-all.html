@@ -4,15 +4,16 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <h1 class="text-white text-center">All Books</h1>
 <hr class="form-line">
-<div class="w-50 mx-auto d-flex justify-content-between my-auto">
-    <div class="justify-content-between w-35 container">
-        <form class="form-inline flex-row flex-wrap">
-            <input type="text" id="search" class=" form-control rounded">
-            <button class="btn btn-info ml-3 flex-wrap form-control">Search</button>
+<div class="w-75 mx-auto d-flex justify-content-between my-auto">
+    <div class="d-flex w-50 justify-content-center d-inline">
+        <form class="form-inline">
+            <input type="text" id="search-text" class=" form-control rounded" placeholder="Company name">
+            <button class="btn btn-info ml-3  form-control" id="search">Search</button>
         </form>
     </div>
-    <div w-35>
+    <div class="d-flex w-50 justify-content-center">
         <select id="select-genre" class="selectpicker">
+            <option value=""></option>
             <th:block th:each="genre : ${T(app.project.gamestart.domain.enums.Genre).values()}">
                 <option th:value="${genre}" th:text="${genre.getFullName()}"></option>
             </th:block>

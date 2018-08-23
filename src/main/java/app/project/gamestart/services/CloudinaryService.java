@@ -12,5 +12,5 @@ public interface CloudinaryService {
 
     Set<String> uploadManyImages(Set<File> files) throws IOException;
 
-    String deleteImage(String imageId) throws URISyntaxException;
+    String deleteImage(String imageId) throws Exception;
 }

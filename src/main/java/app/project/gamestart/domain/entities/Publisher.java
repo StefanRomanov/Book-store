@@ -1,8 +1,11 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.domain.enums.Country;
+import app.project.gamestart.validators.annotations.EmailValidator;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @Entity
@@ -25,6 +28,7 @@ public class Publisher extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @NotEmpty
     public String getCompanyName() {
         return companyName;
     }
@@ -34,6 +38,8 @@ public class Publisher extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @NotEmpty
+    @Length(min = 10)
     public String getVatNumber() {
         return vatNumber;
     }
@@ -43,6 +49,8 @@ public class Publisher extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @NotEmpty
+    @Length(min = 5)
     public String getBillingAddress() {
         return billingAddress;
     }
@@ -78,16 +86,18 @@ public class Publisher extends BaseEntity{
         this.user = user;
     }
 
+    @Column(nullable = false)
+    @NotEmpty
     public String getLegalForm() {
         return legalForm;
     }
 
-    @Column(nullable = false)
     public void setLegalForm(String legalForm) {
         this.legalForm = legalForm;
     }
 
     @Column(nullable = false)
+    @EmailValidator
     public String getCompanyEmail() {
         return companyEmail;
     }
@@ -97,6 +107,7 @@ public class Publisher extends BaseEntity{
     }
 
     @Enumerated(value = EnumType.STRING)
+    @NotEmpty
     public Country getCountry() {
         return country;
     }
@@ -106,6 +117,7 @@ public class Publisher extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @NotEmpty
     public String getCity() {
         return city;
     }
@@ -115,6 +127,7 @@ public class Publisher extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @NotEmpty
     public String getPostalCode() {
         return postalCode;
     }

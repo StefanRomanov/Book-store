@@ -12,6 +12,7 @@ public class PublisherServiceModel {
     private Country country;
     private String city;
     private String postalCode;
+    private boolean isApproved;
 
     public PublisherServiceModel() {
     }
@@ -86,5 +87,13 @@ public class PublisherServiceModel {
 
     public void setPostalCode(String postalCode) {
         this.postalCode = postalCode;
+    }
+
+    public boolean getApproved() {
+        return isApproved;
+    }
+
+    public void setApproved(boolean approved) {
+        isApproved = approved;
     }
 }
