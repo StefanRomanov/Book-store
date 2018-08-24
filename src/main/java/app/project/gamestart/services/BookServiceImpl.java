@@ -226,7 +226,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void deleteBook(String bookId) throws IOException {
-        Book book = this.bookRepository.getOne(bookId);
+        Book book = this.bookRepository.findById(bookId).orElse(null);
         if(book == null){
             throw new BookNotFoundException();
         }
@@ -242,7 +242,6 @@ public class BookServiceImpl implements BookService {
         for(Sale sale : this.saleRepository.findAllByBook(book)){
             this.saleRepository.delete(sale);
         }
-
 
         this.cloudinaryService.deleteImage(book.getCoverImageUrl());
         this.cloudinaryService.deleteImage(book.getTextFile());

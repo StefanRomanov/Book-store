@@ -57,7 +57,7 @@
             <div class="d-flex justify-content-center justify-content-around mb-3">
                 <button class="btn btn-primary" type="submit" th:if="!*{isApproved}">Approve</button>
                 <a class="btn btn-danger" th:if="!*{isApproved}" th:href="|/publishers/delete/*{id}|">Dont approve</a>
-                <a class="btn btn-danger" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/delete/*{id}|">Delete</a>
+                <a class="btn btn-danger" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT')" th:href="|/publishers/delete/*{id}|">Delete</a>
                 <a class="btn btn-info" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/edit/*{id}|">Edit</a>
                 <a class="btn btn-light" href="/publishers/manage">Cancel</a>
             </div>

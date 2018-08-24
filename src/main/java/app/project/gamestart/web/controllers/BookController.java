@@ -63,11 +63,12 @@ public class BookController extends  BaseController {
 
     @PostMapping("/add")
     public ModelAndView addConfirm(@Valid @ModelAttribute("viewModel") BookAddBindingModel bindingModel, BindingResult bindingResult, Authentication authentication) throws IOException{
-
+        System.out.println(bindingModel.getCoverImageUrl().getContentType());
         if (bindingResult.hasErrors()) {
             this.addAuthors(bindingModel);
             return super.view("/books/add", bindingModel, "Add Book");
         }
+
 
         BookAddServiceModel serviceModel = this.modelMapper.map(bindingModel, BookAddServiceModel.class);
 
