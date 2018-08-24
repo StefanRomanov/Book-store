@@ -37,18 +37,9 @@ public class AuthorController extends BaseController {
     @PostMapping("/add")
     public ModelAndView addConfirm(@Valid @ModelAttribute("viewModel") AuthorAddBindingModel bindingModel, BindingResult bindingResult){
 
+        this.authorService.validateAuthor(bindingModel,bindingResult);
+
         if(bindingResult.hasErrors()){
-            return super.view("/authors/authors-add",bindingModel, "Add author");
-        }
-
-        if(this.authorService.findByNameCountryAndBirthDate(
-            bindingModel.getName(),
-            Country.valueOf(bindingModel.getCountry()),
-            bindingModel.getDateOfBirth())
-                .size() > 0){
-
-            bindingResult.rejectValue("name","error.viewModel","This author already exists");
-
             return super.view("/authors/authors-add",bindingModel, "Add author");
         }
 

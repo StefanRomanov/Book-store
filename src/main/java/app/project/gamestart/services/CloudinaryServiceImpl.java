@@ -50,7 +50,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
 
     @Override
-    public String deleteImage(String url) throws Exception {
+    public String deleteImage(String url) throws IOException {
         String[] parts = url.split("/");
         String fileName = parts[parts.length - 1];
         Map<String,String> options = new HashMap<>();

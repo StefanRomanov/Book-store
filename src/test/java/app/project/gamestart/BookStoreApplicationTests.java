@@ -2,12 +2,14 @@ package app.project.gamestart;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.ActiveProfiles;
 
-@RunWith(SpringRunner.class)
+@RunWith(MockitoJUnitRunner.class)
 @SpringBootTest
-public class GamestartApplicationTests {
+@ActiveProfiles("test")
+public class BookStoreApplicationTests {
 
     @Test
     public void contextLoads() {

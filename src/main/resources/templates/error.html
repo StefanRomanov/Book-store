@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<!--/*@thymesVar id="title" type="java.lang.String"*/-->
+<!--/*@thymesVar id="viewName" type="java.lang.String"*/-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}"></title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-select.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-datepicker.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="/js/popper.min.js"></script>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/bootstrap-select.min.js"></script>
+    <script src="/js/bootstrap-datepicker.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+</head>
+<body class="app-color-secondary">
+<div class="container-fluid">
+    <header>
+        <nav class="navbar navbar-static-top navbar-expand-lg navbar-light container-fluid app-color-prime nav navbar-holder rounded">
+            <a class="navbar-brand text-white" th:text="${T(app.project.gamestart.constants.Constants).APPLICATION_NAME}" href="/"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav mr-auto">
+                        <th:block th:replace="fragments/books-menu-items"></th:block>
+                        <th:block sec:authorize="hasAnyAuthority('ADMIN','ROOT')">
+                            <th:block th:replace="fragments/admin-menu-items"></th:block>
+                        </th:block>
+                        <th:block sec:authorize="isAnonymous()" >
+                            <th:block th:replace="fragments/anonymous-menu-items"></th:block>
+                        </th:block>
+                        <th:block sec:authorize="hasAuthority('PARTNER')">
+                            <th:block th:replace="fragments/publisher-menu-items"></th:block>
+                        </th:block>
+                        <th:block sec:authorize="isAuthenticated()">
+                            <th:block th:replace="fragments/authenticated-menu-items"></th:block>
+                        </th:block>
+
+                    </ul>
+                </ul>
+            </div>
+        </nav>
+
+    </header>
+    <main>
+        <div class="d-flex justify-content-center">
+            <img src="/img/404.png" class="d-flex align-self-center rounded">
+        </div>
+    </main>
+    <footer>
+        <div class="d-flex app-color-prime mt-5 rounded">
+            <div class="footer mx-auto justify-content-center align-bottom ">
+                <span class="text-muted" th:text="|&copy; CopyRight ${T(app.project.gamestart.constants.Constants).APPLICATION_NAME} Inc. 2018-2018. All rights reserved.|"></span>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+</html>

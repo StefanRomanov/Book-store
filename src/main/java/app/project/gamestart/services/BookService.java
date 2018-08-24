@@ -17,19 +17,13 @@ public interface BookService {
 
     BookServiceModel getOneById(String id);
 
-    byte[] downloadTextFile(String bookId) throws IOException;
-
-    //Page<BookServiceModel> getAllBooksByApproved(Pageable pageable, boolean approved);
-//
-    //Page<BookServiceModel> getAllBooksByApprovedAndTitle(Pageable pageable, boolean approved, String title);
-//
-    //Page<BookServiceModel> getAllBooksByApprovedAndTitleAndGenre(Pageable pageable, boolean approved, String title, String genre);
+    byte[] downloadTextFile(String bookId, String userId) throws IOException;
 
     void bookApprove(String bookId);
 
-    void editBook(String bookId, BookEditServiceModel model) throws Exception;
+    void editBook(String bookId, BookEditServiceModel model) throws IOException;
 
-    void deleteBook(String bookId) throws Exception;
+    void deleteBook(String bookId) throws IOException;
 
     Page<BookServiceModel> getMyBooksList(Pageable pageable, boolean approved,String title,String genre, String userId);
 
@@ -37,5 +31,5 @@ public interface BookService {
 
     Page<BookServiceModel> getAllBooksList(Pageable pageable,boolean approved, String title, String genre);
 
-    List<BookServiceModel> getFiveTopRatedBooks();
+    List<BookServiceModel> getTopRatedBooks();
 }

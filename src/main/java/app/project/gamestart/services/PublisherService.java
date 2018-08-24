@@ -1,10 +1,12 @@
 package app.project.gamestart.services;
 
 import app.project.gamestart.domain.entities.Publisher;
+import app.project.gamestart.domain.models.binding.PublisherAddBindingModel;
 import app.project.gamestart.domain.models.service.BookServiceModel;
 import app.project.gamestart.domain.models.service.PublisherServiceModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.validation.BindingResult;
 
 public interface PublisherService {
     void addPublisher(PublisherServiceModel serviceModel, String userId);
@@ -20,7 +22,5 @@ public interface PublisherService {
     void delete(String id) throws Exception;
     void edit(String id, PublisherServiceModel serviceModel);
 
-    PublisherServiceModel findByCompanyName(String companyName);
-    PublisherServiceModel findByVatNumber(String vatNumber);
-    PublisherServiceModel findByEmail(String email);
+    void validateRegister(BindingResult bindingResult, PublisherAddBindingModel bindingModel);
 }

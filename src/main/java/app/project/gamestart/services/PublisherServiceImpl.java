@@ -3,7 +3,10 @@ package app.project.gamestart.services;
 import app.project.gamestart.domain.entities.Book;
 import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.User;
+import app.project.gamestart.domain.models.binding.PublisherAddBindingModel;
 import app.project.gamestart.domain.models.service.PublisherServiceModel;
+import app.project.gamestart.exceptions.PublisherNotFoundException;
+import app.project.gamestart.exceptions.UserNotFoundException;
 import app.project.gamestart.repositories.PublisherRepository;
 import app.project.gamestart.repositories.UserRoleRepository;
 import app.project.gamestart.util.PageMapper;
@@ -12,8 +15,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 
 @Service
 @Transactional
@@ -38,7 +43,14 @@ public class PublisherServiceImpl implements PublisherService {
     public void addPublisher(PublisherServiceModel serviceModel, String userId) {
 
         Publisher publisher = this.modelMapper.map(serviceModel,Publisher.class);
+        if(publisher == null){
+            throw new PublisherNotFoundException();
+        }
+
         User user = this.userService.getUserById(userId);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
 
 
         this.userService.addRole(user.getId(),"PENDING");
@@ -50,12 +62,22 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public PublisherServiceModel getPublisherById(String id) {
-        return this.modelMapper.map(this.publisherRepository.getOne(id),PublisherServiceModel.class);
+        Publisher publisher = this.publisherRepository.findById(id).orElse(null);
+        if(publisher == null){
+            throw new PublisherNotFoundException();
+        }
+
+        return this.modelMapper.map(publisher,PublisherServiceModel.class);
     }
 
     @Override
     public void approvePublisher(String publisherId) {
-        Publisher publisher = this.publisherRepository.getOne(publisherId);
+        Publisher publisher = this.publisherRepository.findById(publisherId).orElse(null);
+
+        if(publisher == null){
+            throw new PublisherNotFoundException();
+        }
+
         publisher.setApproved(true);
         this.userService.addRole(publisher.getUser().getId(),"PARTNER");
 
@@ -74,8 +96,13 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public void delete(String id) throws Exception {
-        Publisher publisher = this.publisherRepository.getOne(id);
+    public void delete(String id) throws IOException {
+        Publisher publisher = this.publisherRepository.findById(id).orElse(null);
+
+        if(publisher == null){
+            throw new PublisherNotFoundException();
+        }
+
         User user = publisher.getUser();
         user.getAuthorities().clear();
         user.getAuthorities().add(this.roleRepository.findByAuthority("USER"));
@@ -90,7 +117,11 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public void edit(String id, PublisherServiceModel serviceModel){
 
-        Publisher publisher = this.publisherRepository.getOne(id);
+        Publisher publisher = this.publisherRepository.findById(id).orElse(null);
+
+        if(publisher == null){
+            throw new PublisherNotFoundException();
+        }
 
         publisher.setCompanyName(serviceModel.getCompanyName());
         publisher.setBillingAddress(serviceModel.getBillingAddress());
@@ -105,34 +136,17 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public PublisherServiceModel findByCompanyName(String companyName) {
-
-        Publisher publisher = this.publisherRepository.findFirstByCompanyName(companyName);
-
-        if(publisher == null){
-            return null;
+    public void validateRegister(BindingResult bindingResult, PublisherAddBindingModel bindingModel) {
+        if(this.publisherRepository.findFirstByCompanyName(bindingModel.getCompanyName()) != null){
+            bindingResult.rejectValue("companyName","error.viewModel","Company already registered !");
         }
 
-        return this.modelMapper.map(publisher, PublisherServiceModel.class);
-    }
-
-    @Override
-    public PublisherServiceModel findByVatNumber(String vatNumber) {
-        Publisher publisher = this.publisherRepository.findFirstByVatNumber(vatNumber);
-
-        if(publisher == null){
-            return null;
+        if(this.publisherRepository.findFirstByCompanyEmail(bindingModel.getCompanyEmail()) != null){
+            bindingResult.rejectValue("companyEmail","error.viewModel","Email already taken !");
         }
-        return this.modelMapper.map(publisher, PublisherServiceModel.class);
-    }
 
-    @Override
-    public PublisherServiceModel findByEmail(String email) {
-        Publisher publisher = this.publisherRepository.findFirstByCompanyEmail(email);
-
-        if(publisher == null){
-            return null;
+        if(this.publisherRepository.findFirstByVatNumber(bindingModel.getVatNumber()) != null){
+            bindingResult.rejectValue("vatNumber","error.viewModel","VAT already registered !");
         }
-        return this.modelMapper.map(publisher, PublisherServiceModel.class);
     }
 }

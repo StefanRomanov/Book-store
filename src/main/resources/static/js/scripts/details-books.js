@@ -51,11 +51,11 @@ function fetchData(pageNumber, bookId) {
                         if(object['recommended']){
                             $('#' + object['id']).find('.recommended').show();
                         } else {
-                            $('#' +object['id']).find('.not-recommended').show();
+                            $('#' + object['id']).find('.not-recommended').show();
                         }
 
                         if(object['author'] || (object['currentRole'] === "ADMIN" || object['currentRole'] === "ROOT")){
-                            $('#delete').show();
+                            $('#' + object['id']).find('#delete').show();
                         }
 
                         renderedElement = template;

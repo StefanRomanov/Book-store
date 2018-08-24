@@ -2,12 +2,14 @@ package app.project.gamestart.services;
 
 import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.enums.Country;
+import app.project.gamestart.domain.models.binding.AuthorAddBindingModel;
 import app.project.gamestart.domain.models.service.AuthorServiceModel;
 import app.project.gamestart.repositories.AuthorRepository;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
@@ -34,13 +36,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> findByNameCountryAndBirthDate(String name, Country country, LocalDate dateOfBirth) {
-        return this.authorRepository.findAllByNameAndCountryAndDateOfBirth(name,country,dateOfBirth);
-    }
-
-    @Override
     public List<AuthorServiceModel> findAll() {
-
         Type type = new TypeToken<List<AuthorServiceModel>>(){}.getType();
 
         return this.modelMapper.map(this.authorRepository.findAll(),type);
@@ -49,5 +45,17 @@ public class AuthorServiceImpl implements AuthorService {
     @Override
     public Set<Author> findAllByIdIn(Set<String> ids) {
         return this.authorRepository.findAllByIdIn(ids);
+    }
+
+    @Override
+    public void validateAuthor(AuthorAddBindingModel bindingModel, BindingResult bindingResult) {
+        if(this.authorRepository.findAllByNameAndCountryAndDateOfBirth(
+                bindingModel.getName(),
+                Country.valueOf(bindingModel.getCountry()),
+                bindingModel.getDateOfBirth())
+                .size() > 0){
+
+            bindingResult.rejectValue("name","error.viewModel","This author already exists");
+        }
     }
 }

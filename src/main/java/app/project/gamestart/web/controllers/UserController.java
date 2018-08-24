@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public class UserController extends BaseController {
 
 
     @GetMapping("/profile")
-    private ModelAndView profile(Authentication authentication, Model model){
+    public ModelAndView profile(Authentication authentication, Model model){
         ChangeEmailBindingModel changeEmailModel = new ChangeEmailBindingModel();
 
         if(model.containsAttribute("secondModel")){
@@ -113,7 +114,7 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/changemail/{id}")
-    private ModelAndView changeEmail(@Valid @ModelAttribute("secondModel") ChangeEmailBindingModel bindingModel,
+    public ModelAndView changeEmail(@Valid @ModelAttribute("secondModel") ChangeEmailBindingModel bindingModel,
                                      BindingResult bindingResult, @PathVariable("id") String id, Authentication authentication, RedirectAttributes redirectAttributes){
         if(!((User) authentication.getPrincipal()).getId().equals(id)){
             throw new AccessDeniedException("Forbidden");
@@ -132,8 +133,8 @@ public class UserController extends BaseController {
     }
 
     @PostMapping("/changepassword/{id}")
-    private ModelAndView changePassword(@PathVariable("id") String id, @Valid @ModelAttribute("thirdModel") ChangePasswordBindingModel bindingModel,
-                                        BindingResult bindingResult,Authentication authentication, RedirectAttributes redirectAttributes){
+    public ModelAndView changePassword(@PathVariable("id") String id, @Valid @ModelAttribute("thirdModel") ChangePasswordBindingModel bindingModel,
+                                       BindingResult bindingResult, Authentication authentication, RedirectAttributes redirectAttributes, HttpSession session){
         if(!((User) authentication.getPrincipal()).getId().equals(id)){
             throw new AccessDeniedException("Forbidden");
         }
@@ -147,7 +148,8 @@ public class UserController extends BaseController {
         }
 
         this.userService.changePassword(bindingModel,id);
+        session.invalidate();
 
-        return super.redirect("/users/profile");
+        return super.redirect("/users/login");
     }
 }

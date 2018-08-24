@@ -10,10 +10,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableAsync
 @EnableWebSecurity
 @EnableScheduling
-public class BookStartApplication {
+public class BookStoreApplication {
 
     public static void main(String[] args){
 
-       SpringApplication.run(BookStartApplication.class, args);
+       SpringApplication.run(BookStoreApplication.class, args);
     }
 }

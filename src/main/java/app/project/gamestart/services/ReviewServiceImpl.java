@@ -5,6 +5,7 @@ import app.project.gamestart.domain.entities.Review;
 import app.project.gamestart.domain.models.binding.ReviewAddBindingModel;
 import app.project.gamestart.domain.models.service.BookServiceModel;
 import app.project.gamestart.domain.models.service.ReviewServiceModel;
+import app.project.gamestart.exceptions.ReviewNotFoundException;
 import app.project.gamestart.repositories.ReviewRepository;
 import app.project.gamestart.util.PageMapper;
 import org.modelmapper.ModelMapper;
@@ -54,13 +55,23 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewServiceModel getOneById(String reviewId) {
-        return this.modelMapper.map( this.reviewRepository.getOne(reviewId), ReviewServiceModel.class);
+
+        Review review = this.reviewRepository.findById(reviewId).orElse(null);
+        if(review == null){
+            throw new ReviewNotFoundException();
+        }
+
+        return this.modelMapper.map(review , ReviewServiceModel.class);
     }
 
     @Override
     public void delete(String reviewId) {
 
-        Review review = this.reviewRepository.getOne(reviewId);
+        Review review = this.reviewRepository.findById(reviewId).orElse(null);
+        if(review == null){
+            throw new ReviewNotFoundException();
+        }
+
         review.getUser().getReviews().remove(review);
 
         this.reviewRepository.delete(review);

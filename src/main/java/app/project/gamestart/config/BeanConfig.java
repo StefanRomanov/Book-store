@@ -10,8 +10,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.concurrent.Executor;
 
-import static org.apache.activemq.ActiveMQConnectionFactory.DEFAULT_BROKER_URL;
-
 @Configuration
 public class BeanConfig {
     @Bean

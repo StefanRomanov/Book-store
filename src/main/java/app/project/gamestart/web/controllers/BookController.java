@@ -1,7 +1,6 @@
 package app.project.gamestart.web.controllers;
 
 import app.project.gamestart.domain.entities.BaseEntity;
-import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.User;
 import app.project.gamestart.domain.models.binding.BookAddBindingModel;
 import app.project.gamestart.domain.models.binding.BookEditBindingModel;
@@ -13,7 +12,7 @@ import app.project.gamestart.domain.models.views.AuthorViewModel;
 import app.project.gamestart.domain.models.views.BookAllView;
 import app.project.gamestart.domain.models.views.BookDetailsView;
 import app.project.gamestart.services.*;
-import app.project.gamestart.util.MultipartToFileTransferer;
+import app.project.gamestart.util.MultipartToFileConverter;
 import app.project.gamestart.util.PageMapper;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
@@ -31,8 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.AccessDeniedException;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -76,8 +73,8 @@ public class BookController extends  BaseController {
 
         User authUser = (User) authentication.getPrincipal();
 
-        serviceModel.setCoverImageUrl(MultipartToFileTransferer.convertOne(bindingModel.getCoverImageUrl()));
-        serviceModel.setTextFile(MultipartToFileTransferer.convertOne(bindingModel.getTextFile()));
+        serviceModel.setCoverImageUrl(MultipartToFileConverter.convertOne(bindingModel.getCoverImageUrl()));
+        serviceModel.setTextFile(MultipartToFileConverter.convertOne(bindingModel.getTextFile()));
 
 
         this.bookService.addBook(serviceModel, this.userService.getUserById(authUser.getId()).getId());
@@ -157,18 +154,12 @@ public class BookController extends  BaseController {
     byte[] download(@PathVariable("bookId") String bookId, HttpServletResponse response, Authentication authentication) throws IOException {
 
         User authUser = (User) authentication.getPrincipal();
-        User user = this.userService.getUserById(authUser.getId());
         BookServiceModel bookServiceModel = this.bookService.getOneById(bookId);
-
-        if(!user.getBooks().stream().map(BaseEntity::getId).collect(Collectors.toList()).contains(bookId) &&
-                (!user.getAuthorities().iterator().next().getAuthority().equals("ADMIN") && !user.getAuthorities().iterator().next().getAuthority().equals("ROOT") )){
-            throw new AccessDeniedException("Forbidden");
-        }
 
         String bookTitle = bookServiceModel.getTitle();
 
         response.setHeader("Content-Disposition", "inline; filename=" + bookTitle + ".epub");
-        return this.bookService.downloadTextFile(bookId);
+        return this.bookService.downloadTextFile(bookId, authUser.getId());
     }
 
     @GetMapping("/buy/{bookId}")
@@ -209,6 +200,11 @@ public class BookController extends  BaseController {
     @GetMapping("/edit/{id}")
     public ModelAndView edit(@PathVariable("id") String id){
         BookServiceModel serviceModel = this.bookService.getOneById(id);
+
+        if(!serviceModel.getApproved()){
+            throw new org.springframework.security.access.AccessDeniedException("Cannot edit unapproved books!");
+        }
+
         BookEditBindingModel bookEditBindingModel = this.modelMapper.map(serviceModel,BookEditBindingModel.class);
 
         return super.view("/books/books-edit", bookEditBindingModel, serviceModel.getTitle(),"Edit");
@@ -217,6 +213,10 @@ public class BookController extends  BaseController {
     @PostMapping("/edit/{id}")
     public ModelAndView editConfirm(@PathVariable("id") String id, @Valid @ModelAttribute BookEditBindingModel bookEditBindingModel, BindingResult bindingResult) throws Exception {
 
+        if(!bookService.getOneById(id).getApproved()){
+            throw new org.springframework.security.access.AccessDeniedException("Cannot edit unapproved books!");
+        }
+
         if(bindingResult.hasErrors()){
             return super.view("/books/books-edit", bookEditBindingModel,this.bookService.getOneById(id).getTitle(), "Edit");
         }
@@ -224,7 +224,7 @@ public class BookController extends  BaseController {
         BookEditServiceModel serviceModel = this.modelMapper.map(bookEditBindingModel, BookEditServiceModel.class);
 
         if(bookEditBindingModel.getCoverImageUrl().getSize() > 0){
-            serviceModel.setCoverImageUrl(MultipartToFileTransferer.convertOne(bookEditBindingModel.getCoverImageUrl()));
+            serviceModel.setCoverImageUrl(MultipartToFileConverter.convertOne(bookEditBindingModel.getCoverImageUrl()));
         }
 
         this.bookService.editBook(id,serviceModel);

@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 
-public class MultipartToFileTransferer {
+public class MultipartToFileConverter {
     public static File convertOne(MultipartFile multipartFile) throws IOException {
         File fileToUpload = File.createTempFile("temp-file", multipartFile.getOriginalFilename());
         multipartFile.transferTo(fileToUpload);

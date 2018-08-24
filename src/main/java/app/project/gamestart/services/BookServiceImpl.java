@@ -1,16 +1,16 @@
 package app.project.gamestart.services;
 
 import app.project.gamestart.constants.Constants;
-import app.project.gamestart.domain.entities.Author;
-import app.project.gamestart.domain.entities.Book;
-import app.project.gamestart.domain.entities.Publisher;
-import app.project.gamestart.domain.entities.User;
+import app.project.gamestart.domain.entities.*;
 import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
 import app.project.gamestart.domain.models.service.BookEditServiceModel;
 import app.project.gamestart.domain.models.service.BookServiceModel;
+import app.project.gamestart.exceptions.*;
 import app.project.gamestart.repositories.BookRepository;
 import app.project.gamestart.repositories.PublisherRepository;
+import app.project.gamestart.repositories.ReviewRepository;
+import app.project.gamestart.repositories.SaleRepository;
 import app.project.gamestart.util.PageMapper;
 import org.apache.commons.io.IOUtils;
 import org.modelmapper.ModelMapper;
@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.net.URL;
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,36 +41,59 @@ public class BookServiceImpl implements BookService {
     private final PublisherRepository publisherRepository;
     private final CloudinaryService cloudinaryService;
     private final UserService userService;
+    private final ReviewRepository reviewRepository;
+    private final SaleRepository saleRepository;
 
     @Autowired
     public BookServiceImpl(BookRepository bookRepository, AuthorService authorService,
                            ModelMapper modelMapper,
-                           PublisherRepository publisherRepository, CloudinaryService cloudinaryService, UserService userService) {
+                           PublisherRepository publisherRepository, CloudinaryService cloudinaryService,
+                           UserService userService, ReviewRepository reviewRepository, SaleRepository saleRepository) {
         this.bookRepository = bookRepository;
         this.authorService = authorService;
         this.modelMapper = modelMapper;
         this.publisherRepository = publisherRepository;
         this.cloudinaryService = cloudinaryService;
         this.userService = userService;
+        this.reviewRepository = reviewRepository;
+        this.saleRepository = saleRepository;
     }
 
     @Override
     @Async
-    public void addBook(BookAddServiceModel bindingModel, String userId) throws IOException {
+    public void addBook(BookAddServiceModel bindingModel, String userId){
 
         BookAddServiceModel bookModel = this.modelMapper.map(bindingModel, BookAddServiceModel.class);
 
-        Publisher publisher = this.publisherRepository.findFirstByUser(this.userService.getUserById(userId));
+        User user = this.userService.getUserById(userId);
+
+        if (user == null){
+            throw new UserNotFoundException();
+        }
+
+        Publisher publisher = this.publisherRepository.findFirstByUser(user);
+
+        if(publisher == null){
+            throw new PublisherNotFoundException();
+        }
 
         Book bookFinal = this.modelMapper.map(bookModel, Book.class);
         bookFinal.setPublisher(publisher);
 
         Set<Author> authors = this.authorService.findAllByIdIn(bindingModel.getAuthors());
 
+        if(authors.size() < 1){
+            throw new AuthorNotFoundException();
+        }
+
         bookFinal.setAuthors(authors);
 
-        bookFinal.setTextFile(this.cloudinaryService.uploadImage(bookModel.getTextFile()));
-        bookFinal.setCoverImageUrl(this.cloudinaryService.uploadImage(bookModel.getCoverImageUrl()));
+        try {
+            bookFinal.setTextFile(this.cloudinaryService.uploadImage(bookModel.getTextFile()));
+            bookFinal.setCoverImageUrl(this.cloudinaryService.uploadImage(bookModel.getCoverImageUrl()));
+        } catch (IOException e) {
+            throw new FilesNotUploadedException();
+        }
 
 
         this.bookRepository.saveAndFlush(bookFinal);
@@ -77,12 +101,32 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookServiceModel getOneById(String id) {
-        return this.modelMapper.map(this.bookRepository.getOne(id),BookServiceModel.class);
+        Book book = this.bookRepository.findById(id).orElse(null);
+
+        if(book == null){
+            throw new BookNotFoundException();
+        }
+
+        return this.modelMapper.map(book,BookServiceModel.class);
     }
 
     @Override
-    public byte[] downloadTextFile(String bookId) throws IOException {
-        Book book = this.bookRepository.getOne(bookId);
+    public byte[] downloadTextFile(String bookId, String userId) throws IOException {
+
+        User user = this.userService.getUserById(userId);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
+
+        if(!user.getBooks().stream().map(BaseEntity::getId).collect(Collectors.toList()).contains(bookId) &&
+                (!user.getAuthorities().iterator().next().getAuthority().equals("ADMIN") && !user.getAuthorities().iterator().next().getAuthority().equals("ROOT") )) {
+            throw new AccessDeniedException("Forbidden");
+        }
+
+        Book book = this.bookRepository.findById(bookId).orElse(null);
+        if(book == null){
+            throw  new BookNotFoundException();
+        }
 
         InputStream inputStream = new URL(book.getCoverImageUrl()).openStream();
         byte[] bytes = IOUtils.toByteArray(inputStream);
@@ -104,9 +148,9 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public List<BookServiceModel> getFiveTopRatedBooks() {
+    public List<BookServiceModel> getTopRatedBooks() {
         Type type = new TypeToken<List<BookServiceModel>>(){}.getType();
-        List<BookServiceModel> books = modelMapper.map(this.bookRepository.findAll(),type);
+        List<BookServiceModel> books = this.modelMapper.map(this.bookRepository.findAll(),type);
 
         books = books.stream().filter(b -> !b.reviewScore().equals("No reviews"))
                 .sorted( (a, b) -> {
@@ -132,8 +176,6 @@ public class BookServiceImpl implements BookService {
         }
     }
 
-
-
     @Override
     public Page<BookServiceModel> getPublishedBooksList(Pageable pageable, boolean approved,String title,String genre, String userId){
         Publisher publisher = this.publisherRepository.findFirstByUser(this.userService.getUserById(userId));
@@ -148,7 +190,10 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void bookApprove(String bookId) {
-        Book book = this.bookRepository.getOne(bookId);
+        Book book = this.bookRepository.findById(bookId).orElse(null);
+        if(book == null){
+            throw new BookNotFoundException();
+        }
         book.setApproved(true);
 
         this.bookRepository.saveAndFlush(book);
@@ -156,9 +201,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Async
-    public void editBook(String bookId, BookEditServiceModel model) throws Exception {
+    public void editBook(String bookId, BookEditServiceModel model) throws IOException {
 
-        Book book = this.bookRepository.getOne(bookId);
+        Book book = this.bookRepository.findById(bookId).orElse(null);
+
+        if(book == null){
+            throw new BookNotFoundException();
+        }
+
         book.setDescription(model.getDescription());
         book.setPrice(model.getPrice());
         book.setGenre(Genre.valueOf(model.getGenre()));
@@ -175,8 +225,25 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public void deleteBook(String bookId) throws Exception {
+    public void deleteBook(String bookId) throws IOException {
         Book book = this.bookRepository.getOne(bookId);
+        if(book == null){
+            throw new BookNotFoundException();
+        }
+
+        for (Review review : book.getReviews()) {
+            this.reviewRepository.delete(review);
+        }
+
+        for (User user : book.getUsers()){
+            user.getBooks().remove(book);
+        }
+
+        for(Sale sale : this.saleRepository.findAllByBook(book)){
+            this.saleRepository.delete(sale);
+        }
+
+
         this.cloudinaryService.deleteImage(book.getCoverImageUrl());
         this.cloudinaryService.deleteImage(book.getTextFile());
 

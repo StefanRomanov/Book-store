@@ -68,11 +68,10 @@
                 </div>
             </div>
             <hr class="form-line">
-            <input type="hidden" th:name="${_csrf.parameterName}"
-                   th:value="${_csrf.token}" />
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
             <div class="d-flex justify-content-center justify-content-around mb-3">
-                <button class="btn btn-primary " type="submit">Edit</button>
-                <button class="btn btn-info" href="/publishers/manage">Cancel</button>
+                <button class="btn btn-primary" type="submit">Edit</button>
+                <a class="btn btn-info" href="/publishers/manage">Cancel</a>
             </div>
         </form>
     </div>

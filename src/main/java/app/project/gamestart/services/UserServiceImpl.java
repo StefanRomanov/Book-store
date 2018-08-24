@@ -6,6 +6,7 @@ import app.project.gamestart.domain.models.binding.ChangeEmailBindingModel;
 import app.project.gamestart.domain.models.binding.ChangePasswordBindingModel;
 import app.project.gamestart.domain.models.binding.UserRegisterBindingModel;
 import app.project.gamestart.domain.models.service.UserServiceModel;
+import app.project.gamestart.exceptions.UserNotFoundException;
 import app.project.gamestart.repositories.UserRepository;
 import app.project.gamestart.util.PageMapper;
 import org.modelmapper.ModelMapper;
@@ -41,14 +42,25 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User loadUserByUsername(String s) throws UsernameNotFoundException {
-        return this.userRepository.getFirstByUsername(s);
+
+        User user = this.userRepository.getFirstByUsername(s);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
+
+
+        return user;
     }
 
     @Override
     public void saveUser(UserRegisterBindingModel model) {
 
-
         User user = this.modelMapper.map(model,User.class);
+
+        if(user == null){
+            throw new UserNotFoundException();
+        }
+
         user.setPassword(this.bCryptPasswordEncoder.encode(user.getPassword()));
 
         if(this.userRepository.findAll().size() < 1){
@@ -62,13 +74,21 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public User getUserById(String userId) {
+        User user = this.userRepository.findById(userId).orElse(null);
 
-        return this.userRepository.getOne(userId);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
+
+        return user;
     }
 
     @Override
     public void addRole(String userId, String role){
-        User user = this.userRepository.getOne(userId);
+        User user = this.userRepository.findById(userId).orElse(null);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
         UserRole userRole = this.roleService.findByAuthority(role);
 
         user.getAuthorities().clear();
@@ -103,7 +123,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void changeRole(String userId, String role) {
-        User user = this.userRepository.getOne(userId);
+        User user = this.userRepository.findById(userId).orElse(null);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
 
         user.getAuthorities().clear();
         user.getAuthorities().add(this.roleService.findByAuthority(role));
@@ -116,7 +139,7 @@ public class UserServiceImpl implements UserService{
         User user = this.userRepository.getFirstByUsername(username);
 
         if(user == null){
-            return null;
+            throw new UserNotFoundException();
         }
 
         return this.modelMapper.map(user,UserServiceModel.class);
@@ -125,7 +148,11 @@ public class UserServiceImpl implements UserService{
     @Override
     public void changeEmail(ChangeEmailBindingModel bindingModel, String userId) {
 
-        User user = this.userRepository.getOne(userId);
+        User user = this.userRepository.findById(userId).orElse(null);
+        if(user == null){
+            throw new UserNotFoundException();
+        }
+
         user.setEmail(bindingModel.getEmail());
 
         this.userRepository.saveAndFlush(user);
@@ -133,7 +160,12 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void changePassword(ChangePasswordBindingModel bindingModel, String userId) {
-        User user = this.userRepository.getOne(userId);
+        User user = this.userRepository.findById(userId).orElse(null);
+
+        if(user == null){
+            throw new UserNotFoundException();
+        }
+
         user.setPassword(this.bCryptPasswordEncoder.encode(bindingModel.getPassword()));
 
         this.userRepository.saveAndFlush(user);

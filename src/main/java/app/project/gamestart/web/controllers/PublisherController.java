@@ -42,6 +42,9 @@ public class PublisherController extends BaseController{
 
     @PostMapping("/register")
     public ModelAndView registerConfirm(@Valid @ModelAttribute("viewModel") PublisherAddBindingModel bindingModel, BindingResult bindingResult, Authentication authentication){
+
+        this.publisherService.validateRegister(bindingResult,bindingModel);
+
         if(bindingResult.hasErrors()){
             return super.view("/publishers/register",bindingModel, "Become a partner");
         }
@@ -110,28 +113,20 @@ public class PublisherController extends BaseController{
     }
 
     @PostMapping("/edit/{id}")
-    public ModelAndView editConfirm(@PathVariable("id") String id, @ModelAttribute PublisherAddBindingModel bindingModel, BindingResult bindingResult){
+    public ModelAndView editConfirm(@PathVariable("id") String id, @Valid @ModelAttribute("viewModel") PublisherAddBindingModel bindingModel, BindingResult bindingResult){
+
+        PublisherServiceModel publisherServiceModel = this.modelMapper.map(bindingModel,PublisherServiceModel.class);
+
+        if(!this.publisherService.getPublisherById(bindingModel.getId()).getApproved()){
+            throw new AccessDeniedException("Cannot edit publishers that are not approved");
+        }
 
         if(bindingResult.hasErrors()){
             return super.view("/publishers/edit",bindingModel,"Edit Publisher");
         }
 
-        this.publisherService.edit(id,this.modelMapper.map(bindingModel,PublisherServiceModel.class));
+        this.publisherService.edit(id,publisherServiceModel);
 
         return super.redirect("/publishers/manage/" + id);
-    }
-
-    private void validateRegister(BindingResult bindingResult, PublisherAddBindingModel bindingModel){
-        if(this.publisherService.findByCompanyName(bindingModel.getCompanyName()) != null){
-            bindingResult.rejectValue("companyName","error.viewModel","Company already registered !");
-        }
-
-        if(this.publisherService.findByEmail(bindingModel.getCompanyEmail()) != null){
-            bindingResult.rejectValue("companyEmail","error.viewModel","Email already taken !");
-        }
-
-        if(this.publisherService.findByVatNumber(bindingModel.getVatNumber()) != null){
-            bindingResult.rejectValue("vatNumber","error.viewModel","VAT already registered !");
-        }
     }
 }

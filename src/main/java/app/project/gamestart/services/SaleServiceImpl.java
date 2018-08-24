@@ -3,6 +3,7 @@ package app.project.gamestart.services;
 import app.project.gamestart.domain.entities.Book;
 import app.project.gamestart.domain.entities.Sale;
 import app.project.gamestart.domain.entities.User;
+import app.project.gamestart.exceptions.UserNotFoundException;
 import app.project.gamestart.repositories.SaleRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +32,8 @@ public class SaleServiceImpl implements SaleService {
     @Override
     public void registerSale(String userId, String bookId) {
         User customer = this.userService.getUserById(userId);
-        Book book = this.modelMapper.map(this.bookService.getOneById(bookId), Book.class);
 
+        Book book = this.modelMapper.map(this.bookService.getOneById(bookId), Book.class);
 
         Sale sale = new Sale();
         sale.setBook(book);
