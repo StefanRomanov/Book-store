@@ -1,0 +1,9 @@
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Books
+    </a>
+    <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item text-white" th:href="@{/books/all}" th:text="All"></a>
+        <a class="dropdown-item text-white" sec:authorize="hasAnyAuthority('USER','PARTNER','PENDING')" th:href="@{/books/my}" th:text="|My Books|"></a>
+    </div>
+</li>

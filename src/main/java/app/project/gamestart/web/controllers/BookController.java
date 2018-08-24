@@ -22,6 +22,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,6 +34,7 @@ import java.lang.reflect.Type;
 import java.nio.file.AccessDeniedException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -44,16 +46,14 @@ public class BookController extends  BaseController {
     private final AuthorService authorService;
     private final SaleService saleService;
     private final UserService userService;
-    private final PublisherService publisherService;
 
     @Autowired
-    public BookController(BookService bookService, ModelMapper modelMapper, AuthorService authorService, SaleService saleService, UserService userService, PublisherService publisherService) {
+    public BookController(BookService bookService, ModelMapper modelMapper, AuthorService authorService, SaleService saleService, UserService userService) {
         this.bookService = bookService;
         this.modelMapper = modelMapper;
         this.authorService = authorService;
         this.saleService = saleService;
         this.userService = userService;
-        this.publisherService = publisherService;
     }
 
     @GetMapping("/add")
@@ -82,14 +82,12 @@ public class BookController extends  BaseController {
 
         this.bookService.addBook(serviceModel, this.userService.getUserById(authUser.getId()).getId());
 
-        return super.redirect("/", null, "Hello");
+        return super.redirect("/");
     }
 
     @GetMapping("/details/{id}")
-    public ModelAndView details(@PathVariable("id") String id, Authentication authentication, @ModelAttribute("ReviewBindingModel") ReviewAddBindingModel reviewAddBindingModel){
+    public ModelAndView details(@PathVariable("id") String id, Authentication authentication, Model model){
         BookDetailsView view = this.modelMapper.map(this.bookService.getOneById(id), BookDetailsView.class);
-
-
 
         if(authentication == null){
             view.setOwner(false);
@@ -101,13 +99,14 @@ public class BookController extends  BaseController {
             view.setReviewed(user.getReviews().stream().map(r -> r.getBook().getId()).collect(Collectors.toList()).contains(view.getId()));
         }
 
+        ReviewAddBindingModel addBindingModel = new ReviewAddBindingModel();
 
-        ReviewAddBindingModel reviewModel = new ReviewAddBindingModel();
-        if(reviewAddBindingModel != null){
-            reviewModel = reviewAddBindingModel;
+        if(model.containsAttribute("secondModel")){
+            Map<String,Object> map = model.asMap();
+            addBindingModel = (ReviewAddBindingModel) map.get("secondModel");
         }
 
-        return super.view("/books/books-details",view,reviewModel,"Details");
+        return super.view("/books/books-details",view,addBindingModel,"Details");
     }
 
     @GetMapping("/all")
@@ -155,7 +154,7 @@ public class BookController extends  BaseController {
 
     @GetMapping(value = "/download/{bookId}", produces = "application/epub+zip")
     public @ResponseBody
-    byte[] download(@PathVariable("bookId") String bookId, HttpServletResponse response, Authentication authentication) throws AccessDeniedException {
+    byte[] download(@PathVariable("bookId") String bookId, HttpServletResponse response, Authentication authentication) throws IOException {
 
         User authUser = (User) authentication.getPrincipal();
         User user = this.userService.getUserById(authUser.getId());
@@ -168,13 +167,8 @@ public class BookController extends  BaseController {
 
         String bookTitle = bookServiceModel.getTitle();
 
-        try {
-            response.setHeader("Content-Disposition", "inline; filename=" + bookTitle + ".epub");
-            return this.bookService.downloadTextFile(bookId);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new IllegalArgumentException("File not found !");
-        }
+        response.setHeader("Content-Disposition", "inline; filename=" + bookTitle + ".epub");
+        return this.bookService.downloadTextFile(bookId);
     }
 
     @GetMapping("/buy/{bookId}")
@@ -184,7 +178,7 @@ public class BookController extends  BaseController {
 
         this.saleService.registerSale(user.getId(),bookId);
 
-        return super.redirect("/books/all",null);
+        return super.redirect("/books/all");
     }
 
     @GetMapping("/manage")
@@ -221,7 +215,7 @@ public class BookController extends  BaseController {
     }
 
     @PostMapping("/edit/{id}")
-    public ModelAndView editConfirm(@PathVariable("id") String id, @Valid @ModelAttribute BookEditBindingModel bookEditBindingModel, BindingResult bindingResult) throws IOException {
+    public ModelAndView editConfirm(@PathVariable("id") String id, @Valid @ModelAttribute BookEditBindingModel bookEditBindingModel, BindingResult bindingResult) throws Exception {
 
         if(bindingResult.hasErrors()){
             return super.view("/books/books-edit", bookEditBindingModel,this.bookService.getOneById(id).getTitle(), "Edit");
@@ -233,12 +227,7 @@ public class BookController extends  BaseController {
             serviceModel.setCoverImageUrl(MultipartToFileTransferer.convertOne(bookEditBindingModel.getCoverImageUrl()));
         }
 
-        try{
-            this.bookService.editBook(id,serviceModel);
-        } catch (Exception e){
-            System.out.println(e.getMessage());
-            throw new IllegalArgumentException();
-        }
+        this.bookService.editBook(id,serviceModel);
 
         return super.redirect("/books/details/" + id);
     }

@@ -15,6 +15,10 @@ a.book-list-element:hover, a.book-list-element:visited, a.book-list-element:link
     background-color: #333333;
 }
 
+.app-color-third {
+    background-color: ghostwhite;
+}
+
 .nav {
     margin-bottom: 20px;
 }

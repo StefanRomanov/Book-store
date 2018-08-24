@@ -4,7 +4,7 @@
     <h2 class="text-center text-white">Publisher</h2>
 </div>
 <hr class="form-line">
-<div class="d-flex justify-content-lg-center container">
+<div class="d-flex justify-content-lg-center container app-color-prime rounded">
     <div class="col-lg-6 align-items-lg-center " th:object="${viewModel}">
         <form th:action="|/publishers/approve/*{id}|" method="post">
             <br>
@@ -48,17 +48,18 @@
                 </div>
             </div>
             <div class="d-flex justify-content-between container-fluid">
-                <div class="form-group">
+                <div class="form-group w-75">
                     <label class="text-white" th:for="${#ids.next('companyEmail')}">Comapny email</label>
                     <input type="text" class="form-control" th:field="*{companyEmail}" disabled>
                 </div>
             </div>
             <hr class="form-line">
-            <div class="d-flex justify-content-center justify-content-around">
+            <div class="d-flex justify-content-center justify-content-around mb-3">
                 <button class="btn btn-primary" type="submit" th:if="!*{isApproved}">Approve</button>
                 <a class="btn btn-danger" th:if="!*{isApproved}" th:href="|/publishers/delete/*{id}|">Dont approve</a>
                 <a class="btn btn-danger" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/delete/*{id}|">Delete</a>
-                <a class="btn btn-info" href="/publishers/manage">Cancel</a>
+                <a class="btn btn-info" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/edit/*{id}|">Edit</a>
+                <a class="btn btn-light" href="/publishers/manage">Cancel</a>
             </div>
         </form>
     </div>

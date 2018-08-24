@@ -4,7 +4,6 @@ import app.project.gamestart.domain.entities.BaseEntity;
 import app.project.gamestart.domain.entities.User;
 import app.project.gamestart.domain.models.binding.ReviewAddBindingModel;
 import app.project.gamestart.domain.models.views.ReviewViewModel;
-import app.project.gamestart.services.BookService;
 import app.project.gamestart.services.ReviewService;
 import app.project.gamestart.services.UserService;
 import app.project.gamestart.util.PageMapper;
@@ -16,6 +15,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -28,28 +28,26 @@ public class ReviewController extends BaseController {
     private final ReviewService reviewService;
     private final ModelMapper modelMapper;
     private final UserService userService;
-    private final BookService bookService;
 
     @Autowired
-    public ReviewController(ReviewService reviewService, ModelMapper modelMapper, UserService userService, BookService bookService) {
+    public ReviewController(ReviewService reviewService, ModelMapper modelMapper, UserService userService) {
         this.reviewService = reviewService;
         this.modelMapper = modelMapper;
         this.userService = userService;
-        this.bookService = bookService;
     }
 
     @PostMapping("/add/{bookId}")
-    public ModelAndView add(@PathVariable("bookId") String bookId, @Valid @ModelAttribute ReviewAddBindingModel bindingModel,
+    public ModelAndView add(@PathVariable("bookId") String bookId, @Valid @ModelAttribute("secondModel") ReviewAddBindingModel secondModel,
                             BindingResult bindingResult, RedirectAttributes redirectAttributes, Authentication authentication){
         if(bindingResult.hasErrors()){
-            redirectAttributes.addFlashAttribute("reviewBindingModel", bindingModel);
-
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.secondModel", bindingResult);
+            redirectAttributes.addFlashAttribute("secondModel", secondModel);
             return super.redirect("/books/details/" + bookId);
         }
 
         User user = (User) authentication.getPrincipal();
 
-        this.reviewService.saveReview(bookId,user.getId(),bindingModel);
+        this.reviewService.saveReview(bookId,user.getId(),secondModel);
 
         return super.redirect("/books/details/" + bookId);
     }

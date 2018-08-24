@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @Transactional
@@ -35,6 +37,7 @@ public class SaleServiceImpl implements SaleService {
         Sale sale = new Sale();
         sale.setBook(book);
         sale.setCustomer(customer);
+        sale.setDate(LocalDate.now());
 
         customer.getBooks().add(book);
         book.getUsers().add(customer);
@@ -42,5 +45,10 @@ public class SaleServiceImpl implements SaleService {
 
         this.saleRepository.saveAndFlush(sale);
 
+    }
+
+    @Override
+    public List<Sale> allSalesAfterDate(LocalDate localDate) {
+        return this.saleRepository.findAllByDateAfter(localDate);
     }
 }

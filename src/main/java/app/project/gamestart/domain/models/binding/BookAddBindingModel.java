@@ -34,6 +34,7 @@ public class BookAddBindingModel {
 
 
     @NotEmpty
+    @Length(max = 50, message = "Maximum 100 characters allowed")
     public String getTitle() {
         return title;
     }

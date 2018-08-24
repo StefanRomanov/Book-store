@@ -88,6 +88,23 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    public void edit(String id, PublisherServiceModel serviceModel){
+
+        Publisher publisher = this.publisherRepository.getOne(id);
+
+        publisher.setCompanyName(serviceModel.getCompanyName());
+        publisher.setBillingAddress(serviceModel.getBillingAddress());
+        publisher.setCompanyEmail(serviceModel.getCompanyEmail());
+        publisher.setCountry(serviceModel.getCountry());
+        publisher.setCity(serviceModel.getCity());
+        publisher.setLegalForm(serviceModel.getLegalForm());
+        publisher.setPostalCode(serviceModel.getPostalCode());
+        publisher.setVatNumber(serviceModel.getVatNumber());
+
+        this.publisherRepository.saveAndFlush(publisher);
+    }
+
+    @Override
     public PublisherServiceModel findByCompanyName(String companyName) {
 
         Publisher publisher = this.publisherRepository.findFirstByCompanyName(companyName);

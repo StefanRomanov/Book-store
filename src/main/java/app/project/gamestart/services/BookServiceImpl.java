@@ -120,22 +120,6 @@ public class BookServiceImpl implements BookService {
         return books;
     }
 
-    //@Override
-    //public Page<BookServiceModel> getAllBooksByApproved(Pageable pageable, boolean approved) {
-    //    Page<BookServiceModel> page = PageMapper.mapPage(this.bookRepository.findAllByApproved(pageable, approved),BookServiceModel.class,modelMapper);
-    //    return page;
-    //}
-//
-    //@Override
-    //public Page<BookServiceModel> getAllBooksByApprovedAndTitle(Pageable pageable, boolean approved, String title) {
-    //    return PageMapper.mapPage(this.bookRepository.findAllByApprovedAndTitleContains(pageable, approved, title),BookServiceModel.class,modelMapper);
-    //}
-//
-    //@Override
-    //public Page<BookServiceModel> getAllBooksByApprovedAndTitleAndGenre(Pageable pageable, boolean approved, String title, String genre) {
-    //    return PageMapper.mapPage(this.bookRepository.findAllByApprovedAndTitleContainsAndGenre(pageable,approved,title,Genre.valueOf(genre)),BookServiceModel.class,modelMapper);
-    //}
-
     @Override
     public Page<BookServiceModel> getMyBooksList(Pageable pageable, boolean approved,String title,String genre, String userId){
         User user = this.userService.getUserById(userId);

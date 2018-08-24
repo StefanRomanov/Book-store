@@ -11,13 +11,12 @@ public class UserRegisterBindingModel {
     private String email;
     private String password;
     private String confirmPassword;
-    private String address;
 
     public UserRegisterBindingModel() {
     }
 
     @NotEmpty(message = "Enter username")
-    @Length(min = 3, message = "Minimum 3 characters")
+    @Length(min = 3, max = 35, message = "Allowed between 3 and 35 characters")
     public String getUsername() {
         return username;
     }
@@ -37,7 +36,7 @@ public class UserRegisterBindingModel {
     }
 
     @NotEmpty(message = "Enter password")
-    @Length(min = 3, message = "Minimum 3 characters")
+    @Length(min = 3, max = 35, message = "Allowed between 3 and 35 characters")
     public String getPassword() {
         return password;
     }
@@ -47,20 +46,12 @@ public class UserRegisterBindingModel {
     }
 
     @NotEmpty(message = "Enter password again")
-    @Length(min = 3, message = "Minimum 3 characters")
+    @Length(min = 3, max = 35, message = "Allowed between 3 and 35 characters")
     public String getConfirmPassword() {
         return confirmPassword;
     }
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 }

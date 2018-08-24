@@ -4,66 +4,73 @@
     <h2 class="text-center text-white">Register your company</h2>
 </div>
 <hr class="form-line">
-<div class="d-flex justify-content-lg-center container">
+<div class="d-flex justify-content-lg-center container app-color-prime rounded">
     <div class="col-lg-6 align-items-lg-center " th:object="${viewModel}">
         <form th:action="|/publishers/edit/*{id}|" method="post">
             <br>
             <div class="d-flex justify-content-between container-fluid">
                 <div class="form-group w-75" th:classappend="${#fields.hasErrors('companyName')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('companyName')}">Company name</label>
-                    <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{companyName}" disabled>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{companyName}">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('companyName')}" th:errors="*{companyName}"></span>
                 </div>
             </div>
             <div class="d-flex justify-content-between container-fluid">
                 <div class="form-group" th:classappend="${#fields.hasErrors('vatNumber')}? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('vatNumber')}">VAT Number</label>
-                    <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{vatNumber}"  disabled>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{vatNumber}">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('vatNumber')}" th:errors="*{vatNumber}"></span>
                 </div>
                 <div class="form-group" th:classappend="${#fields.hasErrors('legalForm')}? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('legalForm')}">Legal form</label>
-                    <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{legalForm}" disabled>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{legalForm}">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('legalForm')}" th:errors="*{legalForm}"></span>
                 </div>
             </div>
             <div class="d-flex justify-content-between container-fluid">
                 <div class="form-group w-75" th:classappend="${#fields.hasErrors('billingAddress')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('billingAddress')}">Billing address</label>
-                    <input type="text" class="form-control " th:errorclass="is-invalid" th:field="*{billingAddress}" disabled>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{billingAddress}" >
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('billingAddress')}" th:errors="*{billingAddress}"></span>
                 </div>
             </div>
             <div class="d-flex justify-content-between container-fluid">
                 <div class="form-group" th:classappend="${#fields.hasErrors('city')}? 'has-danger'">
                     <label class="text-white" th:for="${#ids.next('city')}">City</label>
-                    <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{city}" disabled>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{city}">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('city')}" th:errors="*{city}"></span>
                 </div>
                 <br>
                 <div class="form-group" th:classappend="${#fields.hasErrors('postalCode')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('postalCode')}">Postal code</label>
-                    <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{postalCode}" disabled>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{postalCode}">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('postalCode')}" th:errors="*{postalCode}"></span>
                 </div>
                 <br>
-                <div class="form-group" th:classappend="${#fields.hasErrors('country')}? 'has-danger'">
-                    <label class="text-white" th:for="${#ids.next('country')}">Country</label>
-                    <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{country}"  disabled>
-                    <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+                <div class="form-group">
+                    <label class="text-white w-50">Country</label>
+                    <br>
+                    <select id="select-genre" class="selectpicker" data-live-search="true" th:field="*{country}">
+                        <th:block th:each="country : ${T(app.project.gamestart.domain.enums.Country).values()}">
+                            <option th:value="${country}" th:text="${country.getFullName()}" th:classappend="${viewModel.country == country} ? 'selected' : ''"></option>
+                        </th:block>
+                    </select>
+                    <br>
+                    <span class="help-block small text-danger" th:if="${#fields.hasErrors('country')}" th:errors="*{country}"></span>
+                    <br>
                 </div>
             </div>
             <div class="d-flex justify-content-between container-fluid">
-                <div class="form-group" th:classappend="${#fields.hasErrors('companyEmail')} ? 'is-invalid'">
-                    <label class="text-white" th:for="${#ids.next('companyEmail')}">Comapny email</label>
-                    <input type="text" class="form-control" th:errorclass="is-invalid" th:field="*{companyEmail}" disabled>
+                <div class="form-group w-75" th:classappend="${#fields.hasErrors('companyEmail')} ? 'is-invalid'">
+                    <label class="text-white" th:for="${#ids.next('companyEmail')}">Company email</label>
+                    <input type="text" class="form-control text-white" th:errorclass="is-invalid" th:field="*{companyEmail}">
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('companyEmail')}" th:errors="*{companyEmail}"></span>
                 </div>
             </div>
             <hr class="form-line">
             <input type="hidden" th:name="${_csrf.parameterName}"
                    th:value="${_csrf.token}" />
-            <div class="d-flex justify-content-center justify-content-around">
+            <div class="d-flex justify-content-center justify-content-around mb-3">
                 <button class="btn btn-primary " type="submit">Edit</button>
                 <button class="btn btn-info" href="/publishers/manage">Cancel</button>
             </div>

@@ -59,6 +59,10 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public void delete(String reviewId) {
-        this.reviewRepository.delete(this.reviewRepository.getOne(reviewId));
+
+        Review review = this.reviewRepository.getOne(reviewId);
+        review.getUser().getReviews().remove(review);
+
+        this.reviewRepository.delete(review);
     }
 }

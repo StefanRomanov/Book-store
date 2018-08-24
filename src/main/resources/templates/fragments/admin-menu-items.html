@@ -1,0 +1,11 @@
+<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle text-white" href="#" role="button"
+       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="|Admin|">
+    </a>
+    <div class="dropdown-menu app-color-prime" aria-labelledby="navbarDropdown">
+        <a class="dropdown-item text-white" href="/authors/add" th:text="|Add author|"></a>
+        <a class="dropdown-item text-white" th:href="@{/publishers/manage}" th:text="Publishers"></a>
+        <a class="dropdown-item text-white" th:href="@{/users/roles}" th:text="|Manage roles|"></a>
+        <a class="dropdown-item text-white" href="/books/manage" th:text="|Manage books|"></a>
+    </div>
+</li>

@@ -26,21 +26,7 @@ public class HomeController  extends BaseController{
     }
 
     @GetMapping(value = "/")
-    public ModelAndView index(Authentication authentication){
-        if(authentication != null){
-            System.out.println(authentication.getClass());
-            System.out.println("------------");
-            System.out.println(authentication.getCredentials());
-            System.out.println("------------");
-            System.out.println(authentication.getPrincipal());
-            System.out.println("------------");
-            System.out.println(authentication.getDetails());
-            System.out.println("------------");
-            System.out.println(authentication.getName());
-            System.out.println("------------");
-            System.out.println(authentication.getAuthorities().iterator().next().getAuthority());
-            System.out.println("------------");
-        }
+    public ModelAndView index(){
 
         Type type = new TypeToken<List<BookAllView>>(){}.getType();
 

@@ -42,8 +42,9 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/books/buy/**","/reviews/add/**", "/books/my", "/books/api/my").hasAnyAuthority("USER","PARTNER","PENDING")
                     .antMatchers("/authors/add").hasAnyAuthority("PARTNER","ADMIN","ROOT")
                     .antMatchers("/books/manage","/books/api/manage","/books/approve/**",
-                                                "/books/edit/**","/publishers/manage",
-                                                "/publishers/manage/**", "/publishers/approve/**", "/users/roles", "/users/rolechange", "/books/delete/**", "/publishers/delete/**").hasAnyAuthority("ADMIN", "ROOT")
+                                                "/books/edit/**","/publishers/manage", "/publishers/manage/**",
+                                                "/publishers/approve/**", "/users/roles", "/users/rolechange",
+                                                "/books/delete/**", "/publishers/delete/**","/reports/all","reports/api/all").hasAnyAuthority("ADMIN", "ROOT")
                     .anyRequest().authenticated()
                 .and()
                     .csrf()

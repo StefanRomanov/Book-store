@@ -6,14 +6,15 @@ import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 public class ReviewAddBindingModel {
-    String title;
-    String text;
-    boolean recommended;
+    private String title;
+    private String text;
+    private boolean recommended;
 
     public ReviewAddBindingModel() {
     }
 
     @NotEmpty
+    @Length(max = 50,message = "Max 50 characters")
     public String getTitle() {
         return title;
     }
@@ -23,7 +24,7 @@ public class ReviewAddBindingModel {
     }
 
     @NotEmpty
-    @Length(max = 255, message = "Max 255 characters")
+    @Length(max = 1000, message = "Max 1000 characters")
     public String getText() {
         return text;
     }

@@ -1,8 +1,8 @@
 package app.project.gamestart.web.controllers;
 
 import app.project.gamestart.domain.entities.User;
-import app.project.gamestart.domain.models.binding.ChangeRoleBindingModel;
-import app.project.gamestart.domain.models.binding.UserRegisterBindingModel;
+import app.project.gamestart.domain.models.binding.*;
+import app.project.gamestart.domain.models.views.UserProfileView;
 import app.project.gamestart.domain.models.views.UserRoleView;
 import app.project.gamestart.services.UserService;
 import app.project.gamestart.util.PageMapper;
@@ -10,14 +10,17 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/users")
@@ -34,19 +37,17 @@ public class UserController extends BaseController {
 
     @GetMapping("/register")
     public ModelAndView register(){
-        String test = "";
         return super.view("/users/register",new UserRegisterBindingModel(), "Register");
     }
 
     @PostMapping("/register")
     public ModelAndView registerConfirm(@Valid @ModelAttribute("viewModel") UserRegisterBindingModel bindingModel, BindingResult bindingResult){
 
-        this.validateRegister(bindingResult,bindingModel);
+        this.userService.validateRegister(bindingResult,bindingModel);
 
         if(bindingResult.hasErrors()){
             return view("/users/register", bindingModel);
         }
-
 
         this.userService.saveUser(bindingModel);
 
@@ -89,17 +90,64 @@ public class UserController extends BaseController {
         return super.redirect("/users/roles");
     }
 
-    private void validateRegister(BindingResult bindingResult, UserRegisterBindingModel bindingModel){
-        if(this.userService.findUserByUsername(bindingModel.getUsername()) != null){
-            bindingResult.rejectValue("username","error.viewModel","User already exists !");
+
+    @GetMapping("/profile")
+    private ModelAndView profile(Authentication authentication, Model model){
+        ChangeEmailBindingModel changeEmailModel = new ChangeEmailBindingModel();
+
+        if(model.containsAttribute("secondModel")){
+            Map<String,Object> map = model.asMap();
+            changeEmailModel = (ChangeEmailBindingModel) map.get("secondModel");
         }
 
-        if(this.userService.findByEmail(bindingModel.getEmail()) != null){
-            bindingResult.rejectValue("email","error.viewModel","Email already taken !");
+        ChangePasswordBindingModel changePasswordModel= new ChangePasswordBindingModel();
+
+        if(model.containsAttribute("thirdModel")){
+            Map<String,Object> map = model.asMap();
+            changePasswordModel = (ChangePasswordBindingModel) map.get("thirdModel");
         }
 
-        if(!bindingModel.getPassword().equals(bindingModel.getConfirmPassword())){
-            bindingResult.rejectValue("password","error.viewModel","Password doesn't match");
+        UserProfileView view = this.modelMapper.map(this.userService.findUserByUsername(authentication.getName()),UserProfileView.class);
+
+        return super.view("/users/profile",view,changeEmailModel,changePasswordModel,"Profile");
+    }
+
+    @PostMapping("/changemail/{id}")
+    private ModelAndView changeEmail(@Valid @ModelAttribute("secondModel") ChangeEmailBindingModel bindingModel,
+                                     BindingResult bindingResult, @PathVariable("id") String id, Authentication authentication, RedirectAttributes redirectAttributes){
+        if(!((User) authentication.getPrincipal()).getId().equals(id)){
+            throw new AccessDeniedException("Forbidden");
         }
+
+        this.userService.validateEmail(bindingResult,bindingModel);
+
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.secondModel", bindingResult);
+            redirectAttributes.addFlashAttribute("secondModel",bindingModel);
+            return super.redirect("/users/profile");
+        }
+        this.userService.changeEmail(bindingModel,id);
+
+        return super.redirect("/users/profile");
+    }
+
+    @PostMapping("/changepassword/{id}")
+    private ModelAndView changePassword(@PathVariable("id") String id, @Valid @ModelAttribute("thirdModel") ChangePasswordBindingModel bindingModel,
+                                        BindingResult bindingResult,Authentication authentication, RedirectAttributes redirectAttributes){
+        if(!((User) authentication.getPrincipal()).getId().equals(id)){
+            throw new AccessDeniedException("Forbidden");
+        }
+
+        this.userService.validatePassword(bindingResult,bindingModel);
+
+        if(bindingResult.hasErrors()){
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.thirdModel", bindingResult);
+            redirectAttributes.addFlashAttribute("thirdModel",bindingModel);
+            return super.redirect("/users/profile");
+        }
+
+        this.userService.changePassword(bindingModel,id);
+
+        return super.redirect("/users/profile");
     }
 }

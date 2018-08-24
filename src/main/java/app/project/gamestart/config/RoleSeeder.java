@@ -10,7 +10,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DataSeeder implements ApplicationListener<ApplicationReadyEvent> {
+public class RoleSeeder implements ApplicationListener<ApplicationReadyEvent> {
 
     /**
      * This event is executed as late as conceivably possible to indicate that
@@ -20,7 +20,7 @@ public class DataSeeder implements ApplicationListener<ApplicationReadyEvent> {
     private final UserRoleService roleService;
 
     @Autowired
-    public DataSeeder(UserRoleService roleService) {
+    public RoleSeeder(UserRoleService roleService) {
         this.roleService = roleService;
     }
 

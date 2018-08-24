@@ -18,6 +18,7 @@ public interface PublisherService {
     Page<PublisherServiceModel> getAllPublishersByApprovedAndCompanyName(Pageable pageable, boolean approved, String companyName);
 
     void delete(String id) throws Exception;
+    void edit(String id, PublisherServiceModel serviceModel);
 
     PublisherServiceModel findByCompanyName(String companyName);
     PublisherServiceModel findByVatNumber(String vatNumber);

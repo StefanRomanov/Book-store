@@ -33,36 +33,39 @@ public class RolesInterceptor extends HandlerInterceptorAdapter {
         this.userService = userService;
     }
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return super.preHandle(request, response, handler);
-    }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        if (modelAndView == null) {
+            return;
+        }
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if(authentication.isAuthenticated()){
             if(authentication.getPrincipal() != "anonymousUser") {
 
                 User authUser = (User) authentication.getPrincipal();
-                User user = this.userService.getUserById(authUser.getId());
 
+                if(authUser.getId() != null){
+                    User user = this.userService.getUserById(authUser.getId());
 
+                    if(authUser.getAuthorities().iterator().next() != user.getAuthorities().iterator().next()){
 
-                Collection<GrantedAuthority> authorities = new HashSet<>();
-                authorities.add(user.getAuthorities().iterator().next());
+                        Collection<GrantedAuthority> authorities = new HashSet<>();
+                        authorities.add(user.getAuthorities().iterator().next());
 
+                        Authentication newAuth = new UsernamePasswordAuthenticationToken(
+                                SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
+                                "",
+                                authorities);
 
-                Authentication newAuth = new UsernamePasswordAuthenticationToken(
-                        SecurityContextHolder.getContext().getAuthentication().getPrincipal(),
-                        "",
-                        authorities);
+                        ((UsernamePasswordAuthenticationToken) newAuth).setDetails(new WebAuthenticationDetails(request));
 
-                ((UsernamePasswordAuthenticationToken) newAuth).setDetails(new WebAuthenticationDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(newAuth);
+                        SecurityContextHolder.getContext().setAuthentication(newAuth);
+                    }
+                }
             }
         }
 

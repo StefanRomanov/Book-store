@@ -16,7 +16,7 @@ public class AuthorAddBindingModel {
     }
 
     @NotEmpty(message = "Please enter author name")
-    @Length(min = 3, message = "Name should be at least 3 characters long")
+    @Length(min = 3 ,max = 25, message = "Name should be between 3 and 25 characters long")
     public String getName() {
         return name;
     }

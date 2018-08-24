@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.validators.annotations.EmailValidator;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
@@ -15,7 +16,6 @@ public class User extends BaseEntity implements UserDetails {
     private String username;
     private String email;
     private String password;
-    private String address;
     private Set<UserRole> authorities;
     private Set<Sale> sales;
     private Set<Review> reviews;
@@ -34,6 +34,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     @Column(nullable = false, unique = true)
+    @Length(min = 3, max = 35)
     public String getUsername() {
         return this.username;
     }
@@ -44,6 +45,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
     @EmailValidator
+    @Length(min = 3, max = 35)
     public String getEmail() {
         return this.email;
     }
@@ -53,6 +55,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Column(nullable = false)
+    @Length(min = 3)
     public String getPassword() {
         return this.password;
     }
@@ -60,15 +63,6 @@ public class User extends BaseEntity implements UserDetails {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public String getAddress() {
-        return this.address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
 
     @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     public Set<Review> getReviews() {

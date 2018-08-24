@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.domain.enums.Country;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -23,6 +24,7 @@ public class Author extends BaseEntity {
     }
 
     @Column(nullable = false)
+    @Length(min = 3, max = 25)
     public String getName() {
         return name;
     }

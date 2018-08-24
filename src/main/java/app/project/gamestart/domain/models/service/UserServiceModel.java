@@ -10,7 +10,6 @@ public class UserServiceModel {
     private String email;
     private String password;
     private Set<UserRole> authorities;
-    private String address;
 
     public UserServiceModel() {
     }
@@ -37,14 +36,6 @@ public class UserServiceModel {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getId() {

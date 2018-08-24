@@ -9,17 +9,25 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class PublisherAddBindingModel {
+    private String id;
     private String companyName;
     private String vatNumber;
     private String billingAddress;
     private String legalForm;
     private String companyEmail;
-    private boolean sameEmail;
     private String country;
     private String city;
     private String postalCode;
 
     public PublisherAddBindingModel() {
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @NotEmpty(message = "Please input Your company name !")

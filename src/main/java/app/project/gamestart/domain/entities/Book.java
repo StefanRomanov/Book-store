@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.domain.enums.Genre;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -30,6 +31,7 @@ public class Book extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @Length(max = 100)
     public String getTitle() {
         return title;
     }

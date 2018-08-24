@@ -1,5 +1,6 @@
 package app.project.gamestart.domain.entities;
 
+import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Controller;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ public class Review extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @Length(min = 1, max = 50,message = "Max 50 characters")
     public String getTitle() {
         return title;
     }
@@ -30,6 +32,7 @@ public class Review extends BaseEntity{
     }
 
     @Column(nullable = false)
+    @Length(min = 1, max = 1000)
     public String getText() {
         return text;
     }

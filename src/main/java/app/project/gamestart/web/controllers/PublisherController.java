@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -86,7 +87,7 @@ public class PublisherController extends BaseController{
     public ModelAndView approveConfirm(@PathVariable("id") String id){
         this.publisherService.approvePublisher(id);
 
-        return super.redirect("/",null,"Home");
+        return super.redirect("/");
     }
 
     @GetMapping("/delete/{id}")
@@ -94,6 +95,30 @@ public class PublisherController extends BaseController{
         this.publisherService.delete(id);
 
         return super.redirect("/publishers/manage");
+    }
+
+    @GetMapping("/edit/{id}")
+    public ModelAndView edit(@PathVariable("id") String id){
+        PublisherServiceModel serviceModel = this.publisherService.getPublisherById(id);
+        if(!serviceModel.getApproved()){
+            throw new AccessDeniedException("Cannot edit publishers that are not approved");
+        }
+
+        PublisherAddBindingModel bindingModel = this.modelMapper.map(serviceModel,PublisherAddBindingModel.class);
+
+        return super.view("/publishers/edit",bindingModel,"Edit Publisher");
+    }
+
+    @PostMapping("/edit/{id}")
+    public ModelAndView editConfirm(@PathVariable("id") String id, @ModelAttribute PublisherAddBindingModel bindingModel, BindingResult bindingResult){
+
+        if(bindingResult.hasErrors()){
+            return super.view("/publishers/edit",bindingModel,"Edit Publisher");
+        }
+
+        this.publisherService.edit(id,this.modelMapper.map(bindingModel,PublisherServiceModel.class));
+
+        return super.redirect("/publishers/manage/" + id);
     }
 
     private void validateRegister(BindingResult bindingResult, PublisherAddBindingModel bindingModel){

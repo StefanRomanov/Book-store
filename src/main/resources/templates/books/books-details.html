@@ -52,10 +52,10 @@
         <a th:href="|/books/delete/${viewModel.id}|" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" class="btn btn-danger mx-2" th:if="${!viewModel.approved}">
             Don't Approve
         </a>
-        <a th:href="|/books/edit/${viewModel.id}|" class="btn btn-info mx-2">
+        <a th:href="|/books/edit/${viewModel.id}|" class="btn btn-info mx-2" th:if="${viewModel.approved}">
             Edit
         </a>
-        <a th:href="|/books/delete/${viewModel.id}|"  class=" btn btn-danger mx-2" th:if="${!viewModel.approved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')">
+        <a th:href="|/books/delete/${viewModel.id}|"  class=" btn btn-danger mx-2" sec:authorize="hasAnyAuthority('ROOT','ADMIN') " th:if="${viewModel.approved}">
             Delete
         </a>
     </div>
@@ -78,9 +78,11 @@
     <div class="d-flex flex-row mt-3 justify-content-center">
         <div  class="flex-column w-50 justify-content-center">
             <form th:action="|/reviews/add/${viewModel.id}|" method="post" th:object="${secondModel}">
-                <input type="text" th:field="*{title}" class="align-self-center form-control" placeholder="Title">
+                <input type="text" th:field="*{title}" th:errorclass="is-invalid" class="align-self-center form-control" placeholder="Title">
+                <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
                 <br>
-                <textarea class="form-control text-area mt-2" th:field="*{text}" placeholder="Text"></textarea>
+                <textarea class="form-control text-area mt-2" th:errorclass="is-invalid" th:field="*{text}" placeholder="Text"></textarea>
+                <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
                 <br>
                 <div class="mt-2">
                     <input type="checkbox" th:field="*{recommended}" id="recommend">
