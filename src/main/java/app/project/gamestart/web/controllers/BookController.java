@@ -63,7 +63,13 @@ public class BookController extends  BaseController {
 
     @PostMapping("/add")
     public ModelAndView addConfirm(@Valid @ModelAttribute("viewModel") BookAddBindingModel bindingModel, BindingResult bindingResult, Authentication authentication) throws IOException{
-        System.out.println(bindingModel.getCoverImageUrl().getContentType());
+        if(!bindingModel.getCoverImageUrl().getContentType().equals("image/jpeg")){
+            bindingResult.rejectValue("coverImageUrl","error.viewModel","Only JPEG files allowed !");
+        };
+
+        if(!bindingModel.getCoverImageUrl().getContentType().equals("application/epub+zip")){
+            bindingResult.rejectValue("textFile","error.viewModel","Only EPUB files allowed !");
+        };
         if (bindingResult.hasErrors()) {
             this.addAuthors(bindingModel);
             return super.view("/books/add", bindingModel, "Add Book");

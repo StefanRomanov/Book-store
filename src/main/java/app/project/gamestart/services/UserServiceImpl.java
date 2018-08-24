@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -126,6 +127,10 @@ public class UserServiceImpl implements UserService{
         User user = this.userRepository.findById(userId).orElse(null);
         if(user == null){
             throw new UserNotFoundException();
+        }
+
+        if(user.getAuthorities().iterator().next().getAuthority().equals("ROOT")){
+            throw new AccessDeniedException("Can't change ROOT role");
         }
 
         user.getAuthorities().clear();
