@@ -1,18 +1,21 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.util.constants.UserConstants;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 
 public class ChangePasswordBindingModel {
+
+
     private String password;
     private String confirmPassword;
 
     public ChangePasswordBindingModel() {
     }
 
-    @NotEmpty(message = "Enter password")
-    @Length(min = 3, message = "Minimum 3 characters")
+    @NotEmpty(message = UserConstants.PASSWORD_EMPTY_ERROR_MESSAGE)
+    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, message = UserConstants.PASSWORD_MIN_LENGTH_ERROR_MESSAGE)
     public String getPassword() {
         return password;
     }
@@ -21,8 +24,8 @@ public class ChangePasswordBindingModel {
         this.password = password;
     }
 
-    @NotEmpty(message = "Enter password again")
-    @Length(min = 3, message = "Minimum 3 characters")
+    @NotEmpty(message = UserConstants.CONFIRM_PASSWORD_EMPTY_ERROR_MESSAGE)
+    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, message = UserConstants.PASSWORD_MIN_LENGTH_ERROR_MESSAGE)
     public String getConfirmPassword() {
         return confirmPassword;
     }

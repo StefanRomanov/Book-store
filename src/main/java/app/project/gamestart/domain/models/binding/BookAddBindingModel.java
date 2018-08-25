@@ -1,8 +1,10 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.util.constants.BookConstants;
+import app.project.gamestart.util.constants.GlobalConstants;
 import app.project.gamestart.domain.models.views.AuthorViewModel;
-import app.project.gamestart.validators.annotations.FileSizeValidation;
-import app.project.gamestart.validators.annotations.NotEmptyFile;
+import app.project.gamestart.web.validators.annotations.FileSizeValidation;
+import app.project.gamestart.web.validators.annotations.NotEmptyFile;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -13,11 +15,12 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+
 public class BookAddBindingModel {
+
 
     private String title;
     private Set<String> authors;
@@ -34,7 +37,7 @@ public class BookAddBindingModel {
 
 
     @NotEmpty
-    @Length(max = 50, message = "Maximum 100 characters allowed")
+    @Length(max = BookConstants.BOOK_TITLE_MAX_CHARACTERS, message = BookConstants.BOOK_TITLE_MAX_CHARACTERS_ERROR_MESSAGE)
     public String getTitle() {
         return title;
     }
@@ -54,7 +57,7 @@ public class BookAddBindingModel {
         this.textFile = textFile;
     }
 
-    @NotEmpty(message = "Select genre !")
+    @NotEmpty(message = BookConstants.NO_GENRE_SELECTED_ERROR_MESSAGE)
     public String getGenre() {
         return genre;
     }
@@ -63,7 +66,7 @@ public class BookAddBindingModel {
         this.genre = genre;
     }
 
-    @Length(max = 2000, message = "Maximum 2000 characters")
+    @Length(max = BookConstants.BOOK_DESCRIPTION_MAX_CHARACTERS, message = BookConstants.BOOK_DESCRIPTION_CHARACTERS_COUNT_ERROR_MESSAGE)
     public String getDescription() {
         return description;
     }
@@ -72,7 +75,7 @@ public class BookAddBindingModel {
         this.description = description;
     }
 
-    @NotNull(message = "Books should have price!")
+    @NotNull(message = BookConstants.NO_PRICE_ENTERED_MESSAGE)
     public BigDecimal getPrice() {
         return price;
     }
@@ -93,7 +96,7 @@ public class BookAddBindingModel {
     }
 
     @NotNull
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = GlobalConstants.DATE_FORMAT)
     public LocalDate getReleaseDate() {
         return releaseDate;
     }
@@ -102,7 +105,7 @@ public class BookAddBindingModel {
         this.releaseDate = releaseDate;
     }
     @NotNull
-    @Size(min = 1,message = "Select at least one author !")
+    @Size(min = 1,message = BookConstants.NO_AUTHOR_SELECTED_ERROR_MESSAGE)
     public Set<String> getAuthors() {
         return authors;
     }

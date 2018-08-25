@@ -1,6 +1,6 @@
 package app.project.gamestart.services;
 
-import app.project.gamestart.constants.Constants;
+import app.project.gamestart.util.constants.GlobalConstants;
 import app.project.gamestart.domain.entities.*;
 import app.project.gamestart.domain.enums.Genre;
 import app.project.gamestart.domain.models.service.BookAddServiceModel;
@@ -49,6 +49,7 @@ public class BookServiceImpl implements BookService {
                            ModelMapper modelMapper,
                            PublisherRepository publisherRepository, CloudinaryService cloudinaryService,
                            UserService userService, ReviewRepository reviewRepository, SaleRepository saleRepository) {
+
         this.bookRepository = bookRepository;
         this.authorService = authorService;
         this.modelMapper = modelMapper;
@@ -128,7 +129,7 @@ public class BookServiceImpl implements BookService {
             throw  new BookNotFoundException();
         }
 
-        InputStream inputStream = new URL(book.getCoverImageUrl()).openStream();
+        InputStream inputStream = new URL(book.getTextFile()).openStream();
         byte[] bytes = IOUtils.toByteArray(inputStream);
         inputStream.close();
 
@@ -158,7 +159,7 @@ public class BookServiceImpl implements BookService {
                                 Double bScore = Double.parseDouble(b.reviewScore().replace("%",""));
                                 return bScore.compareTo(aScore);
                             })
-                .limit(Constants.FRONT_PAGE_BOOK_COUNT)
+                .limit(GlobalConstants.FRONT_PAGE_BOOK_COUNT)
                 .collect(Collectors.toList());
 
         return books;

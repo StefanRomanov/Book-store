@@ -1,4 +1,4 @@
-package app.project.gamestart.interceptors;
+package app.project.gamestart.web.interceptors;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;

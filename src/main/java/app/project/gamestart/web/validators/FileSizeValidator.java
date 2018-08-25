@@ -1,6 +1,6 @@
-package app.project.gamestart.validators;
+package app.project.gamestart.web.validators;
 
-import app.project.gamestart.validators.annotations.FileSizeValidation;
+import app.project.gamestart.web.validators.annotations.FileSizeValidation;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;

@@ -1,6 +1,6 @@
-package app.project.gamestart.validators.annotations;
+package app.project.gamestart.web.validators.annotations;
 
-import app.project.gamestart.validators.FileValidator;
+import app.project.gamestart.web.validators.FileValidator;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;

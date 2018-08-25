@@ -1,7 +1,7 @@
 package app.project.gamestart.config;
 
-import app.project.gamestart.interceptors.RolesInterceptor;
-import app.project.gamestart.interceptors.TitleInterceptor;
+import app.project.gamestart.web.interceptors.RolesInterceptor;
+import app.project.gamestart.web.interceptors.TitleInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

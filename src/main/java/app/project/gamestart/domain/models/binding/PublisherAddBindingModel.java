@@ -1,9 +1,7 @@
 package app.project.gamestart.domain.models.binding;
 
-import app.project.gamestart.validators.annotations.EmailValidator;
-import app.project.gamestart.validators.annotations.NotEmptyFile;
+import app.project.gamestart.web.validators.annotations.EmailValidator;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

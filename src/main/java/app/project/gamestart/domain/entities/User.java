@@ -1,11 +1,10 @@
 package app.project.gamestart.domain.entities;
 
-import app.project.gamestart.validators.annotations.EmailValidator;
+import app.project.gamestart.web.validators.annotations.EmailValidator;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import java.util.HashSet;
 import java.util.Set;
 

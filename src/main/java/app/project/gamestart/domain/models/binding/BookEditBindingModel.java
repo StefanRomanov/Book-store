@@ -1,5 +1,7 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.util.constants.BookConstants;
+import app.project.gamestart.util.constants.GlobalConstants;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +31,7 @@ public class BookEditBindingModel {
         this.id = id;
     }
 
-    @NotEmpty(message = "Select genre !")
+    @NotEmpty(message = BookConstants.NO_GENRE_SELECTED_ERROR_MESSAGE)
     public String getGenre() {
         return genre;
     }
@@ -38,7 +40,7 @@ public class BookEditBindingModel {
         this.genre = genre;
     }
 
-    @Length(max = 2000, message = "Maximum 2000 characters")
+    @Length(max = BookConstants.BOOK_DESCRIPTION_MAX_CHARACTERS, message = BookConstants.BOOK_DESCRIPTION_CHARACTERS_COUNT_ERROR_MESSAGE)
     public String getDescription() {
         return description;
     }
@@ -47,7 +49,7 @@ public class BookEditBindingModel {
         this.description = description;
     }
 
-    @NotNull(message = "Books should have price!")
+    @NotNull(message = BookConstants.NO_PRICE_ENTERED_MESSAGE)
     public BigDecimal getPrice() {
         return price;
     }
@@ -65,7 +67,7 @@ public class BookEditBindingModel {
     }
 
     @NotNull
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @DateTimeFormat(pattern = GlobalConstants.DATE_FORMAT)
     public LocalDate getReleaseDate() {
         return releaseDate;
     }

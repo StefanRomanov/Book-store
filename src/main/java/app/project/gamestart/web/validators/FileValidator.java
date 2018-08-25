@@ -1,6 +1,6 @@
-package app.project.gamestart.validators;
+package app.project.gamestart.web.validators;
 
-import app.project.gamestart.validators.annotations.NotEmptyFile;
+import app.project.gamestart.web.validators.annotations.NotEmptyFile;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.ConstraintValidator;

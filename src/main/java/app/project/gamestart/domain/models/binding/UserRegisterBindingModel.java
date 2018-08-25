@@ -1,10 +1,9 @@
 package app.project.gamestart.domain.models.binding;
 
-import app.project.gamestart.validators.annotations.EmailValidator;
+import app.project.gamestart.web.validators.annotations.EmailValidator;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 public class UserRegisterBindingModel {
     private String username;

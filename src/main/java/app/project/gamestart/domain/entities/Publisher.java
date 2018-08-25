@@ -1,7 +1,7 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.domain.enums.Country;
-import app.project.gamestart.validators.annotations.EmailValidator;
+import app.project.gamestart.web.validators.annotations.EmailValidator;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;

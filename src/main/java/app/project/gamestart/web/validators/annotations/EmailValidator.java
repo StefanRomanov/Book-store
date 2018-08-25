@@ -1,4 +1,4 @@
-package app.project.gamestart.validators.annotations;
+package app.project.gamestart.web.validators.annotations;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
