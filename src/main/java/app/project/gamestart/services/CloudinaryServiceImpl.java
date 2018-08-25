@@ -1,6 +1,7 @@
 package app.project.gamestart.services;
 
 import com.cloudinary.Cloudinary;
+import com.cloudinary.Transformation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     @Override
     public String uploadImage(File file) throws IOException {
 
-        Map<String,String> options = new HashMap<>();
+        Map<String,Object> options = new HashMap<>();
         options.put("resource_type", "raw");
 
         String result = this.cloudinary
