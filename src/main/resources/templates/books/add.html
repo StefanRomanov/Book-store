@@ -73,7 +73,7 @@
                 <br>
                 <div class="form-group w-35 align-self-start" th:classappend="${#fields.hasErrors('price')} ? 'is-invalid'">
                     <label class="text-white" th:for="${#ids.next('price')}">Price</label>
-                    <input type="number" step=".01" class="form-control" th:errorclass="is-invalid" th:field="*{price}"/>
+                    <input type="number" step=".01" class="form-control text-white" th:errorclass="is-invalid" th:field="*{price}"/>
                     <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></span>
                 </div>
                 <br>

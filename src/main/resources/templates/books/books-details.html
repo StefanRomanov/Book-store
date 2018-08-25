@@ -55,9 +55,10 @@
         <a th:href="|/books/edit/${viewModel.id}|" class="btn btn-info mx-2" th:if="${viewModel.approved}">
             Edit
         </a>
-        <a th:href="|/books/delete/${viewModel.id}|"  class=" btn btn-danger mx-2" sec:authorize="hasAnyAuthority('ROOT','ADMIN') " th:if="${viewModel.approved}">
+        <a data-toggle="modal" data-target="#deleteModal" class=" btn btn-danger mx-2" sec:authorize="hasAnyAuthority('ROOT','ADMIN') " th:if="${viewModel.approved}">
             Delete
         </a>
+        <a class="btn btn-light" href="/books/manage">Cancel</a>
     </div>
 </div>
 <hr class="form-line w-75">
@@ -78,10 +79,10 @@
     <div class="d-flex flex-row mt-3 justify-content-center">
         <div  class="flex-column w-50 justify-content-center">
             <form th:action="|/reviews/add/${viewModel.id}|" method="post" th:object="${secondModel}">
-                <input type="text" th:field="*{title}" th:errorclass="is-invalid" class="align-self-center form-control" placeholder="Title">
+                <input type="text" th:field="*{title}" th:errorclass="is-invalid" class="align-self-center form-control text-white" placeholder="Title">
                 <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
                 <br>
-                <textarea class="form-control text-area mt-2" th:errorclass="is-invalid" th:field="*{text}" placeholder="Text"></textarea>
+                <textarea class="form-control text-area mt-2 text-white" th:errorclass="is-invalid" th:field="*{text}" placeholder="Text"></textarea>
                 <span class="help-block invalid-feedback" th:if="${#fields.hasErrors('text')}" th:errors="*{text}"></span>
                 <br>
                 <div class="mt-2">
@@ -119,6 +120,28 @@
             <div class="modal-footer">
                 <a type="button" th:href="|/books/buy/${viewModel.id}|" class="btn btn-primary">Confirm</a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete book</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure that you want to delete this book ? All records will be lost !</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a th:href="|/books/delete/${viewModel.id}|"  class=" btn btn-danger mx-2" sec:authorize="hasAnyAuthority('ROOT','ADMIN') " th:if="${viewModel.approved}">
+                    Delete
+                </a>
             </div>
         </div>
     </div>

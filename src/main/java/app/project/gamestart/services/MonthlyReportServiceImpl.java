@@ -36,7 +36,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
     }
 
 
-    @Scheduled(cron="* * * * 1 *")
+    @Scheduled(cron="0 30 13 25 * ?")
     public void generateReports(){
         LocalDate startDate = LocalDate.now().minusMonths(1);
         List<Sale> sales = this.saleService.allSalesAfterDate(startDate);

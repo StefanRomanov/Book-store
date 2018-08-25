@@ -57,10 +57,30 @@
             <div class="d-flex justify-content-center justify-content-around mb-3">
                 <button class="btn btn-primary" type="submit" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:if="!*{isApproved}">Approve</button>
                 <a class="btn btn-danger" th:if="!*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/delete/*{id}|">Dont approve</a>
-                <a class="btn btn-danger" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/delete/*{id}|">Delete</a>
+                <a class="btn btn-danger" data-toggle="modal" data-target="#exampleModal" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')">Delete</a>
                 <a class="btn btn-info" th:if="*{isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/edit/*{id}|">Edit</a>
                 <a class="btn btn-light" href="/publishers/manage">Cancel</a>
             </div>
         </form>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete publisher</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure that you want to delete this publisher ? All his books will be deleted as well !</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a class="btn btn-danger text-white" th:if="${viewModel.isApproved}" sec:authorize="hasAnyAuthority('ROOT','ADMIN')" th:href="|/publishers/delete/*{id}|">Delete</a>
+            </div>
+        </div>
     </div>
 </div>

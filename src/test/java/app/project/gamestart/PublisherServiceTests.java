@@ -46,9 +46,7 @@ public class PublisherServiceTests {
     @Before
     public void setUp() {
         when(this.modelMapper.map(any(),eq(Publisher.class))).thenReturn(null);
-        when(this.modelMapper.map(any(),eq(User.class))).thenReturn(null);
         when(this.userService.getUserById(any())).thenReturn(null);
-        when(this.publisherRepository.getOne(AWESOME_ID)).thenReturn(null);
     }
 
     @Test(expected = PublisherNotFoundException.class)

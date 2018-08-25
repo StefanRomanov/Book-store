@@ -56,7 +56,6 @@ public class BookServiceTests {
         when(this.modelMapper.map(any(),eq(Book.class))).thenAnswer(a -> new Book());
         when(this.modelMapper.map(any(),eq(BookAddServiceModel.class))).thenAnswer(a -> new BookAddServiceModel());
         when(this.userService.getUserById(any())).thenReturn(null);
-        when(this.bookRepository.getOne(AWESOME_ID)).thenReturn(null);
     }
 
     @Test(expected = UserNotFoundException.class)
@@ -67,7 +66,6 @@ public class BookServiceTests {
     @Test(expected = PublisherNotFoundException.class)
     public void addBookTest_ShouldThrowExceptionsWhenPublisherIsNull(){
         when(this.userService.getUserById(any())).thenAnswer(a -> new User());
-        when(this.publisherRepository.getOne(any())).thenReturn(null);
 
          this.bookService.addBook(new BookAddServiceModel(),AWESOME_ID);
     }

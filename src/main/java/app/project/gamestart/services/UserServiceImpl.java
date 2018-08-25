@@ -129,8 +129,9 @@ public class UserServiceImpl implements UserService{
             throw new UserNotFoundException();
         }
 
-        if(user.getAuthorities().iterator().next().getAuthority().equals("ROOT")){
-            throw new AccessDeniedException("Can't change ROOT role");
+        if(user.getAuthorities().iterator().next().getAuthority().equals("ROOT") ||
+                user.getAuthorities().iterator().next().getAuthority().equals("PARTNER") ){
+            throw new AccessDeniedException("Can't change ROOT or PARTNER role");
         }
 
         user.getAuthorities().clear();
