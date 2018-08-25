@@ -67,7 +67,7 @@ public class BookController extends  BaseController {
             bindingResult.rejectValue("coverImageUrl","error.viewModel","Only JPEG files allowed !");
         };
 
-        if(!bindingModel.getCoverImageUrl().getContentType().equals("application/epub+zip")){
+        if(!bindingModel.getTextFile().getContentType().equals("application/epub+zip")){
             bindingResult.rejectValue("textFile","error.viewModel","Only EPUB files allowed !");
         };
         if (bindingResult.hasErrors()) {

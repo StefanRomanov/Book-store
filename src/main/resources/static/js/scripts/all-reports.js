@@ -55,13 +55,15 @@ $('#next-page').click(function () {
 function fetchData(pageNumber) {
     $('#result').empty();
 
-    let url = 'http://localhost:8080/reports/api/all?page='+ pageNumber;
+    let url = 'http://localhost:8080/reports/api/all?page='+ pageNumber + "&sort=date,DESC";
+
 
     $.ajax({
         type: 'GET',
         url:url,
         success: function (data) {
 
+            console.log(data);
 
             setPageItems(data['totalPages'],data['number'] + 1);
 
