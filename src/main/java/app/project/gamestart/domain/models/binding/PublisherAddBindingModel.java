@@ -7,6 +7,15 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 public class PublisherAddBindingModel {
+
+    private static final String COMPANY_NAME_EMPTY_ERROR_MESSAGE = "Please input Your company name !";
+    private static final String VAT_EMPTY_ERROR_MESSAGE = "Please input VAT number";
+    private static final String VAT_LENGTH_ERROR_MESSAGE = "VAT number should be at least 10 characters long.";
+    private static final String BILLING_ADDRESS_EMPTY_MESSAGE = "Please input company full billing address.";
+    private static final String LEGAL_FORM_EMPTY_ERROR_MESSAGE = "Please input company legal form stated in the registration papers.";
+    private static final String CITY_EMPTY_ERROR_MESSAGE = "Please enter city.";
+    private static final String POSTAL_CODE_ERROR_MESSAGE = "Please enter postal code.";
+
     private String id;
     private String companyName;
     private String vatNumber;
@@ -28,7 +37,7 @@ public class PublisherAddBindingModel {
         this.id = id;
     }
 
-    @NotEmpty(message = "Please input Your company name !")
+    @NotEmpty(message = COMPANY_NAME_EMPTY_ERROR_MESSAGE)
     public String getCompanyName() {
         return companyName;
     }
@@ -37,8 +46,8 @@ public class PublisherAddBindingModel {
         this.companyName = companyName;
     }
 
-    @NotEmpty(message = "Please input VAT number")
-    @Size(min = 10, message = "VAT number should be at least 10 characters long.")
+    @NotEmpty(message = VAT_EMPTY_ERROR_MESSAGE)
+    @Size(min = 10, message = VAT_LENGTH_ERROR_MESSAGE)
     public String getVatNumber() {
         return vatNumber;
     }
@@ -47,7 +56,7 @@ public class PublisherAddBindingModel {
         this.vatNumber = vatNumber;
     }
 
-    @NotEmpty(message = "Please input company full billing address.")
+    @NotEmpty(message = BILLING_ADDRESS_EMPTY_MESSAGE)
     public String getBillingAddress() {
         return billingAddress;
     }
@@ -56,7 +65,7 @@ public class PublisherAddBindingModel {
         this.billingAddress = billingAddress;
     }
 
-    @NotEmpty(message = "Please input company legal form stated in the registration papers.")
+    @NotEmpty(message = LEGAL_FORM_EMPTY_ERROR_MESSAGE)
     public String getLegalForm() {
         return legalForm;
     }
@@ -85,7 +94,7 @@ public class PublisherAddBindingModel {
         this.country = country;
     }
 
-    @NotEmpty(message = "Please enter city.")
+    @NotEmpty(message = CITY_EMPTY_ERROR_MESSAGE)
     public String getCity() {
         return city;
     }
@@ -94,7 +103,7 @@ public class PublisherAddBindingModel {
         this.city = city;
     }
 
-    @NotEmpty(message = "Please enter postal code.")
+    @NotEmpty(message = POSTAL_CODE_ERROR_MESSAGE)
     public String getPostalCode() {
         return postalCode;
     }

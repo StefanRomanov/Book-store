@@ -1,5 +1,6 @@
 package app.project.gamestart.domain.entities;
 
+import app.project.gamestart.util.constants.UserConstants;
 import app.project.gamestart.web.validators.annotations.EmailValidator;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,7 +34,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     @Column(nullable = false, unique = true)
-    @Length(min = 3, max = 35)
+    @Length(min = UserConstants.USERNAME_MIN_LENGTH, max = UserConstants.USERNAME_MAX_LENGTH)
     public String getUsername() {
         return this.username;
     }
@@ -44,7 +45,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
     @EmailValidator
-    @Length(min = 3, max = 35)
+    @Length(min = UserConstants.EMAIL_MIN_LENGTH, max = UserConstants.EMAIL_MAX_LENGTH)
     public String getEmail() {
         return this.email;
     }
@@ -54,7 +55,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Column(nullable = false)
-    @Length(min = 3)
+    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, max = UserConstants.PASSWORD_MAX_LENGTH)
     public String getPassword() {
         return this.password;
     }

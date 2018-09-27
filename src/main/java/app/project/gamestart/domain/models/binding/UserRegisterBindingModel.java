@@ -1,5 +1,6 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.util.constants.UserConstants;
 import app.project.gamestart.web.validators.annotations.EmailValidator;
 import org.hibernate.validator.constraints.Length;
 
@@ -14,8 +15,8 @@ public class UserRegisterBindingModel {
     public UserRegisterBindingModel() {
     }
 
-    @NotEmpty(message = "Enter username")
-    @Length(min = 3, max = 35, message = "Allowed between 3 and 35 characters")
+    @NotEmpty(message = UserConstants.USERNAME_EMPTY_ERROR_MESSAGE)
+    @Length(min = UserConstants.USERNAME_MIN_LENGTH, max = UserConstants.USERNAME_MAX_LENGTH, message = UserConstants.USERNAME_LENGTH_ERROR_MESSAGE)
     public String getUsername() {
         return username;
     }
@@ -34,8 +35,8 @@ public class UserRegisterBindingModel {
         this.email = email;
     }
 
-    @NotEmpty(message = "Enter password")
-    @Length(min = 3, max = 35, message = "Allowed between 3 and 35 characters")
+    @NotEmpty(message = UserConstants.PASSWORD_EMPTY_ERROR_MESSAGE)
+    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, max = UserConstants.PASSWORD_MAX_LENGTH, message = UserConstants.PASSWORD_LENGTH_ERROR_MESSAGE)
     public String getPassword() {
         return password;
     }
@@ -44,8 +45,8 @@ public class UserRegisterBindingModel {
         this.password = password;
     }
 
-    @NotEmpty(message = "Enter password again")
-    @Length(min = 3, max = 35, message = "Allowed between 3 and 35 characters")
+    @NotEmpty(message = UserConstants.CONFIRM_PASSWORD_EMPTY_ERROR_MESSAGE)
+    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, max = UserConstants.PASSWORD_MAX_LENGTH, message = UserConstants.PASSWORD_LENGTH_ERROR_MESSAGE)
     public String getConfirmPassword() {
         return confirmPassword;
     }

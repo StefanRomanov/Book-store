@@ -5,6 +5,7 @@ import app.project.gamestart.domain.entities.Sale;
 import app.project.gamestart.domain.models.service.MonthlyReportServiceModel;
 import app.project.gamestart.repositories.MonthlyReportRepository;
 import app.project.gamestart.util.PageMapper;
+import app.project.gamestart.util.constants.GlobalConstants;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class MonthlyReportServiceImpl implements MonthlyReportService {
     }
 
 
-    @Scheduled(cron="0 30 13 25 * ?")
+    @Scheduled(cron= GlobalConstants.MONTHLY_REPORT_CRON_PATTERN)
     public void generateReports(){
         LocalDate startDate = LocalDate.now().minusMonths(1);
         List<Sale> sales = this.saleService.allSalesAfterDate(startDate);
