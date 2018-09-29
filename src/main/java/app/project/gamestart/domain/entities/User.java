@@ -55,7 +55,7 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     @Column(nullable = false)
-    @Length(min = UserConstants.PASSWORD_MIN_LENGTH, max = UserConstants.PASSWORD_MAX_LENGTH)
+    @Length(min = UserConstants.PASSWORD_MIN_LENGTH)
     public String getPassword() {
         return this.password;
     }
