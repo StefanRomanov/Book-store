@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.domain.enums.Genre;
+import app.project.gamestart.util.constants.BookConstants;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
@@ -31,7 +32,7 @@ public class Book extends BaseEntity{
     }
 
     @Column(nullable = false)
-    @Length(max = 100)
+    @Length(max = BookConstants.BOOK_TITLE_MAX_CHARACTERS)
     public String getTitle() {
         return title;
     }
@@ -122,6 +123,7 @@ public class Book extends BaseEntity{
     public void setGenre(Genre genre) {
         this.genre = genre;
     }
+
     @ManyToMany(mappedBy = "books")
     public Set<User> getUsers() {
         return users;

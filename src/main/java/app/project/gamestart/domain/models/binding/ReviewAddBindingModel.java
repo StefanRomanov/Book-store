@@ -1,13 +1,13 @@
 package app.project.gamestart.domain.models.binding;
 
+import app.project.gamestart.util.constants.ReviewConstants;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 
 public class ReviewAddBindingModel {
-    private static final String TITLE_LENGTH_ERROR_MESSAGE = "Max 50 characters";
-    private static final String TEXT_LENGTH_ERROR_MESSAGE = "Max 1000 characters";
+
 
 
     private String title;
@@ -18,7 +18,7 @@ public class ReviewAddBindingModel {
     }
 
     @NotEmpty
-    @Length(max = 50,message = TITLE_LENGTH_ERROR_MESSAGE)
+    @Length(max = ReviewConstants.TITLE_MAX_LENGTH,message = ReviewConstants.TITLE_LENGTH_ERROR_MESSAGE)
     public String getTitle() {
         return title;
     }
@@ -28,7 +28,7 @@ public class ReviewAddBindingModel {
     }
 
     @NotEmpty
-    @Length(max = 1000, message = TEXT_LENGTH_ERROR_MESSAGE)
+    @Length(max = ReviewConstants.TEXT_MAX_LENGTH, message = ReviewConstants.TEXT_LENGTH_ERROR_MESSAGE)
     public String getText() {
         return text;
     }

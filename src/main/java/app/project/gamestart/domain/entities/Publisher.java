@@ -1,6 +1,7 @@
 package app.project.gamestart.domain.entities;
 
 import app.project.gamestart.domain.enums.Country;
+import app.project.gamestart.util.constants.PublisherConstants;
 import app.project.gamestart.web.validators.annotations.EmailValidator;
 import org.hibernate.validator.constraints.Length;
 
@@ -39,7 +40,7 @@ public class Publisher extends BaseEntity{
 
     @Column(nullable = false, unique = true)
     @NotEmpty
-    @Length(min = 10)
+    @Length(min = PublisherConstants.VAT_MINIMUM_SIZE)
     public String getVatNumber() {
         return vatNumber;
     }
@@ -50,7 +51,7 @@ public class Publisher extends BaseEntity{
 
     @Column(nullable = false)
     @NotEmpty
-    @Length(min = 5)
+    @Length(min = PublisherConstants.BILLING_ADDRESS_MINIMUM_SIZE)
     public String getBillingAddress() {
         return billingAddress;
     }

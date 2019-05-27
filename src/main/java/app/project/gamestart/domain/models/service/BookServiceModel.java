@@ -4,6 +4,7 @@ import app.project.gamestart.domain.entities.Author;
 import app.project.gamestart.domain.entities.Publisher;
 import app.project.gamestart.domain.entities.Review;
 import app.project.gamestart.domain.enums.Genre;
+import app.project.gamestart.util.constants.BookConstants;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -130,7 +131,7 @@ public class BookServiceModel {
         double total = (double) this.getReviews().size();
 
         if(total == 0){
-            return "No reviews";
+            return BookConstants.NO_REVIEWS_MESSAGE;
         }
         Double result = (approved / total) * 100.0;
 

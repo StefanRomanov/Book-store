@@ -1,5 +1,6 @@
 package app.project.gamestart.domain.entities;
 
+import app.project.gamestart.util.constants.ReviewConstants;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Controller;
 
@@ -22,7 +23,7 @@ public class Review extends BaseEntity{
     }
 
     @Column(nullable = false)
-    @Length(min = 1, max = 50,message = "Max 50 characters")
+    @Length(min = 1, max = ReviewConstants.TITLE_MAX_LENGTH,message = ReviewConstants.TITLE_LENGTH_ERROR_MESSAGE)
     public String getTitle() {
         return title;
     }
@@ -32,7 +33,7 @@ public class Review extends BaseEntity{
     }
 
     @Column(nullable = false)
-    @Length(min = 1, max = 1000)
+    @Length(min = 1, max = ReviewConstants.TEXT_MAX_LENGTH, message = ReviewConstants.TEXT_LENGTH_ERROR_MESSAGE)
     public String getText() {
         return text;
     }

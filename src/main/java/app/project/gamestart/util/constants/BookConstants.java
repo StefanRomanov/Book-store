@@ -8,4 +8,5 @@ public final class BookConstants {
     public static final String BOOK_DESCRIPTION_CHARACTERS_COUNT_ERROR_MESSAGE = "Maximum 2000 characters";
     public static final String NO_PRICE_ENTERED_MESSAGE = "Books should have price!";
     public static final String NO_AUTHOR_SELECTED_ERROR_MESSAGE = "Select at least one author !";
+    public static final String NO_REVIEWS_MESSAGE = "No reviews";
 }
